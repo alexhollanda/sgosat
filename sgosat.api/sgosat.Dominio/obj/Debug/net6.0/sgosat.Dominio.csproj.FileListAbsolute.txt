@@ -1,0 +1,12 @@
+C:\Users\alexh\OneDrive\Documentos\ALEX\itera360\sgosat\sgosat.api\sgosat.Dominio\obj\Debug\net6.0\sgosat.Dominio.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\alexh\OneDrive\Documentos\ALEX\itera360\sgosat\sgosat.api\sgosat.Dominio\obj\Debug\net6.0\sgosat.Dominio.AssemblyInfoInputs.cache
+C:\Users\alexh\OneDrive\Documentos\ALEX\itera360\sgosat\sgosat.api\sgosat.Dominio\obj\Debug\net6.0\sgosat.Dominio.AssemblyInfo.cs
+C:\Users\alexh\OneDrive\Documentos\ALEX\itera360\sgosat\sgosat.api\sgosat.Dominio\obj\Debug\net6.0\sgosat.Dominio.csproj.CoreCompileInputs.cache
+C:\Users\alexh\OneDrive\Documentos\ALEX\itera360\sgosat\sgosat.api\sgosat.Dominio\obj\Debug\net6.0\sgosat.Dominio.sourcelink.json
+C:\Users\alexh\OneDrive\Documentos\ALEX\itera360\sgosat\sgosat.api\sgosat.Dominio\bin\Debug\net6.0\sgosat.Dominio.deps.json
+C:\Users\alexh\OneDrive\Documentos\ALEX\itera360\sgosat\sgosat.api\sgosat.Dominio\bin\Debug\net6.0\sgosat.Dominio.dll
+C:\Users\alexh\OneDrive\Documentos\ALEX\itera360\sgosat\sgosat.api\sgosat.Dominio\bin\Debug\net6.0\sgosat.Dominio.pdb
+C:\Users\alexh\OneDrive\Documentos\ALEX\itera360\sgosat\sgosat.api\sgosat.Dominio\obj\Debug\net6.0\sgosat.Dominio.dll
+C:\Users\alexh\OneDrive\Documentos\ALEX\itera360\sgosat\sgosat.api\sgosat.Dominio\obj\Debug\net6.0\refint\sgosat.Dominio.dll
+C:\Users\alexh\OneDrive\Documentos\ALEX\itera360\sgosat\sgosat.api\sgosat.Dominio\obj\Debug\net6.0\sgosat.Dominio.pdb
+C:\Users\alexh\OneDrive\Documentos\ALEX\itera360\sgosat\sgosat.api\sgosat.Dominio\obj\Debug\net6.0\ref\sgosat.Dominio.dll

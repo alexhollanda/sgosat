@@ -1,0 +1,12 @@
+C:\Users\alexh\OneDrive\Documentos\ALEX\itera360\sgosat\sgosat.api\sgosat.Repositorio\bin\Debug\net6.0\sgosat.Repositorio.deps.json
+C:\Users\alexh\OneDrive\Documentos\ALEX\itera360\sgosat\sgosat.api\sgosat.Repositorio\bin\Debug\net6.0\sgosat.Repositorio.dll
+C:\Users\alexh\OneDrive\Documentos\ALEX\itera360\sgosat\sgosat.api\sgosat.Repositorio\bin\Debug\net6.0\sgosat.Repositorio.pdb
+C:\Users\alexh\OneDrive\Documentos\ALEX\itera360\sgosat\sgosat.api\sgosat.Repositorio\obj\Debug\net6.0\sgosat.Repositorio.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\alexh\OneDrive\Documentos\ALEX\itera360\sgosat\sgosat.api\sgosat.Repositorio\obj\Debug\net6.0\sgosat.Repositorio.AssemblyInfoInputs.cache
+C:\Users\alexh\OneDrive\Documentos\ALEX\itera360\sgosat\sgosat.api\sgosat.Repositorio\obj\Debug\net6.0\sgosat.Repositorio.AssemblyInfo.cs
+C:\Users\alexh\OneDrive\Documentos\ALEX\itera360\sgosat\sgosat.api\sgosat.Repositorio\obj\Debug\net6.0\sgosat.Repositorio.csproj.CoreCompileInputs.cache
+C:\Users\alexh\OneDrive\Documentos\ALEX\itera360\sgosat\sgosat.api\sgosat.Repositorio\obj\Debug\net6.0\sgosat.Repositorio.sourcelink.json
+C:\Users\alexh\OneDrive\Documentos\ALEX\itera360\sgosat\sgosat.api\sgosat.Repositorio\obj\Debug\net6.0\sgosat.Repositorio.dll
+C:\Users\alexh\OneDrive\Documentos\ALEX\itera360\sgosat\sgosat.api\sgosat.Repositorio\obj\Debug\net6.0\refint\sgosat.Repositorio.dll
+C:\Users\alexh\OneDrive\Documentos\ALEX\itera360\sgosat\sgosat.api\sgosat.Repositorio\obj\Debug\net6.0\sgosat.Repositorio.pdb
+C:\Users\alexh\OneDrive\Documentos\ALEX\itera360\sgosat\sgosat.api\sgosat.Repositorio\obj\Debug\net6.0\ref\sgosat.Repositorio.dll
