@@ -23,14 +23,20 @@ namespace sgosat.Repositorio
             _contexto.SaveChanges();
         }
 
-        public Usuario Obter(int usuarioID)
+        public Usuario Obter(int usuarioID, bool Ativo)
         {
-            return _contexto.Usuarios.Where(u => u.ID == usuarioID).FirstOrDefault();
+            return _contexto.Usuarios
+                        .Where(u => u.ID == usuarioID)
+                        .Where(u => u.Ativo == Ativo)
+                        .FirstOrDefault();
         }
 
-        public Usuario ObterPorEmail(string email)
+        public Usuario ObterPorEmail(string email, bool Ativo)
         {
-            return _contexto.Usuarios.Where(u => u.Pessoa.Email == email).FirstOrDefault();
+            return _contexto.Usuarios
+                        .Where(u => u.Pessoa.Email == email)
+                        .Where(u => u.Ativo == Ativo)
+                        .FirstOrDefault();
         }
 
         public IEnumerable<Usuario> Listar(bool Ativo)

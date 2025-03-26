@@ -14,3 +14,5 @@ C:\Users\alexh\OneDrive\Documentos\ALEX\itera360\sgosat\sgosat.api\sgosat.Reposi
 C:\Users\alexh\OneDrive\Documentos\ALEX\itera360\sgosat\sgosat.api\sgosat.Repositorio\bin\Debug\net6.0\sgosat.Dominio.pdb
 C:\Users\alexh\OneDrive\Documentos\ALEX\itera360\sgosat\sgosat.api\sgosat.Repositorio\obj\Debug\net6.0\sgosat.Repositorio.csproj.AssemblyReference.cache
 C:\Users\alexh\OneDrive\Documentos\ALEX\itera360\sgosat\sgosat.api\sgosat.Repositorio\obj\Debug\net6.0\sgosat.R.3E35214A.Up2Date
+C:\Users\alexh\OneDrive\Documentos\ALEX\itera360\sgosat\sgosat.api\sgosat.Repositorio\bin\Debug\net6.0\sgosat.Repositorio.runtimeconfig.json
+C:\Users\alexh\OneDrive\Documentos\ALEX\itera360\sgosat\sgosat.api\sgosat.Repositorio\obj\Debug\net6.0\sgosat.Repositorio.genruntimeconfig.cache
