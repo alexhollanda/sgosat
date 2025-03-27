@@ -3,6 +3,7 @@
   <ItemGroup>
     <ProjectReference Include="..\sgosat.Repositorio\sgosat.Repositorio.csproj" />
     <ProjectReference Include="..\sgosat.Dominio\sgosat.Dominio.csproj" />
+    <ProjectReference Include="..\sgosat.Servicos\sgosat.Servicos.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

@@ -1988,19 +1988,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\alexh\\.nuget\\packages\\": {}
+    "C:\\Users\\Alex Hollanda\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\alexh\\OneDrive\\Documentos\\ALEX\\itera360\\sgosat\\sgosat.api\\sgosat.Repositorio\\sgosat.Repositorio.csproj",
+      "projectUniqueName": "D:\\ProjetoFinal\\sgosat\\sgosat.api\\sgosat.Repositorio\\sgosat.Repositorio.csproj",
       "projectName": "sgosat.Repositorio",
-      "projectPath": "C:\\Users\\alexh\\OneDrive\\Documentos\\ALEX\\itera360\\sgosat\\sgosat.api\\sgosat.Repositorio\\sgosat.Repositorio.csproj",
-      "packagesPath": "C:\\Users\\alexh\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\alexh\\OneDrive\\Documentos\\ALEX\\itera360\\sgosat\\sgosat.api\\sgosat.Repositorio\\obj\\",
+      "projectPath": "D:\\ProjetoFinal\\sgosat\\sgosat.api\\sgosat.Repositorio\\sgosat.Repositorio.csproj",
+      "packagesPath": "C:\\Users\\Alex Hollanda\\.nuget\\packages\\",
+      "outputPath": "D:\\ProjetoFinal\\sgosat\\sgosat.api\\sgosat.Repositorio\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\alexh\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\Alex Hollanda\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net6.0"
@@ -2012,8 +2012,8 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "C:\\Users\\alexh\\OneDrive\\Documentos\\ALEX\\itera360\\sgosat\\sgosat.api\\sgosat.Dominio\\sgosat.Dominio.csproj": {
-              "projectPath": "C:\\Users\\alexh\\OneDrive\\Documentos\\ALEX\\itera360\\sgosat\\sgosat.api\\sgosat.Dominio\\sgosat.Dominio.csproj"
+            "D:\\ProjetoFinal\\sgosat\\sgosat.api\\sgosat.Dominio\\sgosat.Dominio.csproj": {
+              "projectPath": "D:\\ProjetoFinal\\sgosat\\sgosat.api\\sgosat.Dominio\\sgosat.Dominio.csproj"
             }
           }
         }
@@ -2022,11 +2022,6 @@
         "warnAsError": [
           "NU1605"
         ]
-      },
-      "restoreAuditProperties": {
-        "enableAudit": "true",
-        "auditLevel": "low",
-        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -2059,26 +2054,12 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "downloadDependencies": [
-          {
-            "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[6.0.36, 6.0.36]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Ref",
-            "version": "[6.0.36, 6.0.36]"
-          },
-          {
-            "name": "Microsoft.WindowsDesktop.App.Ref",
-            "version": "[6.0.36, 6.0.36]"
-          }
-        ],
         "frameworkReferences": {
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.404\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.413\\RuntimeIdentifierGraph.json"
       }
     }
   }

@@ -2,14 +2,20 @@ using Microsoft.EntityFrameworkCore;
 using sgosat.Aplicacao;
 using sgosat.Aplicacao.Interfaces;
 using sgosat.Repositorio;
+using sgosat.Servicos.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Adicione serviços ao contêiner.
 builder.Services.AddScoped<IUsuarioAplicacao, UsuarioAplicacao>();
+builder.Services.AddScoped<ICepAplicacao, CepAplicacao>();
 
 // Adicione as interfaces de banco de dados
 builder.Services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
+
+// Adicione o serviço
+
+builder.Services.AddScoped<IBrasilAPICep, BrasilAPICep>();
 
 builder.Services.AddControllers();
 

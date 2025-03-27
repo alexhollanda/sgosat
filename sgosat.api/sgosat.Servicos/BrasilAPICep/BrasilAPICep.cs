@@ -1,20 +1,21 @@
 using Newtonsoft.Json;
 using sgosat.Dominio.Entidades;
 using sgosat.Servicos.BrasilAPICep.Models;
+using sgosat.Servicos.Interfaces;
 
-public class BrasilAPICep
+public class BrasilAPICep : IBrasilAPICep
 {
     private readonly HttpClient _httpClient;
 
     public BrasilAPICep()
     {
         _httpClient = new HttpClient();
-        _httpClient.BaseAddress = new Uri("https://brasilapi.com.br/api/cep/v1/");
+        _httpClient.BaseAddress = new Uri("https://viacep.com.br/ws/");
     }
 
     public async Task<Cep> ConsultarCEP(int cep)
     {
-        HttpResponseMessage response = await _httpClient.GetAsync("{cep}");
+        HttpResponseMessage response = await _httpClient.GetAsync(Convert.ToString(cep) + "/json/");
         response.EnsureSuccessStatusCode();
 
         string responseBody = await response.Content.ReadAsStringAsync();
@@ -22,12 +23,17 @@ public class BrasilAPICep
 
         var CEP = new Cep{
             CEP = result.Cep,
-            Logradouro = result.Street,
-            Bairro = result.Neighborhood,
-            Cidade = result.City,
-            UF = result.State
+            Logradouro = result.Logradouro,
+            Bairro = result.Bairro,
+            Cidade = result.Localidade,
+            UF = result.Estado + " - " + result.UF
         };
 
         return CEP;
+    }
+
+    public void Dispose()
+    {
+        throw new NotImplementedException();
     }
 }
