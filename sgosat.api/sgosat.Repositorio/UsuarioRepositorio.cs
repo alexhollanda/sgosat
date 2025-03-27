@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using sgosat.Dominio.Entidades;
 
 namespace sgosat.Repositorio
@@ -9,39 +10,39 @@ namespace sgosat.Repositorio
             
         }
 
-        public int Salvar(Usuario usuario)
+        public async Task<int> Salvar(Usuario usuario)
         {
             _contexto.Usuarios.Add(usuario);
-            _contexto.SaveChanges();
+            await _contexto.SaveChangesAsync();
 
             return usuario.ID;
         }
 
-        public void Atualizar(Usuario usuario)
+        public async Task Atualizar(Usuario usuario)
         {
             _contexto.Usuarios.Update(usuario);
-            _contexto.SaveChanges();
+            await _contexto.SaveChangesAsync();
         }
 
-        public Usuario Obter(int usuarioID, bool Ativo)
+        public async Task<Usuario> Obter(int usuarioID, bool Ativo)
         {
-            return _contexto.Usuarios
+            return await _contexto.Usuarios
                         .Where(u => u.ID == usuarioID)
                         .Where(u => u.Ativo == Ativo)
-                        .FirstOrDefault();
+                        .FirstOrDefaultAsync();
         }
 
-        public Usuario ObterPorEmail(string email, bool Ativo)
+        public async Task<Usuario> ObterPorEmail(string email, bool Ativo)
         {
-            return _contexto.Usuarios
+            return await _contexto.Usuarios
                         .Where(u => u.Pessoa.Email == email)
                         .Where(u => u.Ativo == Ativo)
-                        .FirstOrDefault();
+                        .FirstOrDefaultAsync();
         }
 
-        public IEnumerable<Usuario> Listar(bool Ativo)
+        public async Task<IEnumerable<Usuario>> Listar(bool Ativo)
         {
-            return _contexto.Usuarios.Where(u => u.Ativo == Ativo).ToList();
+            return await _contexto.Usuarios.Where(u => u.Ativo == Ativo).ToListAsync();
         }
     }
 }

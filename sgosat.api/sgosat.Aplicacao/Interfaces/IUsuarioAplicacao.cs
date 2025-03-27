@@ -4,13 +4,13 @@ namespace sgosat.Aplicacao.Interfaces
 {
     public interface IUsuarioAplicacao
     {
-        public int Criar(Usuario usuario);
-        public void Atualizar(Usuario usuario);
-        public void AtualizaSenha(Usuario usuario, string senhaAntiga);
-        public Usuario Obter(int usuarioID);
-        public Usuario ObterPorEmail(string email);        
-        public void Deletar(int usuarioID);
-        public void Restaurar(int usuarioID);
-        public IEnumerable<Usuario> Listar(bool Ativo);
+        Task<int> Criar(Usuario usuario);
+        Task Atualizar(Usuario usuario);
+        Task AtualizaSenha(Usuario usuario, string senhaAntiga);        
+        Task Deletar(int usuarioID);
+        Task Restaurar(int usuarioID);
+        Task<Usuario> Obter(int usuarioID);
+        Task<Usuario> ObterPorEmail(string email);
+        public Task<IEnumerable<Usuario>> Listar(bool Ativo);
     }
 }

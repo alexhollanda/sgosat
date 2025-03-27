@@ -9,6 +9,7 @@ public class sgosatContexto : DbContext
     /// <summary>
     /// Define o conjunto de entidades.
     /// </summary>
+    public DbSet<Pessoa> Pessoas { get; set; }
     public DbSet<Usuario> Usuarios { get; set; }
 
     public sgosatContexto()
@@ -33,6 +34,7 @@ public class sgosatContexto : DbContext
     /// </summary>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.ApplyConfiguration(new PessoaConfiguracoes());
         modelBuilder.ApplyConfiguration(new UsuarioConfiguracoes());
     }
 }

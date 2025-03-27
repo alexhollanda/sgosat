@@ -1,3 +1,5 @@
+using sgosat.Dominio.Enumeradores;
+
 namespace sgosat.Dominio.Entidades
 {
     public class Usuario
@@ -7,6 +9,8 @@ namespace sgosat.Dominio.Entidades
         public string Senha { get; set; }
         public bool Ativo { get; set; }
         public Pessoa Pessoa { get; set; }
+        public int PessoaID { get; set; }
+        public int TipoUsuarioID { get; set; }
         
         public Usuario()
         {

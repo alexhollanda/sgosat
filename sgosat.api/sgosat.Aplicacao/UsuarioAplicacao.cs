@@ -12,7 +12,7 @@ namespace sgosat.Aplicacao
             _usuarioRepositorio = usuarioRepositorio;
         }
 
-        public int Criar(Usuario usuario)
+        public async Task<int> Criar(Usuario usuario)
         {
             if (usuario == null)
                 throw new Exception("Usuário não pode ser vazio");
@@ -22,12 +22,12 @@ namespace sgosat.Aplicacao
             if (string.IsNullOrEmpty(usuario.Senha))
                 throw new Exception("Senha não pode ser vazia");
 
-            return _usuarioRepositorio.Salvar(usuario);
+            return await _usuarioRepositorio.Salvar(usuario);
         }
 
-        public void Atualizar(Usuario usuario)
+        public async Task Atualizar(Usuario usuario)
         {
-            var usuarioDominio = _usuarioRepositorio.Obter(usuario.ID, true);
+            var usuarioDominio = await _usuarioRepositorio.Obter(usuario.ID, true);
 
             if (usuarioDominio == null)
                 throw new Exception("Usuário não encontrado!");
@@ -36,12 +36,12 @@ namespace sgosat.Aplicacao
 
             usuarioDominio.UserName = usuario.UserName;
 
-            _usuarioRepositorio.Atualizar(usuarioDominio);
+            await _usuarioRepositorio.Atualizar(usuarioDominio);
         }
 
-        public void AtualizaSenha(Usuario usuario, string senhaAntiga)
+        public async Task AtualizaSenha(Usuario usuario, string senhaAntiga)
         {
-            var usuarioDominio = _usuarioRepositorio.Obter(usuario.ID, true);
+            var usuarioDominio = await _usuarioRepositorio.Obter(usuario.ID, true);
 
             if (usuarioDominio == null)
                 throw new Exception("Usuário não encontrado!");
@@ -51,56 +51,56 @@ namespace sgosat.Aplicacao
 
             usuarioDominio.Senha = usuario.Senha;
 
-            _usuarioRepositorio.Atualizar(usuarioDominio);
-        }
-
-        public Usuario Obter(int usuarioID)
-        {
-            var usuarioDominio = _usuarioRepositorio.Obter(usuarioID, true);
-
-            if (usuarioDominio == null)
-                throw new Exception("Usuário não encontrado!");
-
-            return usuarioDominio;
-        }
-
-        public Usuario ObterPorEmail(string email)
-        {
-            var usuarioDominio = _usuarioRepositorio.ObterPorEmail(email, true);
-
-            if (usuarioDominio == null)
-                throw new Exception("Usuário não encontrado!");
-
-            return usuarioDominio;
+            await _usuarioRepositorio.Atualizar(usuarioDominio);
         }
         
-        public void Deletar(int usuarioID)
+        public async Task Deletar(int usuarioID)
         {
-            var usuarioDominio = _usuarioRepositorio.Obter(usuarioID, true);
+            var usuarioDominio = await _usuarioRepositorio.Obter(usuarioID, true);
 
             if (usuarioDominio == null)
                 throw new Exception("Usuário não encontrado!");
             
             usuarioDominio.Deletar();
 
-            _usuarioRepositorio.Atualizar(usuarioDominio);
+            await _usuarioRepositorio.Atualizar(usuarioDominio);
         }
 
-        public void Restaurar(int usuarioID)
+        public async Task Restaurar(int usuarioID)
         {
-            var usuarioDominio = _usuarioRepositorio.Obter(usuarioID, false);
+            var usuarioDominio = await _usuarioRepositorio.Obter(usuarioID, false);
 
             if (usuarioDominio == null)
                 throw new Exception("Usuário não encontrado!");
             
             usuarioDominio.Restaurar();
             
-            _usuarioRepositorio.Atualizar(usuarioDominio);
+            await _usuarioRepositorio.Atualizar(usuarioDominio);
         }
 
-        public IEnumerable<Usuario> Listar(bool Ativo)
+        public async Task<Usuario> Obter(int usuarioID)
         {
-            return _usuarioRepositorio.Listar(Ativo);
+            var usuarioDominio = await _usuarioRepositorio.Obter(usuarioID, true);
+
+            if (usuarioDominio == null)
+                throw new Exception("Usuário não encontrado!");
+
+            return usuarioDominio;
+        }
+
+        public async Task<Usuario> ObterPorEmail(string email)
+        {
+            var usuarioDominio = await _usuarioRepositorio.ObterPorEmail(email, true);
+
+            if (usuarioDominio == null)
+                throw new Exception("Usuário não encontrado!");
+
+            return usuarioDominio;
+        }
+
+        public async Task<IEnumerable<Usuario>> Listar(bool Ativo)
+        {
+            return await _usuarioRepositorio.Listar(Ativo);
         }
 
         #region Útil

@@ -2,9 +2,9 @@ using sgosat.Dominio.Entidades;
 
 public interface IUsuarioRepositorio
 {
-    int Salvar(Usuario usuario);
-    void Atualizar(Usuario usuario);
-    Usuario Obter(int usuarioID, bool Ativo);
-    Usuario ObterPorEmail(string email, bool Ativo);
-    IEnumerable<Usuario> Listar(bool ativo);
+    Task<int> Salvar(Usuario usuario);
+    Task Atualizar(Usuario usuario);
+    Task<Usuario> Obter(int usuarioID, bool Ativo);
+    Task<Usuario> ObterPorEmail(string email, bool Ativo);
+    Task<IEnumerable<Usuario>> Listar(bool ativo);
 }

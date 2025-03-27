@@ -14,6 +14,8 @@ namespace sgosat.Repositorio.Configuracoes
             builder.Property(nameof(Usuario.UserName)).HasColumnName("UserName").IsRequired(true);
             builder.Property(nameof(Usuario.Senha)).HasColumnName("Senha").IsRequired(true);
             builder.Property(nameof(Usuario.Ativo)).HasColumnName("Ativo").IsRequired(true);
+            builder.Property(nameof(Usuario.PessoaID)).HasColumnName("PessoaID").IsRequired(true);
+            builder.Property(nameof(Usuario.TipoUsuarioID)).HasColumnName("TipoUsuarioID").IsRequired(true);
         }
     }
 }
