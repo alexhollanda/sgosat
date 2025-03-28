@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using sgosat.Dominio.Entidades;
+using sgosat.Repositorio.Interfaces;
 
 namespace sgosat.Repositorio
 {
