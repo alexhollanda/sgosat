@@ -72,8 +72,9 @@ namespace sgosat.Repositorio.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("Nome");
 
-                    b.Property<int>("Numero")
-                        .HasColumnType("int")
+                    b.Property<string>("Numero")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
                         .HasColumnName("Numero");
 
                     b.Property<string>("Telefone")

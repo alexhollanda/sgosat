@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace sgosat.Repositorio.Migrations
 {
     [DbContext(typeof(sgosatContexto))]
-    [Migration("20250327004347_Inicial")]
+    [Migration("20250329225006_Inicial")]
     partial class Inicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -74,8 +74,9 @@ namespace sgosat.Repositorio.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("Nome");
 
-                    b.Property<int>("Numero")
-                        .HasColumnType("int")
+                    b.Property<string>("Numero")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
                         .HasColumnName("Numero");
 
                     b.Property<string>("Telefone")

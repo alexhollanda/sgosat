@@ -29,7 +29,8 @@ namespace sgosat.Api.Controllers
                 var usuarioResponse = new UsuarioResponse()
                 {
                     ID = usuarioDomino.ID,
-                    UserName = usuarioDomino.UserName
+                    UserName = usuarioDomino.UserName,
+                    Pessoa = usuarioDomino.Pessoa
                 };
 
                 return Ok(usuarioResponse);

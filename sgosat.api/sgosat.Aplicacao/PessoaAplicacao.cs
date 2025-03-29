@@ -53,7 +53,7 @@ namespace sgosat.Aplicacao
         
         public async Task Deletar(int pessoaID)
         {
-            var pessoaDominio = await _pessoaRepositorio.Obter(pessoaID, false);
+            var pessoaDominio = await _pessoaRepositorio.Obter(pessoaID, true);
 
             if (pessoaDominio == null)
                 throw new Exception("Pessoa não encontrada!");
