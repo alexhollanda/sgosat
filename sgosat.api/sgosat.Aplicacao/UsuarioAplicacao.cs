@@ -1,5 +1,6 @@
 using sgosat.Aplicacao.Interfaces;
 using sgosat.Dominio.Entidades;
+using sgosat.Repositorio.Interfaces;
 
 namespace sgosat.Aplicacao
 {

@@ -1,8 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "ryBh5dW83uC1z2dI6LR+7OglCtFGKcsEBK0hXVXRFYffWhDYpseQy8ALjt6nq3NLGmpEu7cBNdifBDLg8Kywdw==",
+  "dgSpecHash": "CS7XJR9se7o=",
   "success": true,
-  "projectFilePath": "D:\\ProjetoFinal\\sgosat\\sgosat.api\\sgosat.Dominio\\sgosat.Dominio.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "C:\\Users\\alexh\\OneDrive\\Documentos\\ALEX\\itera360\\sgosat\\sgosat.api\\sgosat.Dominio\\sgosat.Dominio.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\alexh\\.nuget\\packages\\microsoft.netcore.app.ref\\6.0.36\\microsoft.netcore.app.ref.6.0.36.nupkg.sha512",
+    "C:\\Users\\alexh\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\6.0.36\\microsoft.windowsdesktop.app.ref.6.0.36.nupkg.sha512",
+    "C:\\Users\\alexh\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\6.0.36\\microsoft.aspnetcore.app.ref.6.0.36.nupkg.sha512"
+  ],
   "logs": []
 }
