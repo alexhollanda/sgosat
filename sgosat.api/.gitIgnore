@@ -46,7 +46,6 @@ secrets.json
 Thumbs.db
 Desktop.ini
 
-projeto360.sqlite*
 *.sqlite*
 *.sqlite-shm
 *.sqlite-wal
