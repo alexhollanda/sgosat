@@ -36,6 +36,7 @@ namespace sgosat.Repositorio
         public async Task<Usuario> ObterPorEmail(string email, bool Ativo)
         {
             return await _contexto.Usuarios
+                        .Include(u => u.Pessoa)
                         .Where(u => u.Pessoa.Email == email)
                         .Where(u => u.Ativo == Ativo)
                         .FirstOrDefaultAsync();

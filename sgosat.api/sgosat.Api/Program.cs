@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using sgosat.Aplicacao;
 using sgosat.Aplicacao.Interfaces;
@@ -32,6 +33,10 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddControllers();
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
 
 // Adicione o serviço do Banco de Dados
 builder.Services.AddDbContext<sgosatContexto>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

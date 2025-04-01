@@ -26,7 +26,10 @@ public class sgosatContexto : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         if (_options == null)
-            optionsBuilder.UseSqlServer("Server=DESKTOP-G3F377S\\SQLEXPRESS;DataBase=SGOSAT;Integrated Security=SSPI;TrustServerCertificate=True;");
+            //NOTEBOOK
+            //optionsBuilder.UseSqlServer("Server=DESKTOP-G3F377S\\SQLEXPRESS;DataBase=SGOSAT;Integrated Security=SSPI;TrustServerCertificate=True;");
+            //DESKTOP
+            optionsBuilder.UseSqlServer("Server=DESKTOP-N0SPDKK\\SQLEXPRESS;DataBase=SGOSAT;Integrated Security=SSPI;TrustServerCertificate=True;");
     }
 
     /// <summary>

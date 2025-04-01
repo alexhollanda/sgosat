@@ -64,6 +64,29 @@ const UsuarioAPI = {
             throw error;
         }
     },
-    async alterarSenhaAsync(usuarioID, senhaAtual, novaSenha) {
+    async restaurarAsync(usuarioID) {
+        try {
+            const response = await HTTPClient.put(`/Usuario/Restaurar/${usuarioID}`);
+            return response.data;
+        } catch (error) {
+            console.error("Erro ao deletar usuário:", error);
+            throw error;
+        }
+    },
+    async alterarSenhaAsync(usuarioID, senha, senhaAntiga) {
+        try {
+            const usuarioAlterarSenha = {
+                ID: usuarioID,
+                Senha: senha,
+                SenhaAntiga: senhaAntiga
+            }
+            const response = await HTTPClient.put("/Usuario/AlterarSenha", usuarioAlterarSenha);
+            return response.data;
+            
+        } catch (error) {
+            console.error("Erro ao alterar senha do usuário:", error);
+            throw error;            
+        }
+    }
 
 }

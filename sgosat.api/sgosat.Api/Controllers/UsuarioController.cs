@@ -41,6 +41,29 @@ namespace sgosat.Api.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("ObterPorEmail/{email}")]
+        public async Task<ActionResult> ObterPorEmail([FromRoute] string email)
+        {
+            try
+            {
+                var usuarioDomino = await _usuarioAplicacao.ObterPorEmail(email);
+
+                var usuarioResponse = new UsuarioResponse()
+                {
+                    ID = usuarioDomino.ID,
+                    UserName = usuarioDomino.UserName,
+                    Pessoa = usuarioDomino.Pessoa
+                };
+
+                return Ok(usuarioResponse);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPost]
         [Route("Criar")]
         public async Task<ActionResult> Criar([FromBody] UsuarioCriar usuarioCriar)
