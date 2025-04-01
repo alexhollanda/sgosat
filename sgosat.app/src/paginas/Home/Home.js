@@ -6,7 +6,7 @@ export function Home() {
     return (
         <div className={style.conteudo}>
             <Sidebar>
-                <Topbar>
+                <Topbar texto="Home">
                     <div className={style.pagina_conteudo}>
                         <h3>Home</h3>
                     </div>

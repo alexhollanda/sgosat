@@ -1,0 +1,26 @@
+.sidebar_item {
+    text-decoration: none;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-style: normal;
+
+    display: flex;
+    margin: 20px;
+
+    color: #e6ded3;    
+
+    & svg {
+        width: 30px;
+        height: 44px;
+    }
+
+    & .texto_link {
+        margin: 10px;
+
+        font-size: 20px;
+    }
+
+    &:hover {
+        color: #939393;
+    }
+}

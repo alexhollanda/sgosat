@@ -22,3 +22,15 @@ D:\ProjetoFinal\sgosat\sgosat.api\sgosat.Dominio\obj\Debug\net6.0\sgosat.Dominio
 D:\ProjetoFinal\sgosat\sgosat.api\sgosat.Dominio\obj\Debug\net6.0\refint\sgosat.Dominio.dll
 D:\ProjetoFinal\sgosat\sgosat.api\sgosat.Dominio\obj\Debug\net6.0\sgosat.Dominio.pdb
 D:\ProjetoFinal\sgosat\sgosat.api\sgosat.Dominio\obj\Debug\net6.0\ref\sgosat.Dominio.dll
+C:\itera360\sgosat\sgosat.api\sgosat.Dominio\bin\Debug\net6.0\sgosat.Dominio.deps.json
+C:\itera360\sgosat\sgosat.api\sgosat.Dominio\bin\Debug\net6.0\sgosat.Dominio.dll
+C:\itera360\sgosat\sgosat.api\sgosat.Dominio\bin\Debug\net6.0\sgosat.Dominio.pdb
+C:\itera360\sgosat\sgosat.api\sgosat.Dominio\obj\Debug\net6.0\sgosat.Dominio.GeneratedMSBuildEditorConfig.editorconfig
+C:\itera360\sgosat\sgosat.api\sgosat.Dominio\obj\Debug\net6.0\sgosat.Dominio.AssemblyInfoInputs.cache
+C:\itera360\sgosat\sgosat.api\sgosat.Dominio\obj\Debug\net6.0\sgosat.Dominio.AssemblyInfo.cs
+C:\itera360\sgosat\sgosat.api\sgosat.Dominio\obj\Debug\net6.0\sgosat.Dominio.csproj.CoreCompileInputs.cache
+C:\itera360\sgosat\sgosat.api\sgosat.Dominio\obj\Debug\net6.0\sgosat.Dominio.sourcelink.json
+C:\itera360\sgosat\sgosat.api\sgosat.Dominio\obj\Debug\net6.0\sgosat.Dominio.dll
+C:\itera360\sgosat\sgosat.api\sgosat.Dominio\obj\Debug\net6.0\refint\sgosat.Dominio.dll
+C:\itera360\sgosat\sgosat.api\sgosat.Dominio\obj\Debug\net6.0\sgosat.Dominio.pdb
+C:\itera360\sgosat\sgosat.api\sgosat.Dominio\obj\Debug\net6.0\ref\sgosat.Dominio.dll

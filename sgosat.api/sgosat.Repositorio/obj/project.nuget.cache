@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Wr+l9UL4yvU=",
+  "dgSpecHash": "w0/u8k3dGyo=",
   "success": true,
-  "projectFilePath": "C:\\Users\\alexh\\OneDrive\\Documentos\\ALEX\\itera360\\sgosat\\sgosat.api\\sgosat.Repositorio\\sgosat.Repositorio.csproj",
+  "projectFilePath": "C:\\itera360\\sgosat\\sgosat.api\\sgosat.Repositorio\\sgosat.Repositorio.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\alexh\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\alexh\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",

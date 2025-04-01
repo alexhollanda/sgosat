@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\alexh\\OneDrive\\Documentos\\ALEX\\itera360\\sgosat\\sgosat.api\\sgosat.Dominio\\sgosat.Dominio.csproj": {}
+    "C:\\itera360\\sgosat\\sgosat.api\\sgosat.Dominio\\sgosat.Dominio.csproj": {}
   },
   "projects": {
-    "C:\\Users\\alexh\\OneDrive\\Documentos\\ALEX\\itera360\\sgosat\\sgosat.api\\sgosat.Dominio\\sgosat.Dominio.csproj": {
+    "C:\\itera360\\sgosat\\sgosat.api\\sgosat.Dominio\\sgosat.Dominio.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\alexh\\OneDrive\\Documentos\\ALEX\\itera360\\sgosat\\sgosat.api\\sgosat.Dominio\\sgosat.Dominio.csproj",
+        "projectUniqueName": "C:\\itera360\\sgosat\\sgosat.api\\sgosat.Dominio\\sgosat.Dominio.csproj",
         "projectName": "sgosat.Dominio",
-        "projectPath": "C:\\Users\\alexh\\OneDrive\\Documentos\\ALEX\\itera360\\sgosat\\sgosat.api\\sgosat.Dominio\\sgosat.Dominio.csproj",
+        "projectPath": "C:\\itera360\\sgosat\\sgosat.api\\sgosat.Dominio\\sgosat.Dominio.csproj",
         "packagesPath": "C:\\Users\\alexh\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\alexh\\OneDrive\\Documentos\\ALEX\\itera360\\sgosat\\sgosat.api\\sgosat.Dominio\\obj\\",
+        "outputPath": "C:\\itera360\\sgosat\\sgosat.api\\sgosat.Dominio\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\alexh\\AppData\\Roaming\\NuGet\\NuGet.Config"

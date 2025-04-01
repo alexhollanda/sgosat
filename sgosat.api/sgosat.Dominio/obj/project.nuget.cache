@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "CS7XJR9se7o=",
+  "dgSpecHash": "MBEZCa3vFas=",
   "success": true,
-  "projectFilePath": "C:\\Users\\alexh\\OneDrive\\Documentos\\ALEX\\itera360\\sgosat\\sgosat.api\\sgosat.Dominio\\sgosat.Dominio.csproj",
+  "projectFilePath": "C:\\itera360\\sgosat\\sgosat.api\\sgosat.Dominio\\sgosat.Dominio.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\alexh\\.nuget\\packages\\microsoft.netcore.app.ref\\6.0.36\\microsoft.netcore.app.ref.6.0.36.nupkg.sha512",
     "C:\\Users\\alexh\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\6.0.36\\microsoft.windowsdesktop.app.ref.6.0.36.nupkg.sha512",

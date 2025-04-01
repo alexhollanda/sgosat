@@ -7,8 +7,25 @@
 
     width: 20%;
     height: 100%;
+
+    overflow-x: hidden;
 }
 
 .pagina_conteudo {
     margin-left: 20%;
+}
+
+.sidebar_header {
+    justify-content: center;
+    text-align: center;
+    
+
+    & .logo {
+        width: 80%;
+        margin: 10%;
+    }
+
+    & .linha {
+        color: rgba(250, 234, 214, 0.4)
+    }
 }

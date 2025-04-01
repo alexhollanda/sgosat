@@ -1993,11 +1993,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\alexh\\OneDrive\\Documentos\\ALEX\\itera360\\sgosat\\sgosat.api\\sgosat.Repositorio\\sgosat.Repositorio.csproj",
+      "projectUniqueName": "C:\\itera360\\sgosat\\sgosat.api\\sgosat.Repositorio\\sgosat.Repositorio.csproj",
       "projectName": "sgosat.Repositorio",
-      "projectPath": "C:\\Users\\alexh\\OneDrive\\Documentos\\ALEX\\itera360\\sgosat\\sgosat.api\\sgosat.Repositorio\\sgosat.Repositorio.csproj",
+      "projectPath": "C:\\itera360\\sgosat\\sgosat.api\\sgosat.Repositorio\\sgosat.Repositorio.csproj",
       "packagesPath": "C:\\Users\\alexh\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\alexh\\OneDrive\\Documentos\\ALEX\\itera360\\sgosat\\sgosat.api\\sgosat.Repositorio\\obj\\",
+      "outputPath": "C:\\itera360\\sgosat\\sgosat.api\\sgosat.Repositorio\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\alexh\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -2012,8 +2012,8 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "C:\\Users\\alexh\\OneDrive\\Documentos\\ALEX\\itera360\\sgosat\\sgosat.api\\sgosat.Dominio\\sgosat.Dominio.csproj": {
-              "projectPath": "C:\\Users\\alexh\\OneDrive\\Documentos\\ALEX\\itera360\\sgosat\\sgosat.api\\sgosat.Dominio\\sgosat.Dominio.csproj"
+            "C:\\itera360\\sgosat\\sgosat.api\\sgosat.Dominio\\sgosat.Dominio.csproj": {
+              "projectPath": "C:\\itera360\\sgosat\\sgosat.api\\sgosat.Dominio\\sgosat.Dominio.csproj"
             }
           }
         }

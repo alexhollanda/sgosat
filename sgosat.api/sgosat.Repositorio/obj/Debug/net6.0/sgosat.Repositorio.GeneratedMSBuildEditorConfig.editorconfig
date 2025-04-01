@@ -8,6 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = sgosat.Repositorio
-build_property.ProjectDir = C:\Users\alexh\OneDrive\Documentos\ALEX\itera360\sgosat\sgosat.api\sgosat.Repositorio\
+build_property.ProjectDir = C:\itera360\sgosat\sgosat.api\sgosat.Repositorio\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 

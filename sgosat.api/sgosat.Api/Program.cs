@@ -20,6 +20,17 @@ builder.Services.AddScoped<IPessoaRepositorio, PessoaRepositorio>();
 
 builder.Services.AddScoped<IBrasilAPICep, BrasilAPICep>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.WithOrigins("http://localhost:3000")
+               .SetIsOriginAllowedToAllowWildcardSubdomains()
+               .AllowAnyHeader()
+               .AllowAnyMethod();
+    });
+});
+
 builder.Services.AddControllers();
 
 // Adicione o serviço do Banco de Dados
@@ -34,6 +45,7 @@ var app = builder.Build();
 // Configure o pipeline de solicitação HTTP.
 if (app.Environment.IsDevelopment())
 {
+    app.UseCors();
     app.UseSwagger();
     app.UseSwaggerUI();
 }
