@@ -62,6 +62,30 @@ namespace sgosat.Aplicacao
             
             await _pessoaRepositorio.Atualizar(pessoaDominio);
         }
+                
+        public async Task DeletarCliente(int pessoaID)
+        {
+            var pessoaDominio = await _pessoaRepositorio.ObterCliente(pessoaID, true);
+
+            if (pessoaDominio == null)
+                throw new Exception("Cliente não encontrada!");
+            
+            pessoaDominio.Cliente = false;
+            
+            await _pessoaRepositorio.Atualizar(pessoaDominio);
+        }
+                
+        public async Task DeletarFuncionario(int pessoaID)
+        {
+            var pessoaDominio = await _pessoaRepositorio.ObterFuncionario(pessoaID, true);
+
+            if (pessoaDominio == null)
+                throw new Exception("Funcionário não encontrado!");
+            
+            pessoaDominio.Funcionario = false;
+            
+            await _pessoaRepositorio.Atualizar(pessoaDominio);
+        }
 
         public async Task Restaurar(int pessoaID)
         {
@@ -71,6 +95,30 @@ namespace sgosat.Aplicacao
                 throw new Exception("Pessoa não encontrada!");
             
             pessoaDominio.Restaurar();
+            
+            await _pessoaRepositorio.Atualizar(pessoaDominio);
+        }
+
+        public async Task RestaurarCliente(int pessoaID)
+        {
+            var pessoaDominio = await _pessoaRepositorio.ObterCliente(pessoaID, false);
+
+            if (pessoaDominio == null)
+                throw new Exception("Cliente não encontrado!");
+            
+            pessoaDominio.Cliente = true;
+            
+            await _pessoaRepositorio.Atualizar(pessoaDominio);
+        }
+
+        public async Task RestaurarFuncionario(int pessoaID)
+        {
+            var pessoaDominio = await _pessoaRepositorio.ObterFuncionario(pessoaID, false);
+
+            if (pessoaDominio == null)
+                throw new Exception("Funcionário não encontrado!");
+            
+            pessoaDominio.Funcionario = true;
             
             await _pessoaRepositorio.Atualizar(pessoaDominio);
         }
@@ -85,6 +133,26 @@ namespace sgosat.Aplicacao
             return pessoaDominio;
         }
 
+        public async Task<Pessoa> ObterCliente(int pessoaID)
+        {
+            var pessoaDominio = await _pessoaRepositorio.ObterCliente(pessoaID, true);
+
+            if (pessoaDominio == null)
+                throw new Exception("Cliente não encontrado!");
+
+            return pessoaDominio;
+        }
+
+        public async Task<Pessoa> ObterFuncionario(int pessoaID)
+        {
+            var pessoaDominio = await _pessoaRepositorio.ObterFuncionario(pessoaID, true);
+
+            if (pessoaDominio == null)
+                throw new Exception("Funcionário não encontrado!");
+
+            return pessoaDominio;
+        }
+
         public async Task<Pessoa> ObterPorEmail(string email)
         {
             var pessoaDominio = await _pessoaRepositorio.ObterPorEmail(email, true);
@@ -95,9 +163,39 @@ namespace sgosat.Aplicacao
             return pessoaDominio;
         }
 
+        public async Task<Pessoa> ObterClientePorEmail(string email)
+        {
+            var pessoaDominio = await _pessoaRepositorio.ObterClientePorEmail(email, true);
+
+            if (pessoaDominio == null)
+                throw new Exception("Cliente não encontrado!");
+
+            return pessoaDominio;
+        }
+
+        public async Task<Pessoa> ObterFuncionarioPorEmail(string email)
+        {
+            var pessoaDominio = await _pessoaRepositorio.ObterFuncionarioPorEmail(email, true);
+
+            if (pessoaDominio == null)
+                throw new Exception("Funcionário não encontrado!");
+
+            return pessoaDominio;
+        }
+
         public async Task<IEnumerable<Pessoa>> Listar(bool Ativo)
         {
             return await _pessoaRepositorio.Listar(Ativo);
+        }
+
+        public async Task<IEnumerable<Pessoa>> ListarClientes(bool Ativo)
+        {
+            return await _pessoaRepositorio.ListarClientes(Ativo);
+        }
+
+        public async Task<IEnumerable<Pessoa>> ListarFuncionarios(bool Ativo)
+        {
+            return await _pessoaRepositorio.ListarFuncionarios(Ativo);
         }
 
         #region Útil

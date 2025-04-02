@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace sgosat.Dominio.Entidades
 {
     public class Pessoa
@@ -15,7 +17,10 @@ namespace sgosat.Dominio.Entidades
         public string Bairro { get; set; }
         public string Cidade { get; set; }
         public string UF { get; set; }
+        public bool Cliente { get; set; }
+        public bool Funcionario { get; set; }
         public bool Ativo { get; set; }
+        [JsonIgnore]
         public Usuario Usuario { get; set; }
 
         public Pessoa()
@@ -31,6 +36,26 @@ namespace sgosat.Dominio.Entidades
         public void Restaurar()
         {
             Ativo = true;
+        }
+
+        public void DeletarCliente()
+        {
+            Cliente = false;
+        }
+
+        public void RestaurarCliente()
+        {
+            Cliente = true;
+        }
+
+        public void DeletarFuncionario()
+        {
+            Funcionario = false;
+        }
+        
+        public void RestaurarFuncionario()
+        {
+            Funcionario = true;
         }
     }
 }

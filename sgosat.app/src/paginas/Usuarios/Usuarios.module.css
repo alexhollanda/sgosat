@@ -4,3 +4,45 @@
 
     padding: 50px;
 }
+
+.tabela {
+    margin-top: 30px;
+}
+
+.tabela_corpo svg {
+    color: #212529;
+    
+    margin: 5px;
+    font-size: 25px;
+}
+
+.botao_editar svg:hover{
+    color: #E69215;
+}
+
+.botao_deletar {
+    border: none;
+    background: none;
+
+    & svg:hover {
+        color: #df2019;
+    }
+}
+
+.pagina_cabecalho {
+    display: flex;
+    justify-content: space-between;
+    
+    & .botao_novo {
+        text-decoration: none;
+
+        color: white;
+
+        padding: 10px;
+        padding-left: 20px;
+        padding-right: 20px;
+
+        border-radius: 10px;
+        background-color: #E69215;
+    }
+}

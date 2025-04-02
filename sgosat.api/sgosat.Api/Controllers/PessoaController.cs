@@ -39,7 +39,79 @@ namespace sgosat.Api.Controllers
                     Complemento = pessoaDominio.Complemento,
                     Bairro = pessoaDominio.Bairro,
                     Cidade = pessoaDominio.Cidade,
-                    UF = pessoaDominio.UF
+                    UF = pessoaDominio.UF,
+                    Cliente = pessoaDominio.Cliente,
+                    Funcionario = pessoaDominio.Funcionario
+                };
+
+                return Ok(pessoaResponse);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("ObterCliente/{pessoaID}")]
+        public async Task<ActionResult> ObterCliente([FromRoute] int pessoaID)
+        {
+            try
+            {
+                var pessoaDominio = await _pessoaAplicacao.ObterCliente(pessoaID);
+
+                var pessoaResponse = new PessoaResponse()
+                {
+                    ID = pessoaDominio.ID,
+                    Nome = pessoaDominio.Nome,
+                    TipoPessoa = pessoaDominio.TipoPessoa,
+                    Documento = pessoaDominio.Documento,
+                    Telefone = pessoaDominio.Telefone,
+                    Email = pessoaDominio.Email,
+                    CEP = pessoaDominio.CEP,
+                    Logradouro = pessoaDominio.Logradouro,
+                    Numero = pessoaDominio.Numero,
+                    Complemento = pessoaDominio.Complemento,
+                    Bairro = pessoaDominio.Bairro,
+                    Cidade = pessoaDominio.Cidade,
+                    UF = pessoaDominio.UF,
+                    Cliente = pessoaDominio.Cliente,
+                    Funcionario = pessoaDominio.Funcionario
+                };
+
+                return Ok(pessoaResponse);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("ObterFuncionario/{pessoaID}")]
+        public async Task<ActionResult> ObterFuncionario([FromRoute] int pessoaID)
+        {
+            try
+            {
+                var pessoaDominio = await _pessoaAplicacao.ObterFuncionario(pessoaID);
+
+                var pessoaResponse = new PessoaResponse()
+                {
+                    ID = pessoaDominio.ID,
+                    Nome = pessoaDominio.Nome,
+                    TipoPessoa = pessoaDominio.TipoPessoa,
+                    Documento = pessoaDominio.Documento,
+                    Telefone = pessoaDominio.Telefone,
+                    Email = pessoaDominio.Email,
+                    CEP = pessoaDominio.CEP,
+                    Logradouro = pessoaDominio.Logradouro,
+                    Numero = pessoaDominio.Numero,
+                    Complemento = pessoaDominio.Complemento,
+                    Bairro = pessoaDominio.Bairro,
+                    Cidade = pessoaDominio.Cidade,
+                    UF = pessoaDominio.UF,
+                    Cliente = pessoaDominio.Cliente,
+                    Funcionario = pessoaDominio.Funcionario
                 };
 
                 return Ok(pessoaResponse);
@@ -69,7 +141,9 @@ namespace sgosat.Api.Controllers
                     Complemento = pessoaCriar.Complemento,
                     Bairro = pessoaCriar.Bairro,
                     Cidade = pessoaCriar.Cidade,
-                    UF = pessoaCriar.UF
+                    UF = pessoaCriar.UF,
+                    Cliente = pessoaCriar.Cliente,
+                    Funcionario = pessoaCriar.Funcionario
                 };
 
                 var pessoaID = await _pessoaAplicacao.Criar(pessoaDominio);
@@ -102,7 +176,9 @@ namespace sgosat.Api.Controllers
                     Complemento = pessoaAtualizar.Complemento,
                     Bairro = pessoaAtualizar.Bairro,
                     Cidade = pessoaAtualizar.Cidade,
-                    UF = pessoaAtualizar.UF
+                    UF = pessoaAtualizar.UF,
+                    Cliente = pessoaAtualizar.Cliente,
+                    Funcionario = pessoaAtualizar.Funcionario
                 };
 
                 await _pessoaAplicacao.Atualizar(pessoaDominio);
@@ -131,6 +207,38 @@ namespace sgosat.Api.Controllers
             }
         }
 
+        [HttpDelete]
+        [Route("DeletarCliente/{pessoaID}")]
+        public async Task<ActionResult> DeletarCliente([FromRoute] int pessoaID)
+        {
+            try
+            {
+                await _pessoaAplicacao.DeletarCliente(pessoaID);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete]
+        [Route("DeletarFuncionario/{pessoaID}")]
+        public async Task<ActionResult> DeletarFuncionario([FromRoute] int pessoaID)
+        {
+            try
+            {
+                await _pessoaAplicacao.DeletarFuncionario(pessoaID);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPut]
         [Route("Restaurar/{pessoaID}")]
         public async Task<ActionResult> Restaurar([FromRoute] int pessoaID)
@@ -138,6 +246,38 @@ namespace sgosat.Api.Controllers
             try
             {
                 await _pessoaAplicacao.Restaurar(pessoaID);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut]
+        [Route("RestaurarCliente/{pessoaID}")]
+        public async Task<ActionResult> RestaurarCliente([FromRoute] int pessoaID)
+        {
+            try
+            {
+                await _pessoaAplicacao.RestaurarCliente(pessoaID);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut]
+        [Route("RestaurarFuncionario/{pessoaID}")]
+        public async Task<ActionResult> RestaurarFuncionario([FromRoute] int pessoaID)
+        {
+            try
+            {
+                await _pessoaAplicacao.RestaurarFuncionario(pessoaID);
 
                 return Ok();
             }
@@ -168,7 +308,9 @@ namespace sgosat.Api.Controllers
                     Complemento = p.Complemento,
                     Bairro = p.Bairro,
                     Cidade = p.Cidade,
-                    UF = p.UF
+                    UF = p.UF,
+                    Cliente = p.Cliente,
+                    Funcionario = p.Funcionario
                 }).ToList();
 
                 return Ok(pessoas);
@@ -178,5 +320,74 @@ namespace sgosat.Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet]
+        [Route("ListarClientes")]
+        public async Task<ActionResult> ListarClientes([FromQuery] bool ativos)
+        {
+            try
+            {
+                var pessoaDominio = await _pessoaAplicacao.ListarClientes(ativos);
+
+                var pessoas = pessoaDominio.Select(p => new PessoaResponse(){
+                    ID = p.ID,
+                    Nome = p.Nome,
+                    TipoPessoa = p.TipoPessoa,
+                    Documento = p.Documento,
+                    Telefone = p.Telefone,
+                    Email = p.Email,
+                    CEP = p.CEP,
+                    Logradouro = p.Logradouro,
+                    Numero = p.Numero,
+                    Complemento = p.Complemento,
+                    Bairro = p.Bairro,
+                    Cidade = p.Cidade,
+                    UF = p.UF,
+                    Cliente = p.Cliente,
+                    Funcionario = p.Funcionario
+                }).ToList();
+
+                return Ok(pessoas);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("ListarFuncionarios")]
+        public async Task<ActionResult> ListarFuncionarios([FromQuery] bool ativos)
+        {
+            try
+            {
+                var pessoaDominio = await _pessoaAplicacao.ListarFuncionarios(ativos);
+
+                var pessoas = pessoaDominio.Select(p => new PessoaResponse(){
+                    ID = p.ID,
+                    Nome = p.Nome,
+                    TipoPessoa = p.TipoPessoa,
+                    Documento = p.Documento,
+                    Telefone = p.Telefone,
+                    Email = p.Email,
+                    CEP = p.CEP,
+                    Logradouro = p.Logradouro,
+                    Numero = p.Numero,
+                    Complemento = p.Complemento,
+                    Bairro = p.Bairro,
+                    Cidade = p.Cidade,
+                    UF = p.UF,
+                    Cliente = p.Cliente,
+                    Funcionario = p.Funcionario
+                }).ToList();
+
+                return Ok(pessoas);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }

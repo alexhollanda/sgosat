@@ -69,7 +69,7 @@ const UsuarioAPI = {
             const response = await HTTPClient.put(`/Usuario/Restaurar/${usuarioID}`);
             return response.data;
         } catch (error) {
-            console.error("Erro ao deletar usuário:", error);
+            console.error("Erro ao restaurar usuário:", error);
             throw error;
         }
     },
@@ -90,3 +90,5 @@ const UsuarioAPI = {
     }
 
 }
+
+export default UsuarioAPI;

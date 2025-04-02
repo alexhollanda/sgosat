@@ -23,6 +23,8 @@ namespace sgosat.Repositorio.Configuracoes
             builder.Property(nameof(Pessoa.Bairro)).HasColumnName("Bairro").IsRequired(true);
             builder.Property(nameof(Pessoa.Cidade)).HasColumnName("Cidade").IsRequired(true);
             builder.Property(nameof(Pessoa.UF)).HasColumnName("UF").IsRequired(true);
+            builder.Property(nameof(Pessoa.Cliente)).HasColumnName("Cliente").IsRequired(true);
+            builder.Property(nameof(Pessoa.Funcionario)).HasColumnName("Funcionario").IsRequired(true);
             builder.Property(nameof(Pessoa.Ativo)).HasColumnName("Ativo").IsRequired(true);
 
             builder

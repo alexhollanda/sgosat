@@ -3,23 +3,64 @@ import { Link } from "react-router-dom";
 import { Sidebar } from "../../componentes/Sidebar/Sidebar";
 import { Topbar } from "../../componentes/Topbar/Topbar";
 import style from "./Usuarios.module.css";
+import { MdEdit, MdDelete } from "react-icons/md";
+import UsuarioAPI from "../../services/usuarioAPI";
+import { useEffect, useState } from "react";
+import PessoaAPI from "../../services/pessoaAPI";
 
 export function Usuarios() {
+    const [usuarios, setUsuarios] = useState([]);
+    const [pessoas, setPessoas] = useState([]);
+    const [pessoa, setPessoa] = useState(null);
+    var nomePessoa = null;
+    var emailPessoa = null;
 
-    const usuarios = [
-        {
-            id: 1,
-            nome: "João da Silva",
-            nome_usuario: "joaodasilva",
-            email: "joaosilva@email.com"
-        },
-        {
-            id: 2,
-            nome: "Maria Oliveira",
-            nome_usuario: "mariaoliveira",
-            email
+    async function fetchUsuarios() {
+        try {
+            const listaUsuarios = await UsuarioAPI.listarAsync(true);
+            setUsuarios(listaUsuarios);
+        } catch (error) {
+            console.error("Erro ao carregar usuários:", error);          
         }
-    ]
+    }
+
+    useEffect(() => {
+        const fetchPessoas = async () => {
+            try {
+                const listaPessoas = await PessoaAPI.listarFuncionariosAsync(true);
+                setPessoas(listaPessoas);
+            } catch (error) {
+                console.error("Erro ao carregar funcionários:", error);          
+            }
+        };
+        fetchPessoas();
+    }, []);
+    
+    // const carregaPessoa = async (pessoaID) => {
+    //     try {
+    //         const listaPessoas = await PessoaAPI.obterFuncionarioAsync(pessoaID);
+    //         setPessoa(pessoa);
+    //         setNomePessoa(pessoa.Nome);
+    //         setEmailPessoa(pessoa.Email);
+    //     } catch (error) {
+    //         console.error("Erro ao carregar pessoaaaaa:", error);          
+    //     }
+    // }
+    
+    // async function fetchPessoa(pessoaID) {
+    //     try {
+    //         const pessoa = await PessoaAPI.obterAsync(pessoaID);
+    //         setPessoa(pessoa);
+    //     } catch (error) {
+    //         console.error("Erro ao carregar pessoa:", error);          
+    //     }
+    // }
+   
+    useEffect(() => {
+        fetchUsuarios();
+    }, []);
+
+    
 
     return (
         <Sidebar>
@@ -41,7 +82,21 @@ export function Usuarios() {
                                 </tr>
                             </thead>
                             <tbody className={style.tabela_corpo}>
-
+                                {usuarios.map((usuario) => (                                    
+                                    <tr key={usuario.ID}>
+                                        <td>{pessoas.findIndex(usuario.pessoaID).Nome}</td>
+                                        <td>{usuario.userName}</td>
+                                        <td>{pessoas.findIndex(usuario.pessoaID).Email}</td>
+                                        <td>
+                                            <Link to='/usuario/editar' state={usuario.id} className={style.botao_editar}>
+                                                <MdEdit />
+                                            </Link>
+                                            <Link to='/usuario/deletar' className={style.botao_deletar}>
+                                                <MdDelete />
+                                            </Link>
+                                        </td>
+                                    </tr>
+                                ))}
                             </tbody>
                         </Table>
                     </div>

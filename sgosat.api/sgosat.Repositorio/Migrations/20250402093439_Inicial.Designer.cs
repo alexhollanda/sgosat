@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace sgosat.Repositorio.Migrations
 {
     [DbContext(typeof(sgosatContexto))]
-    [Migration("20250329225006_Inicial")]
+    [Migration("20250402093439_Inicial")]
     partial class Inicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,6 +50,10 @@ namespace sgosat.Repositorio.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("Cidade");
 
+                    b.Property<bool>("Cliente")
+                        .HasColumnType("bit")
+                        .HasColumnName("Cliente");
+
                     b.Property<string>("Complemento")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("Complemento");
@@ -63,6 +67,10 @@ namespace sgosat.Repositorio.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("Email");
+
+                    b.Property<bool>("Funcionario")
+                        .HasColumnType("bit")
+                        .HasColumnName("Funcionario");
 
                     b.Property<string>("Logradouro")
                         .IsRequired()

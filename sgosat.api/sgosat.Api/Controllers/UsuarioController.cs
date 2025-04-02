@@ -30,7 +30,8 @@ namespace sgosat.Api.Controllers
                 {
                     ID = usuarioDomino.ID,
                     UserName = usuarioDomino.UserName,
-                    Pessoa = usuarioDomino.Pessoa
+                    TipoUsuarioID = usuarioDomino.TipoUsuarioID,
+                    PessoaID = usuarioDomino.PessoaID
                 };
 
                 return Ok(usuarioResponse);
@@ -53,7 +54,8 @@ namespace sgosat.Api.Controllers
                 {
                     ID = usuarioDomino.ID,
                     UserName = usuarioDomino.UserName,
-                    Pessoa = usuarioDomino.Pessoa
+                    TipoUsuarioID = usuarioDomino.TipoUsuarioID,
+                    PessoaID = usuarioDomino.PessoaID
                 };
 
                 return Ok(usuarioResponse);
@@ -74,7 +76,8 @@ namespace sgosat.Api.Controllers
                 {
                     UserName = usuarioCriar.UserName,
                     Senha = usuarioCriar.Senha,
-                    Pessoa = usuarioCriar.Pessoa
+                    TipoUsuarioID = usuarioCriar.TipoUsuarioID,
+                    PessoaID = usuarioCriar.PessoaID
                 };
 
                 var usuarioID = await _usuarioAplicacao.Criar(usuarioDomino);
@@ -95,7 +98,8 @@ namespace sgosat.Api.Controllers
                 var usuarioDomino = new Usuario()
                 {
                     ID = usuario.ID,
-                    UserName = usuario.UserName
+                    UserName = usuario.UserName,
+                    TipoUsuarioID = usuario.TipoUsuarioID
                 };
 
                 await _usuarioAplicacao.Atualizar(usuarioDomino);
@@ -173,7 +177,8 @@ namespace sgosat.Api.Controllers
                 var usuarios = usuarioDomino.Select(u => new UsuarioResponse(){
                     ID = u.ID,
                     UserName = u.UserName,
-                    Pessoa = u.Pessoa
+                    TipoUsuarioID = u.TipoUsuarioID,
+                    PessoaID = u.PessoaID
                 }).ToList();
 
                 return Ok(usuarios);

@@ -15,5 +15,7 @@ namespace sgosat.Api.Models.Pessoas.Request
         public string Bairro { get; set; }
         public string Cidade { get; set; }
         public string UF { get; set; }
+        public bool Cliente { get; set; }
+        public bool Funcionario { get; set; }
     }
 }

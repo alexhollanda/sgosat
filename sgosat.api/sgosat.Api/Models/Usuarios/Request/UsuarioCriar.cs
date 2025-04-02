@@ -6,6 +6,7 @@ namespace sgosat.Api.Models.Usuario.Request
     {
         public string UserName { get; set; }
         public string Senha { get; set; }
-        public Pessoa Pessoa { get; set; }
+        public int TipoUsuarioID { get; set; }
+        public int PessoaID { get; set; }
     }
 }

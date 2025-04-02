@@ -6,7 +6,8 @@ namespace sgosat.Api.Models.Usuario.Response
     {
         public int ID { get; set; }
         public string UserName { get; set; }
-        public Pessoa Pessoa { get; set; }
+        public int TipoUsuarioID { get; set; }
+        public int PessoaID { get; set; }
         
     }
 }

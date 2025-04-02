@@ -33,9 +33,10 @@ namespace sgosat.Aplicacao
             if (usuarioDominio == null)
                 throw new Exception("Usuário não encontrado!");
             
-            ValidarInformacoesUsuario(usuario);
-
-            usuarioDominio.UserName = usuario.UserName;
+            if (!String.IsNullOrEmpty(usuario.UserName) && !String.IsNullOrWhiteSpace(usuario.UserName))
+                usuarioDominio.UserName = usuario.UserName;                
+            
+            usuarioDominio.TipoUsuarioID = usuario.TipoUsuarioID;
 
             await _usuarioRepositorio.Atualizar(usuarioDominio);
         }
@@ -110,9 +111,6 @@ namespace sgosat.Aplicacao
         {
             if (string.IsNullOrEmpty(usuario.UserName))
                 throw new Exception("Nome de usuário não pode ser vazio");
-
-            if (string.IsNullOrEmpty(usuario.Pessoa.Email))
-                throw new Exception("E-mail não pode ser vazio");
         }
 
         #endregion

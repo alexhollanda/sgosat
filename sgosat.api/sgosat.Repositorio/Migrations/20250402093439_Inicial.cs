@@ -26,6 +26,8 @@ namespace sgosat.Repositorio.Migrations
                     Bairro = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Cidade = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UF = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Cliente = table.Column<bool>(type: "bit", nullable: false),
+                    Funcionario = table.Column<bool>(type: "bit", nullable: false),
                     Ativo = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>

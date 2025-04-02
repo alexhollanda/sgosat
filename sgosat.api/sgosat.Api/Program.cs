@@ -38,6 +38,10 @@ builder.Services.AddControllers()
     .AddJsonOptions(options =>
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
 
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles);
+
 // Adicione o serviço do Banco de Dados
 builder.Services.AddDbContext<sgosatContexto>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
