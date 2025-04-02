@@ -11,9 +11,6 @@ import PessoaAPI from "../../services/pessoaAPI";
 export function Usuarios() {
     const [usuarios, setUsuarios] = useState([]);
     const [pessoas, setPessoas] = useState([]);
-    const [pessoa, setPessoa] = useState(null);
-    var nomePessoa = null;
-    var emailPessoa = null;
 
     async function fetchUsuarios() {
         try {
@@ -24,40 +21,18 @@ export function Usuarios() {
         }
     }
 
-    useEffect(() => {
-        const fetchPessoas = async () => {
-            try {
-                const listaPessoas = await PessoaAPI.listarFuncionariosAsync(true);
-                setPessoas(listaPessoas);
-            } catch (error) {
-                console.error("Erro ao carregar funcionários:", error);          
-            }
-        };
-        fetchPessoas();
-    }, []);
-    
-    // const carregaPessoa = async (pessoaID) => {
-    //     try {
-    //         const listaPessoas = await PessoaAPI.obterFuncionarioAsync(pessoaID);
-    //         setPessoa(pessoa);
-    //         setNomePessoa(pessoa.Nome);
-    //         setEmailPessoa(pessoa.Email);
-    //     } catch (error) {
-    //         console.error("Erro ao carregar pessoaaaaa:", error);          
-    //     }
-    // }
-    
-    // async function fetchPessoa(pessoaID) {
-    //     try {
-    //         const pessoa = await PessoaAPI.obterAsync(pessoaID);
-    //         setPessoa(pessoa);
-    //     } catch (error) {
-    //         console.error("Erro ao carregar pessoa:", error);          
-    //     }
-    // }
+    async function fetchPessoas() {
+        try {
+            const listaPessoas = await PessoaAPI.listarFuncionariosAsync(true);
+            setPessoas(listaPessoas);
+        } catch (error) {
+            console.error("Erro ao carregar funcionários:", error);          
+        }
+    }
    
     useEffect(() => {
         fetchUsuarios();
+        fetchPessoas();
     }, []);
 
     
@@ -82,21 +57,24 @@ export function Usuarios() {
                                 </tr>
                             </thead>
                             <tbody className={style.tabela_corpo}>
-                                {usuarios.map((usuario) => (                                    
-                                    <tr key={usuario.ID}>
-                                        <td>{pessoas.findIndex(usuario.pessoaID).Nome}</td>
-                                        <td>{usuario.userName}</td>
-                                        <td>{pessoas.findIndex(usuario.pessoaID).Email}</td>
-                                        <td>
-                                            <Link to='/usuario/editar' state={usuario.id} className={style.botao_editar}>
-                                                <MdEdit />
-                                            </Link>
-                                            <Link to='/usuario/deletar' className={style.botao_deletar}>
-                                                <MdDelete />
-                                            </Link>
-                                        </td>
-                                    </tr>
-                                ))}
+                                {usuarios.map((usuario) => {                                                                                                           
+                                    return (                                    
+                                    
+                                        <tr key={usuario.ID}>
+                                            <td>{pessoas.find(p => p.id === usuario.pessoaID)?.nome || "Não encontrado"}</td>
+                                            <td>{usuario.userName}</td>
+                                            <td>{pessoas.find(p => p.id === usuario.pessoaID)?.email || "Não encontrado"}</td>
+                                            <td>
+                                                <Link to='/usuario/editar' state={usuario.id} className={style.botao_editar}>
+                                                    <MdEdit />
+                                                </Link>
+                                                <Link to='/usuario/deletar' className={style.botao_deletar}>
+                                                    <MdDelete />
+                                                </Link>
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
                             </tbody>
                         </Table>
                     </div>

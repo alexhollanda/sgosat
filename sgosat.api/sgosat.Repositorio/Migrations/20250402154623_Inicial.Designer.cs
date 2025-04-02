@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace sgosat.Repositorio.Migrations
 {
     [DbContext(typeof(sgosatContexto))]
-    [Migration("20250402093439_Inicial")]
+    [Migration("20250402154623_Inicial")]
     partial class Inicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
