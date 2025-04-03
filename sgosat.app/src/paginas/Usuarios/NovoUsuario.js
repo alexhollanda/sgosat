@@ -1,7 +1,7 @@
+import style from "./NovoUsuario.module.css";
 import { useEffect, useState } from "react";
 import { Sidebar } from "../../componentes/Sidebar/Sidebar";
 import { Topbar } from "../../componentes/Topbar/Topbar";
-import style from "./NovoUsuario.module.css";
 import { useNavigate } from "react-router-dom";
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
