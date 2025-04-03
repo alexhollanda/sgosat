@@ -23,6 +23,9 @@ namespace sgosat.Dominio.Entidades
         [JsonIgnore]
         public Usuario Usuario { get; set; }
 
+        // Relacionamento muitos-para-muitos
+        public ICollection<OrdemServicoPessoas> OrdemServicoPessoas { get; set; } = new List<OrdemServicoPessoas>();
+
         public Pessoa()
         {
             Ativo = true;

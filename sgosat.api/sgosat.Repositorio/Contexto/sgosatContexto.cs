@@ -11,11 +11,13 @@ public class sgosatContexto : DbContext
     /// </summary>
     public DbSet<Pessoa> Pessoas { get; set; }
     public DbSet<Usuario> Usuarios { get; set; }
+    public DbSet<OrdemServico> OrdensServicos { get; set; }
+    public DbSet<OrdemServicoPessoas> OrdemServicoPessoas { get; set; }
 
     public sgosatContexto()
-    {}
+    { }
 
-    public sgosatContexto(DbContextOptions options) : base (options)
+    public sgosatContexto(DbContextOptions options) : base(options)
     {
         _options = options;
     }
@@ -28,8 +30,8 @@ public class sgosatContexto : DbContext
         if (_options == null)
             //NOTEBOOK
             optionsBuilder.UseSqlServer("Server=DESKTOP-G3F377S\\SQLEXPRESS;DataBase=SGOSAT;Integrated Security=SSPI;TrustServerCertificate=True;");
-            //DESKTOP
-            //optionsBuilder.UseSqlServer("Server=DESKTOP-N0SPDKK\\SQLEXPRESS;DataBase=SGOSAT;Integrated Security=SSPI;TrustServerCertificate=True;");
+        //DESKTOP
+        //optionsBuilder.UseSqlServer("Server=DESKTOP-N0SPDKK\\SQLEXPRESS;DataBase=SGOSAT;Integrated Security=SSPI;TrustServerCertificate=True;");
     }
 
     /// <summary>
@@ -37,7 +39,24 @@ public class sgosatContexto : DbContext
     /// </summary>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+
         modelBuilder.ApplyConfiguration(new PessoaConfiguracoes());
         modelBuilder.ApplyConfiguration(new UsuarioConfiguracoes());
+        modelBuilder.ApplyConfiguration(new OrdemServicoConfiguracoes());
+        modelBuilder.ApplyConfiguration(new OrdemServicoPessoasConfiguracoes());
+
+        modelBuilder.Entity<OrdemServicoPessoas>()
+            .HasKey(osp => new { osp.OrdemServicoID, osp.PessoaID });
+        
+        modelBuilder.Entity<OrdemServicoPessoas>()
+            .HasOne(osp => osp.OrdemServico)
+            .WithMany(os => os.OrdemServicoPessoas)
+            .HasForeignKey(osp => osp.OrdemServicoID);
+
+        modelBuilder.Entity<OrdemServicoPessoas>()
+            .HasOne(osp => osp.Pessoa)
+            .WithMany(p => p.OrdemServicoPessoas)
+            .HasForeignKey(osp => osp.PessoaID);
+
     }
 }

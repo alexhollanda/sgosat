@@ -2,9 +2,8 @@ import Table from "react-bootstrap/esm/Table";
 import { Link, useNavigate } from "react-router-dom";
 import { Sidebar } from "../../componentes/Sidebar/Sidebar";
 import { Topbar } from "../../componentes/Topbar/Topbar";
-import style from "./Usuarios.module.css";
+import style from "./Clientes.module.css";
 import { MdEdit, MdDelete } from "react-icons/md";
-import UsuarioAPI from "../../services/usuarioAPI";
 import { useEffect, useState } from "react";
 import PessoaAPI from "../../services/pessoaAPI";
 import { BsFillPersonPlusFill } from "react-icons/bs";
@@ -12,25 +11,60 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 
 
-export function Usuarios() {
-    const [usuarios, setUsuarios] = useState([]);
-    const [funcionarios, setFuncionarios] = useState([]);
+export function Clientes() {
+    const [clientes, setClientes] = useState([]);
     const [mostrarModal, setMostrarModal] = useState(false);
-    const [usuarioSelecionado, setUsuarioSelecionado] = useState(null);
+    const [clienteSelecionado, setClienteSelecionado] = useState(null);
+
+    // Função para formatar CPF ou CNPJ
+    function formataDocumento(value) {
+        if (!value) return ''; // Verifica se o valor é vazio ou undefined
+
+        const digitos = String(value).replace(/\D/g, ''); // Remove qualquer caractere não numérico
+
+        if (digitos.length === 11) {
+            // Formato CPF: 999.999.999-99
+            return digitos.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+        } else if (digitos.length === 14) {
+            // Formato CNPJ: 99.999.999/9999-99
+            return digitos.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
+        }
+
+        // Retorna o valor original se não corresponder a CPF ou CNPJ
+        return value;
+    }
+
+    // Função para formatar telefone brasileiro
+    function formataPhone(value) {
+        if (!value) return ''; // Verifica se o valor é vazio ou undefined
+
+        const digitos = String(value).replace(/\D/g, ''); // Remove qualquer caractere não numérico
+
+        if (digitos.length === 10) {
+            // Formato: (99) 9999-9999
+            return digitos.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+        } else if (digitos.length === 11) {
+            // Formato: (99) 9 9999-9999
+            return digitos.replace(/(\d{2})(\d{1})(\d{4})(\d{4})/, '($1) $2 $3-$4');
+        }
+
+        // Retorna o valor original se não corresponder a um número válido
+        return value;
+    }
 
     const navigate = useNavigate();
 
-    const handleClickDeletar = (usuario) => {
-        setUsuarioSelecionado(usuario);
+    const handleClickDeletar = (cliente) => {
+        setClienteSelecionado(cliente);
         setMostrarModal(true);
     }
 
     const handleDeletar = async () => {
         try {
-            await UsuarioAPI.deletarAsync(usuarioSelecionado.id);
-            setUsuarios(usuarios.filter(usuario => usuario.id !== usuarioSelecionado.id));
+            await PessoaAPI.deletarClienteAsync(clienteSelecionado.id);
+            setClientes(clientes.filter(cliente => cliente.id !== clienteSelecionado.id));
         } catch (error) {
-            console.error("Erro ao deletar usuário:", error);
+            console.error("Erro ao deletar cliente:", error);
         } finally {
             handleFechareModal();
         }
@@ -38,30 +72,20 @@ export function Usuarios() {
 
     const handleFechareModal = () => {
         setMostrarModal(false);
-        setUsuarioSelecionado(null);
+        setClienteSelecionado(null);
     }
 
-    async function fetchUsuarios() {
+    async function fetchClientes() {
         try {
-            const listaUsuarios = await UsuarioAPI.listarAsync(true);
-            setUsuarios(listaUsuarios);
+            const listaClientes = await PessoaAPI.listarClientesAsync(true);
+            setClientes(listaClientes);
         } catch (error) {
-            console.error("Erro ao carregar usuários:", error);
-        }
-    }
-
-    async function fetchFuncionarios() {
-        try {
-            const listaFuncionarios = await PessoaAPI.listarFuncionariosAsync(true);
-            setFuncionarios(listaFuncionarios);
-        } catch (error) {
-            console.error("Erro ao carregar funcionários:", error);
+            console.error("Erro ao carregar clientes:", error);
         }
     }
 
     useEffect(() => {
-        fetchUsuarios();
-        fetchFuncionarios();
+        fetchClientes();
     }, []);
 
 
@@ -71,7 +95,7 @@ export function Usuarios() {
             <Topbar>
                 <div className={style.pagina_conteudo}>
                     <div className={style.pagina_cabecalho}>
-                        <h3>Usuários</h3>
+                        <h3>Clientes</h3>
                         <Button variant="danger" type="button" className={style.botao_novo} onClick={() => navigate("/usuario/novo")}>
                             <BsFillPersonPlusFill />Novo
                         </Button>
@@ -83,26 +107,28 @@ export function Usuarios() {
                                 <tr>
                                     <th>ID</th>
                                     <th>Nome</th>
-                                    <th>Nome do Usuário</th>
+                                    <th>Documento</th>
+                                    <th>Telefone</th>
                                     <th>E-mail</th>
                                     <th>Ações</th>
                                 </tr>
                             </thead>
                             <tbody className={style.tabela_corpo}>
-                                
-                                {usuarios.map((usuario) => {
+
+                                {clientes.map((cliente) => {
                                     return (
 
-                                        <tr key={usuario.id}>
-                                            <td>{String(usuario.id).padStart(6,'0')}</td>
-                                            <td>{funcionarios.find(f => f.id === usuario.pessoaID)?.nome || "Não encontrado"}</td>
-                                            <td>{usuario.userName}</td>
-                                            <td>{funcionarios.find(f => f.id === usuario.pessoaID)?.email || "Não encontrado"}</td>
+                                        <tr key={cliente.id}>
+                                            <td>{String(cliente.id).padStart(5, '0')}</td>
+                                            <td>{cliente.nome}</td>
+                                            <td>{formataDocumento(cliente.documento)}</td>
+                                            <td>{formataPhone(cliente.telefone)}</td>
+                                            <td>{cliente.email}</td>
                                             <td>
-                                                <Link to='/usuario/editar' state={usuario.id} className={style.botao_editar}>
+                                                <Link to='/cliente/editar' state={cliente.id} className={style.botao_editar}>
                                                     <MdEdit />
                                                 </Link>
-                                                <button onClick={() => handleClickDeletar(usuario)} className={style.botao_deletar}>
+                                                <button onClick={() => handleClickDeletar(cliente)} className={style.botao_deletar}>
                                                     <MdDelete />
                                                 </button>
                                             </td>
@@ -120,7 +146,7 @@ export function Usuarios() {
                         </Modal.Header>
 
                         <Modal.Body className={style.modal_content}>
-                            Tem certeza que deseja deletar o usuario <b>{usuarioSelecionado?.userName}</b>?
+                            Tem certeza que deseja deletar o cliente <b>{clienteSelecionado?.nome}</b>?
                         </Modal.Body>
 
                         <Modal.Footer className={style.modal_footer}>
