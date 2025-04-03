@@ -13,6 +13,9 @@ export function Sidebar({ children }) {
                 </div>
 
                 <div className={style.sidebar_corpo}>
+                    <SidebarItem texto="Ordens de Serviço" link="/usuarios" logo={<BsPersonCircle/>} />
+                    <SidebarItem texto="Clientes" link="/usuarios" logo={<BsPersonCircle/>} />
+                    <SidebarItem texto="Funcionários" link="/usuarios" logo={<BsPersonCircle/>} />
                     <SidebarItem texto="Usuários" link="/usuarios" logo={<BsPersonCircle/>} />
                 </div>
             </div>
