@@ -96,7 +96,7 @@ export function Clientes() {
                 <div className={style.pagina_conteudo}>
                     <div className={style.pagina_cabecalho}>
                         <h3>Clientes</h3>
-                        <Button variant="danger" type="button" className={style.botao_novo} onClick={() => navigate("/usuario/novo")}>
+                        <Button variant="danger" type="button" className={style.botao_novo} onClick={() => navigate("/cliente/novo")}>
                             <BsFillPersonPlusFill />Novo
                         </Button>
                     </div>

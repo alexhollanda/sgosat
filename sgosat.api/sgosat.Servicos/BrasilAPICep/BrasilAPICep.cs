@@ -26,7 +26,7 @@ public class BrasilAPICep : IBrasilAPICep
             Logradouro = result.Logradouro,
             Bairro = result.Bairro,
             Cidade = result.Localidade,
-            UF = result.Estado + " - " + result.UF
+            UF = result.UF
         };
 
         return CEP;
