@@ -15,6 +15,9 @@ namespace sgosat.Aplicacao.Interfaces
         Task<Pessoa> Obter(int pessoaID);
         Task<Pessoa> ObterCliente(int pessoaID);
         Task<Pessoa> ObterFuncionario(int pessoaID);
+        Task<Pessoa> ObterPorDoc(string doc);
+        Task<Pessoa> ObterClientePorDoc(string doc);
+        Task<Pessoa> ObterFuncionarioPorDoc(string doc);
         Task<Pessoa> ObterPorEmail(string email);
         Task<Pessoa> ObterClientePorEmail(string email);
         Task<Pessoa> ObterFuncionarioPorEmail(string email);

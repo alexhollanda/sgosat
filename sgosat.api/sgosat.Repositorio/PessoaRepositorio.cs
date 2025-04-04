@@ -50,6 +50,32 @@ namespace sgosat.Repositorio
                         .Where(p => p.Ativo == Ativo)
                         .FirstOrDefaultAsync();
         }
+        
+        public async Task<Pessoa> ObterPorDoc(string doc, bool Ativo)
+        {
+            return await _contexto.Pessoas
+                        .Where(p => p.Documento == doc)
+                        .Where(p => p.Ativo == Ativo)
+                        .FirstOrDefaultAsync();
+        }
+        
+        public async Task<Pessoa> ObterClientePorDoc(string doc, bool Ativo)
+        {
+            return await _contexto.Pessoas
+                        .Where(p => p.Documento == doc)
+                        .Where(p => p.Cliente == true)
+                        .Where(p => p.Ativo == Ativo)
+                        .FirstOrDefaultAsync();
+        }
+        
+        public async Task<Pessoa> ObterFuncionarioPorDoc(string doc, bool Ativo)
+        {
+            return await _contexto.Pessoas
+                        .Where(p => p.Documento == doc)
+                        .Where(p => p.Funcionario == true)
+                        .Where(p => p.Ativo == Ativo)
+                        .FirstOrDefaultAsync();
+        }        
 
         public async Task<Pessoa> ObterPorEmail(string email, bool Ativo)
         {

@@ -153,6 +153,36 @@ namespace sgosat.Aplicacao
             return pessoaDominio;
         }
 
+        public async Task<Pessoa> ObterPorDoc(string doc)
+        {
+            var pessoaDominio = await _pessoaRepositorio.ObterPorDoc(doc, true);
+
+            if (pessoaDominio == null)
+                throw new Exception("Pessoa não encontrada!");
+
+            return pessoaDominio;
+        }
+
+        public async Task<Pessoa> ObterClientePorDoc(string doc)
+        {
+            var pessoaDominio = await _pessoaRepositorio.ObterClientePorDoc(doc, true);
+
+            if (pessoaDominio == null)
+                throw new Exception("Pessoa não encontrada!");
+
+            return pessoaDominio;
+        }
+
+        public async Task<Pessoa> ObterFuncionarioPorDoc(string doc)
+        {
+            var pessoaDominio = await _pessoaRepositorio.ObterFuncionarioPorDoc(doc, true);
+
+            if (pessoaDominio == null)
+                throw new Exception("Pessoa não encontrada!");
+
+            return pessoaDominio;
+        }
+
         public async Task<Pessoa> ObterPorEmail(string email)
         {
             var pessoaDominio = await _pessoaRepositorio.ObterPorEmail(email, true);

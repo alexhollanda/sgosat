@@ -6,10 +6,12 @@ import axios from 'axios';
 import { Sidebar } from '../../componentes/Sidebar/Sidebar';
 import { Topbar } from '../../componentes/Topbar/Topbar';
 import Form from 'react-bootstrap/Form';
+import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import { BsSearch } from 'react-icons/bs';
 
 export function NovoCliente() {
     const [nome, setNome] = useState('');
@@ -24,18 +26,43 @@ export function NovoCliente() {
     const [bairro, setBairro] = useState('');
     const [cidade, setCidade] = useState('');
     const [uf, setUF] = useState('');
-    const cliente = true;
-    const funcionario = false;
+    const [cliente, setCliente] = useState('');;
+    const [funcionario, setFuncionario] = useState('');
+
+    const [isUpdate, setIsUpdate] = useState(false); // Pra saber se é atualização ou criação de cliente
+    const [campos, setCampos] = useState(true); // Campos habilitados se o documento for preenchido
 
 
-    const navigate = useNavigate();    
+    const navigate = useNavigate();
+
+    async function buscarCliente(docCliente) {
+        try {
+            const response = await PessoaAPI.obterClientePorDocAsync(removeMask(docCliente));
+            if (response) {
+                setNome(response.nome);
+                setTipoPessoa(response.tipoPessoa);
+                setTelefone(response.telefone);
+                setEmail(response.email);
+                setCep(response.cep);
+                setLogradouro(response.logradouro); 
+                setNumero(response.numero);
+                setComplemento(response.complemento);
+                setBairro(response.bairro);
+                setCidade(response.cidade); 
+                setUF(response.uf);
+                setCliente(response.cliente);
+                setFuncionario(response.funcionario);
+                setCampos(false); // Habilita os campos se o cliente já existir
+                if (cliente) setIsUpdate(true); // Define que é uma atualização
+            } else {
+                setIsUpdate(false); // Se não encontrar, define que é uma criação
+            }
+        } catch (error) {
+            console.error("Erro ao buscar cliente:", error);   
+        }
+    }
 
     //#region Funções e Validação e Máscaras
-
-    useEffect(() => {
-        handleTipoPessoaChange({ target: { value: tipoPessoa } });
-    }, [tipoPessoa]);
-
     const [errorDocumento, setErrorDocumento] = useState(''); // Mensagem de erro pro CPF/CNPJ
     const [errorPhone, setErrorPhone] = useState(''); // Mensagem de erro pro Telefone
     const [errorCep, setErrorCep] = useState(''); // Mensagem de erro pro CEP
@@ -49,7 +76,7 @@ export function NovoCliente() {
         }
 
         try {
-           const resposta = await axios.get(`https://viacep.com.br/ws/${cepLimpo}/json/`);
+            const resposta = await axios.get(`https://viacep.com.br/ws/${cepLimpo}/json/`);
             if (resposta.data.erro) {
                 setErrorCep("CEP não encontrado.");
             } else {
@@ -112,8 +139,13 @@ export function NovoCliente() {
         }
     }
 
-    function maskDocument(value, type) {
-        return type === 'PF' ? formataCPF(value) : formataCNPJ(value);
+    function maskDocument(value) {
+        
+        if (!value) return ''; // Verifica se o valor é vazio ou undefined
+        
+        if (value.length === 11) return formataCPF(value);
+        
+        if (value.length === 14) return formataCNPJ(value);
     };
 
     // Função para remover a máscara e obter o valor puro
@@ -174,13 +206,11 @@ export function NovoCliente() {
         }
         result = sum % 11 < 2 ? 0 : 11 - (sum % 11);
         return result === parseInt(digits[1]);
+    }      
+    
+    const handleFocusDocumento = () => {
+        if (documento != null) setDocumento(getRawValue(documento)); // Remove a máscara ao focar
     }
-
-    const handleTipoPessoaChange = (event) => {
-        setTipoPessoa(event.target.value);
-        setDocumento(''); // Limpa o valor ao trocar o tipo
-        setErrorDocumento('');
-    };
 
     const handleDocumentoChange = (event) => {
         const rawValue = event.target.value.replace(/\D/g, ''); // Remove a máscara anterior
@@ -189,26 +219,23 @@ export function NovoCliente() {
     }
 
     const handleBlurDocumento = () => {
-        const maskedValue = maskDocument(documento, tipoPessoa);
+        const maskedValue = maskDocument(documento);
         setDocumento(maskedValue);
 
         // Validação de CPF ou CNPJ
-        if (tipoPessoa === 'PF' && !isValidCPF(documento)) {
+        if (documento?.length === 11 && !isValidCPF(documento)) {
             setErrorDocumento('CPF inválido!');
             return;
         }
 
-        if (tipoPessoa === 'PJ' && !isValidCNPJ(documento)) {
+        if (documento?.length === 14 && !isValidCNPJ(documento)) {
             setErrorDocumento('CNPJ inválido!');
             return;
         }
 
         setErrorDocumento(''); // Limpa o erro se for válido
+        buscarCliente(documento); // Chama a função para buscar o cliente
     };
-
-    const handleFocusDocumento = () => {
-        setDocumento(getRawValue(documento)); // Remove a máscara ao focar
-    }
 
     const handleTelefoneChange = (event) => {
         setTelefone(getRawValue(event.target.value));
@@ -243,7 +270,7 @@ export function NovoCliente() {
                 cepLimpo: removeMask(cep)
             };
             // Remove as máscaras antes de enviar
-            
+
             // Chama a API para criar o cliente
             await PessoaAPI.criarAsync(nome, tipoPessoa, dadosSemMascara.documentoLimpo, dadosSemMascara.telefoneLimpo,
                 email, dadosSemMascara.cepLimpo, logradouro, numero, complemento, bairro,
@@ -268,7 +295,38 @@ export function NovoCliente() {
 
                     <Form onSubmit={handleSubmit}>
                         <Container>
+
                             <Row>
+                                <Col sm={4}>
+                                    <Form.Group controlId="formDocumento" className="mb-3">
+                                        <Form.Label>Documento</Form.Label>
+                                        <InputGroup>
+                                            <Form.Control
+                                                type="text"
+                                                name="documento"
+                                                maxLength={tipoPessoa === 'PF' ? 11 : 14}
+                                                value={documento}
+                                                onChange={handleDocumentoChange}
+                                                onFocus={handleFocusDocumento} // Remove máscara ao focar
+                                                onBlur={handleBlurDocumento}   // Aplica máscara ao sair
+                                                //placeholder={tipoPessoa === 'PF' ? '000.000.000-00' : '00.000.000/0000-00'}
+                                                isInvalid={!!errorDocumento}
+                                                required
+                                            />
+
+                                            <Button variant="success" className={style.btn_pesquisar_doc}>
+                                                <BsSearch />
+                                            </Button>
+
+                                            {errorDocumento && (
+                                                <Form.Control.Feedback type="invalid">
+                                                    {errorDocumento}
+                                                </Form.Control.Feedback>
+                                            )}
+                                        </InputGroup>
+                                    </Form.Group>
+                                </Col>
+
                                 <Col sm={8}>
                                     <Form.Group controlId="formNome" className="mb-3">
                                         <Form.Label>Nome do Cliente</Form.Label>
@@ -278,55 +336,18 @@ export function NovoCliente() {
                                             name="nome"
                                             value={nome}
                                             onChange={(e) => setNome(e.target.value.toUpperCase()) || ""}
+                                            disabled={campos}
                                             required
                                         />
-                                    </Form.Group>
-
-                                </Col>
-                                <Col sm={4}>
-                                    <Form.Group controlId="formTipoPessoa" className="mb-3">
-                                        <Form.Label>Tipo de Pessoa</Form.Label>
-                                        <Form.Control
-                                            as="select"
-                                            name="tipoPessoa"
-                                            defaultValue="PF"
-                                            value={tipoPessoa}
-                                            onChange={handleTipoPessoaChange}
-                                            onBlur={handleTipoPessoaChange}
-                                            required
-                                        >
-                                            <option value="PF">PESSOA FÍSICA</option>
-                                            <option value="PJ">PESSOA JURÍDICA</option>
-                                        </Form.Control>
                                     </Form.Group>
                                 </Col>
                             </Row>
+                           
 
                             <Row>
-                                <Col sm>
-                                    <Form.Group controlId="formDocumento" className="mb-3">
-                                        <Form.Label>Documento</Form.Label>
-                                        <Form.Control
-                                            type="text"
-                                            name="documento"
-                                            maxLength={tipoPessoa === 'PF' ? 11 : 14}
-                                            value={documento}
-                                            onChange={handleDocumentoChange}
-                                            onFocus={handleFocusDocumento} // Remove máscara ao focar
-                                            onBlur={handleBlurDocumento}   // Aplica máscara ao sair
-                                            //placeholder={tipoPessoa === 'PF' ? '000.000.000-00' : '00.000.000/0000-00'}
-                                            isInvalid={!!errorDocumento}
-                                            required
-                                        />
-                                        {errorDocumento && (
-                                            <Form.Control.Feedback type="invalid">
-                                                {errorDocumento}
-                                            </Form.Control.Feedback>
-                                        )}
-                                    </Form.Group>
-                                </Col>
+                                
 
-                                <Col sm>
+                                <Col sm={6}>
                                     <Form.Group controlId="formTelefone" className="mb-3">
                                         <Form.Label>Telefone:</Form.Label>
                                         <Form.Control
@@ -339,6 +360,7 @@ export function NovoCliente() {
                                             onBlur={handleBlurTelefone}   // Aplica máscara ao sair
                                             placeholder="(99) 9 9999-9999"
                                             isInvalid={!!errorPhone}
+                                            disabled={campos}
                                             required
                                         />
                                         {errorPhone && (
@@ -349,7 +371,7 @@ export function NovoCliente() {
                                     </Form.Group>
                                 </Col>
 
-                                <Col sm>
+                                <Col sm={6}>
                                     <Form.Group controlId="formEmail" className="mb-3">
                                         <Form.Label>E-mail</Form.Label>
                                         <Form.Control
@@ -358,6 +380,7 @@ export function NovoCliente() {
                                             name="email"
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value.toLowerCase())}
+                                            disabled={campos}
                                             required
                                         />
                                     </Form.Group>
@@ -376,13 +399,14 @@ export function NovoCliente() {
                                             onChange={handleCepChange}
                                             onBlur={buscarCep}
                                             isInvalid={!!errorCep}
+                                            disabled={campos}
                                             required
                                         />
                                         {errorCep && (
                                             <Form.Control.Feedback type="invalid">
                                                 {errorCep}
                                             </Form.Control.Feedback>
-                                        )}                                        
+                                        )}
                                     </Form.Group>
                                 </Col>
 
@@ -395,6 +419,7 @@ export function NovoCliente() {
                                             name="logradouro"
                                             value={logradouro}
                                             onChange={(e) => setLogradouro(e.target.value.toUpperCase())}
+                                            disabled={campos}
                                             required
                                         />
                                     </Form.Group>
@@ -409,6 +434,7 @@ export function NovoCliente() {
                                             name="numero"
                                             value={numero}
                                             onChange={(e) => setNumero(e.target.value)}
+                                            disabled={campos}
                                             required
                                         />
                                     </Form.Group>
@@ -425,7 +451,7 @@ export function NovoCliente() {
                                             name="complemento"
                                             value={complemento}
                                             onChange={(e) => setComplemento(e.target.value.toUpperCase())}
-
+                                            disabled={campos}                                            
                                         />
                                     </Form.Group>
                                 </Col>
@@ -439,6 +465,7 @@ export function NovoCliente() {
                                             name="bairro"
                                             value={bairro}
                                             onChange={(e) => setBairro(e.target.value.toUpperCase())}
+                                            disabled={campos}
                                             required
                                         />
                                     </Form.Group>
@@ -455,6 +482,7 @@ export function NovoCliente() {
                                             name="cidade"
                                             value={cidade}
                                             onChange={(e) => setCidade(e.target.value.toUpperCase())}
+                                            disabled={campos}
                                             required
                                         />
                                     </Form.Group>
@@ -468,6 +496,7 @@ export function NovoCliente() {
                                             name="uf"
                                             value={uf}
                                             onChange={(e) => setUF(e.target.value)}
+                                            disabled={campos}
                                             required
                                         >
                                             <option value="" disabled>Selecione a UF</option>
@@ -502,15 +531,17 @@ export function NovoCliente() {
                                     </Form.Group>
                                 </Col>
                             </Row>
+
+                            <Button variant="success" type="submit" className={style.btn} disabled={!isFormValid()}>
+                                Salvar
+                            </Button>
+
+                            <Button variant="danger" type="button" className={style.btn} onClick={() => navigate("/clientes")}>
+                                Cancelar
+                            </Button>
                         </Container>
 
-                        <Button variant="success" type="submit" className={style.btn} disabled={!isFormValid()}>
-                            Salvar
-                        </Button>
 
-                        <Button variant="danger" type="button" className={style.btn} onClick={() => navigate("/clientes")}>
-                            Cancelar
-                        </Button>
                     </Form>
                 </div>
             </Topbar>

@@ -122,6 +122,216 @@ namespace sgosat.Api.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("ObterPorDoc/{doc}")]
+        public async Task<ActionResult> ObterPorDoc([FromRoute] string doc)
+        {
+            try
+            {
+                var pessoaDominio = await _pessoaAplicacao.ObterPorDoc(doc);
+
+                var pessoaResponse = new PessoaResponse()
+                {
+                    ID = pessoaDominio.ID,
+                    Nome = pessoaDominio.Nome,
+                    TipoPessoa = pessoaDominio.TipoPessoa,
+                    Documento = pessoaDominio.Documento,
+                    Telefone = pessoaDominio.Telefone,
+                    Email = pessoaDominio.Email,
+                    CEP = pessoaDominio.CEP,
+                    Logradouro = pessoaDominio.Logradouro,
+                    Numero = pessoaDominio.Numero,
+                    Complemento = pessoaDominio.Complemento,
+                    Bairro = pessoaDominio.Bairro,
+                    Cidade = pessoaDominio.Cidade,
+                    UF = pessoaDominio.UF,
+                    Cliente = pessoaDominio.Cliente,
+                    Funcionario = pessoaDominio.Funcionario
+                };
+
+                return Ok(pessoaResponse);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("ObterClientePorDoc/{doc}")]
+        public async Task<ActionResult> ObterClientePorDoc([FromRoute] string doc)
+        {
+            try
+            {
+                var pessoaDominio = await _pessoaAplicacao.ObterClientePorDoc(doc);
+
+                var pessoaResponse = new PessoaResponse()
+                {
+                    ID = pessoaDominio.ID,
+                    Nome = pessoaDominio.Nome,
+                    TipoPessoa = pessoaDominio.TipoPessoa,
+                    Documento = pessoaDominio.Documento,
+                    Telefone = pessoaDominio.Telefone,
+                    Email = pessoaDominio.Email,
+                    CEP = pessoaDominio.CEP,
+                    Logradouro = pessoaDominio.Logradouro,
+                    Numero = pessoaDominio.Numero,
+                    Complemento = pessoaDominio.Complemento,
+                    Bairro = pessoaDominio.Bairro,
+                    Cidade = pessoaDominio.Cidade,
+                    UF = pessoaDominio.UF,
+                    Cliente = pessoaDominio.Cliente,
+                    Funcionario = pessoaDominio.Funcionario
+                };
+
+                return Ok(pessoaResponse);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("ObterFuncionarioPorDoc/{doc}")]
+        public async Task<ActionResult> ObterFuncionariPorDoc([FromRoute] string doc)
+        {
+            try
+            {
+                var pessoaDominio = await _pessoaAplicacao.ObterFuncionarioPorDoc(doc);
+
+                var pessoaResponse = new PessoaResponse()
+                {
+                    ID = pessoaDominio.ID,
+                    Nome = pessoaDominio.Nome,
+                    TipoPessoa = pessoaDominio.TipoPessoa,
+                    Documento = pessoaDominio.Documento,
+                    Telefone = pessoaDominio.Telefone,
+                    Email = pessoaDominio.Email,
+                    CEP = pessoaDominio.CEP,
+                    Logradouro = pessoaDominio.Logradouro,
+                    Numero = pessoaDominio.Numero,
+                    Complemento = pessoaDominio.Complemento,
+                    Bairro = pessoaDominio.Bairro,
+                    Cidade = pessoaDominio.Cidade,
+                    UF = pessoaDominio.UF,
+                    Cliente = pessoaDominio.Cliente,
+                    Funcionario = pessoaDominio.Funcionario
+                };
+
+                return Ok(pessoaResponse);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("ObterPorEmail/{email}")]
+        public async Task<ActionResult> ObterPorEmail([FromRoute] string email)
+        {
+            try
+            {
+                var pessoaDominio = await _pessoaAplicacao.ObterPorEmail(email);
+
+                var pessoaResponse = new PessoaResponse()
+                {
+                    ID = pessoaDominio.ID,
+                    Nome = pessoaDominio.Nome,
+                    TipoPessoa = pessoaDominio.TipoPessoa,
+                    Documento = pessoaDominio.Documento,
+                    Telefone = pessoaDominio.Telefone,
+                    Email = pessoaDominio.Email,
+                    CEP = pessoaDominio.CEP,
+                    Logradouro = pessoaDominio.Logradouro,
+                    Numero = pessoaDominio.Numero,
+                    Complemento = pessoaDominio.Complemento,
+                    Bairro = pessoaDominio.Bairro,
+                    Cidade = pessoaDominio.Cidade,
+                    UF = pessoaDominio.UF,
+                    Cliente = pessoaDominio.Cliente,
+                    Funcionario = pessoaDominio.Funcionario
+                };
+
+                return Ok(pessoaResponse);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("ObterClientePorEmail/{email}")]
+        public async Task<ActionResult> ObterClientePorEmail([FromRoute] string email)
+        {
+            try
+            {
+                var pessoaDominio = await _pessoaAplicacao.ObterClientePorEmail(email);
+
+                var pessoaResponse = new PessoaResponse()
+                {
+                    ID = pessoaDominio.ID,
+                    Nome = pessoaDominio.Nome,
+                    TipoPessoa = pessoaDominio.TipoPessoa,
+                    Documento = pessoaDominio.Documento,
+                    Telefone = pessoaDominio.Telefone,
+                    Email = pessoaDominio.Email,
+                    CEP = pessoaDominio.CEP,
+                    Logradouro = pessoaDominio.Logradouro,
+                    Numero = pessoaDominio.Numero,
+                    Complemento = pessoaDominio.Complemento,
+                    Bairro = pessoaDominio.Bairro,
+                    Cidade = pessoaDominio.Cidade,
+                    UF = pessoaDominio.UF,
+                    Cliente = pessoaDominio.Cliente,
+                    Funcionario = pessoaDominio.Funcionario
+                };
+
+                return Ok(pessoaResponse);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("ObterFuncionarioPorEmail/{email}")]
+        public async Task<ActionResult> ObterFuncionarioPorEmail([FromRoute] string email)
+        {
+            try
+            {
+                var pessoaDominio = await _pessoaAplicacao.ObterFuncionarioPorEmail(email);
+
+                var pessoaResponse = new PessoaResponse()
+                {
+                    ID = pessoaDominio.ID,
+                    Nome = pessoaDominio.Nome,
+                    TipoPessoa = pessoaDominio.TipoPessoa,
+                    Documento = pessoaDominio.Documento,
+                    Telefone = pessoaDominio.Telefone,
+                    Email = pessoaDominio.Email,
+                    CEP = pessoaDominio.CEP,
+                    Logradouro = pessoaDominio.Logradouro,
+                    Numero = pessoaDominio.Numero,
+                    Complemento = pessoaDominio.Complemento,
+                    Bairro = pessoaDominio.Bairro,
+                    Cidade = pessoaDominio.Cidade,
+                    UF = pessoaDominio.UF,
+                    Cliente = pessoaDominio.Cliente,
+                    Funcionario = pessoaDominio.Funcionario
+                };
+
+                return Ok(pessoaResponse);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPost]
         [Route("Criar")]
         public async Task<IActionResult> Criar([FromBody] PessoaCriar pessoaCriar)
@@ -166,8 +376,6 @@ namespace sgosat.Api.Controllers
                 {
                     ID = pessoaAtualizar.ID,
                     Nome = pessoaAtualizar.Nome,
-                    TipoPessoa = pessoaAtualizar.TipoPessoa,
-                    Documento = pessoaAtualizar.Documento,
                     Telefone = pessoaAtualizar.Telefone,
                     Email = pessoaAtualizar.Email,
                     CEP = pessoaAtualizar.CEP,

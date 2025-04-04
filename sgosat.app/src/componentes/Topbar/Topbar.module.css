@@ -1,5 +1,5 @@
 .topbar_conteudo {
-    background-color: #ede5d9;
+    background-color: #A2B29F;
 
     position: fixed;
     top: 0;
@@ -11,7 +11,8 @@
     display: flex;
     justify-content: flex-start;
 
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.445);
+    border-bottom: 1px solid #000000;
+    /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.445); */
 }
 
 .topbar_conteudo_right {

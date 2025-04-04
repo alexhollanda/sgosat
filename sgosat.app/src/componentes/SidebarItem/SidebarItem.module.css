@@ -3,14 +3,13 @@
     font-family: 'Poppins', sans-serif;
     font-weight: 600;
     font-style: normal;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding: 0 10px;
     border-radius: 10px;
     
     display: flex;
-    margin: 20px;
+    margin: 20px 5px;
 
-    color: #e6ded3;    
+    color: #1b1814;    
 
     & svg {
         width: 30px;
@@ -24,7 +23,7 @@
     }
 
     &:hover {
-        color: #939393;
-        background-color: #e6ded3;
+        color: #F8EDE3;
+        background-color: #BDD2B6;
     }
 }

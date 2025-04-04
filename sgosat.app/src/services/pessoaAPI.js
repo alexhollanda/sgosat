@@ -18,7 +18,8 @@ const PessoaAPI = {
             console.error("Erro ao obter cliente:", error);
             throw error;
         }
-    },async obterFuncionarioAsync(pessoaID) {
+    },
+    async obterFuncionarioAsync(pessoaID) {
         try {
             const response = await HTTPClient.get(`/Pessoa/ObterFuncionario/${pessoaID}`);
             return response.data;
@@ -27,6 +28,60 @@ const PessoaAPI = {
             throw error;
         }
     },
+    async obterPorDocAsync(documento) {
+        try {
+            const response = await HTTPClient.get(`/Pessoa/ObterPorDoc/${documento}`);
+            return response.data;
+        } catch (error) {
+            console.error("Erro ao obter pessoa:", error);
+            throw error;
+        }
+    },
+    async obterClientePorDocAsync(documento) {
+        try {
+            const response = await HTTPClient.get(`/Pessoa/ObterClientePorDoc/${documento}`);
+            return response.data;
+        } catch (error) {
+            console.error("Erro ao obter cliente:", error);
+            throw error;
+        }
+    },
+    async obterFuncionarioPorDocAsync(documento) {
+        try {
+            const response = await HTTPClient.get(`/Pessoa/ObterFuncionarioPorDoc/${documento}`);
+            return response.data;
+        } catch (error) {
+            console.error("Erro ao obter funcionário:", error);
+            throw error;
+        }
+    },
+    async obterPorEmailAsync(email) {
+        try {
+            const response = await HTTPClient.get(`/Pessoa/ObterPorEmail/${email}`);
+            return response.data;
+        } catch (error) {
+            console.error("Erro ao obter pessoa:", error);
+            throw error;
+        }
+    },
+    async obterClientePorEmailAsync(email) {
+        try {
+            const response = await HTTPClient.get(`/Pessoa/ObterClientePorEmail/${email}`);
+            return response.data;
+        } catch (error) {
+            console.error("Erro ao obter cliente:", error);
+            throw error;
+        }
+    },
+    async obterFuncionarioPorEmailAsync(email) {
+        try {
+            const response = await HTTPClient.get(`/Pessoa/ObterFuncionarioPorEmail/${email}`);
+            return response.data;
+        } catch (error) {
+            console.error("Erro ao obter funcionário:", error);
+            throw error;
+        }
+    },    
     async listarAsync(ativos) {
         try {
             const response = await HTTPClient.get(`/Pessoa/Listar?ativos=${ativos}`);
