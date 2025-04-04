@@ -102,7 +102,7 @@ export function Clientes() {
                     </div>
 
                     <div className={style.tabela}>
-                        <Table responsive>
+                        <Table responsive striped hover>
                             <thead className={style.tabela_cabecalho}>
                                 <tr>
                                     <th>ID</th>
@@ -120,7 +120,7 @@ export function Clientes() {
 
                                         <tr key={cliente.id}>
                                             <td>{String(cliente.id).padStart(5, '0')}</td>
-                                            <td>{cliente.nome}</td>
+                                            <td>{cliente.nome.substring(0,40) + (cliente.nome.length > 40 ? "..." : "")}</td>
                                             <td>{formataDocumento(cliente.documento)}</td>
                                             <td>{formataPhone(cliente.telefone)}</td>
                                             <td>{cliente.email}</td>

@@ -3,7 +3,7 @@ import { HTTPClient } from "./client";
 const CepAPI = {
     async consultarAsync(cep) {
         try {
-            const response = await HTTPClient.get(`/CEP/Consultar/${cep}`);
+            const response = await HTTPClient.get(`/CEP/Consultar?cep=${cep}`);
             return response.data;
         } catch (error) {
             console.error("Erro ao consultar cep:", error);

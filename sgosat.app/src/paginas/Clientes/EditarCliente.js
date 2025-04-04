@@ -1,19 +1,24 @@
-import style from './NovoCliente.module.css';
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import style from "./EditarCliente.module.css";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import PessoaAPI from "../../services/pessoaAPI";
-import axios from 'axios';
-import { Sidebar } from '../../componentes/Sidebar/Sidebar';
-import { Topbar } from '../../componentes/Topbar/Topbar';
+import axios from "axios";
+import { Sidebar } from "../../componentes/Sidebar/Sidebar";
+import { Topbar } from "../../componentes/Topbar/Topbar";
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-export function NovoCliente() {
+export function EditarCliente() {
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    const [id] = useState(location.state);
+
     const [nome, setNome] = useState('');
-    const [tipoPessoa, setTipoPessoa] = useState("PF");
+    const [tipoPessoa, setTipoPessoa] = useState('');
     const [documento, setDocumento] = useState('');
     const [telefone, setTelefone] = useState('');
     const [email, setEmail] = useState('');
@@ -24,19 +29,18 @@ export function NovoCliente() {
     const [bairro, setBairro] = useState('');
     const [cidade, setCidade] = useState('');
     const [uf, setUF] = useState('');
-    const cliente = true;
-    const funcionario = false;
+    const cliente = true; // Para indicar que é um cliente
+    const funcionario = false; // Para indicar que não é um funcionário
 
-
-    const navigate = useNavigate();    
 
     //#region Funções e Validação e Máscaras
 
     useEffect(() => {
-        handleTipoPessoaChange({ target: { value: tipoPessoa } });
-    }, [tipoPessoa]);
+        formataDocumento();
+        carregarTelefone();
+        handleCepChange({target: { value: cep }}); // Aplica a máscara ao carregar o componente
+    }, [documento, tipoPessoa, telefone]);
 
-    const [errorDocumento, setErrorDocumento] = useState(''); // Mensagem de erro pro CPF/CNPJ
     const [errorPhone, setErrorPhone] = useState(''); // Mensagem de erro pro Telefone
     const [errorCep, setErrorCep] = useState(''); // Mensagem de erro pro CEP
 
@@ -49,7 +53,7 @@ export function NovoCliente() {
         }
 
         try {
-           const resposta = await axios.get(`https://viacep.com.br/ws/${cepLimpo}/json/`);
+            const resposta = await axios.get(`https://viacep.com.br/ws/${cepLimpo}/json/`);
             if (resposta.data.erro) {
                 setErrorCep("CEP não encontrado.");
             } else {
@@ -99,6 +103,15 @@ export function NovoCliente() {
             .replace(/(\d{4})(\d{1,2})$/, '$1-$2'); // Coloca o traço
     };
 
+    function maskDocument(value, type) {
+        return type === 'PF' ? formataCPF(value) : formataCNPJ(value);
+    };
+
+    const formataDocumento = () => {
+        const maskedValue = maskDocument(documento, tipoPessoa);
+        setDocumento(maskedValue);
+    };
+
     function formataPhone(value) {
         value = value.replace(/\D/g, '');
         if (value.length <= 10) {
@@ -112,10 +125,6 @@ export function NovoCliente() {
         }
     }
 
-    function maskDocument(value, type) {
-        return type === 'PF' ? formataCPF(value) : formataCNPJ(value);
-    };
-
     // Função para remover a máscara e obter o valor puro
     function getRawValue(value) {
         return value.replace(/[().\s\-\/]/g, '');
@@ -125,98 +134,19 @@ export function NovoCliente() {
         return value.replace(/\D/g, ''); // Remove tudo que não for dígito
     }
 
-    // Validação de CPF
-    function isValidCPF(cpf) {
-        cpf = getRawValue(cpf);
-        if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
-        let sum = 0;
-        for (let i = 0; i < 9; i++) {
-            sum += parseInt(cpf[i]) * (10 - i);
-        }
-        let digit1 = (sum * 10) % 11;
-        if (digit1 === 10 || digit1 === 11) digit1 = 0;
-        if (digit1 !== parseInt(cpf[9])) return false;
-
-        sum = 0;
-        for (let i = 0; i < 10; i++) {
-            sum += parseInt(cpf[i]) * (11 - i);
-        }
-        let digit2 = (sum * 10) % 11;
-        if (digit2 === 10 || digit2 === 11) digit2 = 0;
-        return digit2 === parseInt(cpf[10]);
-    }
-
-    // Validação de CNPJ
-    function isValidCNPJ(cnpj) {
-        cnpj = getRawValue(cnpj);
-        if (cnpj.length !== 14 || /^(\d)\1+$/.test(cnpj)) return false;
-        let length = 12;
-        let numbers = cnpj.substring(0, length);
-        let digits = cnpj.substring(length);
-        let sum = 0;
-        let pos = length - 7;
-
-        for (let i = length; i >= 1; i--) {
-            sum += parseInt(numbers[length - i]) * pos--;
-            if (pos < 2) pos = 9;
-        }
-        let result = sum % 11 < 2 ? 0 : 11 - (sum % 11);
-        if (result !== parseInt(digits[0])) return false;
-
-        length = 13;
-        numbers = cnpj.substring(0, length);
-        sum = 0;
-        pos = length - 7;
-
-        for (let i = length; i >= 1; i--) {
-            sum += parseInt(numbers[length - i]) * pos--;
-            if (pos < 2) pos = 9;
-        }
-        result = sum % 11 < 2 ? 0 : 11 - (sum % 11);
-        return result === parseInt(digits[1]);
-    }
-
-    const handleTipoPessoaChange = (event) => {
-        setTipoPessoa(event.target.value);
-        setDocumento(''); // Limpa o valor ao trocar o tipo
-        setErrorDocumento('');
-    };
-
-    const handleDocumentoChange = (event) => {
-        const rawValue = event.target.value.replace(/\D/g, ''); // Remove a máscara anterior
-        setDocumento(rawValue);
-        setErrorDocumento('');
-    }
-
-    const handleBlurDocumento = () => {
-        const maskedValue = maskDocument(documento, tipoPessoa);
-        setDocumento(maskedValue);
-
-        // Validação de CPF ou CNPJ
-        if (tipoPessoa === 'PF' && !isValidCPF(documento)) {
-            setErrorDocumento('CPF inválido!');
-            return;
-        }
-
-        if (tipoPessoa === 'PJ' && !isValidCNPJ(documento)) {
-            setErrorDocumento('CNPJ inválido!');
-            return;
-        }
-
-        setErrorDocumento(''); // Limpa o erro se for válido
-    };
-
-    const handleFocusDocumento = () => {
-        setDocumento(getRawValue(documento)); // Remove a máscara ao focar
-    }
-
     const handleTelefoneChange = (event) => {
         setTelefone(getRawValue(event.target.value));
         setErrorPhone('');
     };
 
     const handleFocusTelefone = () => {
-        setTelefone(getRawValue(telefone)); // Remove a máscara ao focar
+        const rawValue = getRawValue(telefone);
+        setTelefone(rawValue); // Remove a máscara ao focar
+    };
+
+    const carregarTelefone = () => {
+        const maskedValue = formataPhone(telefone);
+        setTelefone(maskedValue);
     };
 
     const handleBlurTelefone = () => {
@@ -234,6 +164,31 @@ export function NovoCliente() {
 
     //#endregion
 
+
+    useEffect(() => {
+        const fetchCliente = async () => {
+            try {
+                const cliente = await PessoaAPI.obterClienteAsync(id);
+                setNome(cliente.nome);
+                setTipoPessoa(cliente.tipoPessoa);
+                setDocumento(cliente.documento);
+                setTelefone(cliente.telefone);
+                setEmail(cliente.email);
+                setCep(cliente.cep);
+                setLogradouro(cliente.logradouro);
+                setNumero(cliente.numero);
+                setComplemento(cliente.complemento);
+                setBairro(cliente.bairro);
+                setCidade(cliente.cidade);
+                setUF(cliente.uf);
+            } catch (error) {
+                console.error("Erro ao buscar dados do cliente:", error);
+            }
+        };
+
+        fetchCliente();
+    }, []);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (isFormValid()) {
@@ -243,9 +198,9 @@ export function NovoCliente() {
                 cepLimpo: removeMask(cep)
             };
             // Remove as máscaras antes de enviar
-            
+
             // Chama a API para criar o cliente
-            await PessoaAPI.criarAsync(nome, tipoPessoa, dadosSemMascara.documentoLimpo, dadosSemMascara.telefoneLimpo,
+            await PessoaAPI.atualizarAsync(id, nome, tipoPessoa, dadosSemMascara.documentoLimpo, dadosSemMascara.telefoneLimpo,
                 email, dadosSemMascara.cepLimpo, logradouro, numero, complemento, bairro,
                 cidade, uf, cliente, funcionario);
             navigate("/clientes");
@@ -263,7 +218,7 @@ export function NovoCliente() {
         <Sidebar>
             <Topbar>
                 <div className={style.pagina_conteudo}>
-                    <h3>Novo Cliente</h3>
+                    <h3>Editar Cliente</h3>
                     <hr></hr>
 
                     <Form onSubmit={handleSubmit}>
@@ -289,11 +244,9 @@ export function NovoCliente() {
                                         <Form.Control
                                             as="select"
                                             name="tipoPessoa"
-                                            defaultValue="PF"
                                             value={tipoPessoa}
-                                            onChange={handleTipoPessoaChange}
-                                            onBlur={handleTipoPessoaChange}
                                             required
+                                            disabled
                                         >
                                             <option value="PF">PESSOA FÍSICA</option>
                                             <option value="PJ">PESSOA JURÍDICA</option>
@@ -311,18 +264,8 @@ export function NovoCliente() {
                                             name="documento"
                                             maxLength={tipoPessoa === 'PF' ? 11 : 14}
                                             value={documento}
-                                            onChange={handleDocumentoChange}
-                                            onFocus={handleFocusDocumento} // Remove máscara ao focar
-                                            onBlur={handleBlurDocumento}   // Aplica máscara ao sair
-                                            //placeholder={tipoPessoa === 'PF' ? '000.000.000-00' : '00.000.000/0000-00'}
-                                            isInvalid={!!errorDocumento}
-                                            required
+                                            disabled
                                         />
-                                        {errorDocumento && (
-                                            <Form.Control.Feedback type="invalid">
-                                                {errorDocumento}
-                                            </Form.Control.Feedback>
-                                        )}
                                     </Form.Group>
                                 </Col>
 
@@ -332,7 +275,6 @@ export function NovoCliente() {
                                         <Form.Control
                                             type="text"
                                             name="telefone"
-                                            maxLength={11}
                                             value={telefone}
                                             onChange={handleTelefoneChange}
                                             onFocus={handleFocusTelefone} // Remove máscara ao focar
@@ -382,7 +324,7 @@ export function NovoCliente() {
                                             <Form.Control.Feedback type="invalid">
                                                 {errorCep}
                                             </Form.Control.Feedback>
-                                        )}                                        
+                                        )}
                                     </Form.Group>
                                 </Col>
 
