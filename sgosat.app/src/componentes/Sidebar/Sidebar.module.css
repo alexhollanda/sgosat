@@ -1,32 +1,104 @@
 .sidebar_conteudo {
-    /* background-color: #e69215; */
     background-color: #798777;
-
     position: fixed;
     top: 0;
     bottom: 0;
-
     width: 20%;
     height: 100%;
-
     overflow-x: hidden;
+    transition: width 0.3s ease;
+}
+
+.colapsada {
+    width: 70px;
 }
 
 .pagina_conteudo {
     margin-left: 20%;
+    transition: margin-left 0.3s ease;
+}
+
+.expandido {
+    margin-left: 70px;
 }
 
 .sidebar_header {
-    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
-    
+}
 
-    & .logo {
-        width: 80%;
-        margin: 10%;
-    }
+.logo_area {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 90%;
+    padding: 10px;
+}
 
-    & .linha {
-        color: rgba(250, 234, 214, 0.4)
-    }
+.logo {
+    width: 70%;
+    transition: opacity 0.3s ease;
+}
+
+.toggle_btn {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.linha {
+    color: rgba(250, 234, 214, 0.4);
+    width: 80%;
+}
+
+/* Estilo para os ícones no corpo da sidebar */
+.sidebar_corpo {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    margin: 0;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/* Alinhamento e largura dos itens quando a sidebar está expandida */
+.sidebar_item {
+    display: flex;
+    align-items: center;
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+/* Quando colapsada, centraliza ícone */
+.colapsada .sidebar_item {
+    flex-direction: column;
+    justify-content: center;
+    padding: 15px 0;
+}
+
+
+/* Esse estilo deve estar aplicado dentro do componente SidebarItem */
+.sidebar_item_icon {
+    font-size: 1.2rem;
+    transition: font-size 0.3s ease, text-align 0.3s ease;
+}
+
+.colapsada .sidebar_item_icon {
+    font-size: 1.6rem;
+}
+
+/* Oculta o texto quando colapsada */
+.sidebar_item_text {
+    margin-left: 10px;
+}
+
+.colapsada .sidebar_item_text {
+    display: none;
 }

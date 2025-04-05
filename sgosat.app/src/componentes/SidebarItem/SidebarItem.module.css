@@ -1,29 +1,41 @@
 .sidebar_item {
-    text-decoration: none;
-    font-family: 'Poppins', sans-serif;
-    font-weight: 600;
-    font-style: normal;
-    padding: 0 10px;
-    border-radius: 10px;
-    
     display: flex;
-    margin: 20px 5px;
+    align-items: center;
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    width: 100%;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+}
 
-    color: #1b1814;    
+.sidebar_item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
 
-    & svg {
-        width: 30px;
-        height: 44px;
-    }
+.sidebar_item_icon {
+    font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+}
 
-    & .texto_link {
-        margin: 10px;
-        font-size: 15px;
-        padding: 3px;
-    }
+.sidebar_item_text {
+    margin-left: 10px;
+    white-space: nowrap;
+}
 
-    &:hover {
-        color: #F8EDE3;
-        background-color: #BDD2B6;
-    }
+.colapsada {
+    flex-direction: column;
+    justify-content: center;
+    padding: 15px 0;
+}
+
+.colapsada .sidebar_item_icon {
+    font-size: 1.8rem;
+}
+
+.colapsada .sidebar_item_text {
+    display: none;
 }
