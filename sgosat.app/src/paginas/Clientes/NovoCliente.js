@@ -55,6 +55,7 @@ export function NovoCliente() {
                 setCampos(false); // Habilita os campos se o cliente já existir
                 if (cliente) setIsUpdate(true); // Define que é uma atualização
             } else {
+                setCampos(false)
                 setIsUpdate(false); // Se não encontrar, define que é uma criação
             }
         } catch (error) {
