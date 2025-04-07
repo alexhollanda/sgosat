@@ -10,6 +10,7 @@
     "axios": "^1.8.4",
     "bootstrap": "^5.3.5",
     "clsx": "^2.1.1",
+    "formik": "^2.4.6",
     "inputmask": "^5.0.9",
     "react": "^19.1.0",
     "react-bootstrap": "^2.10.9",
@@ -19,7 +20,8 @@
     "react-input-mask": "^2.0.4",
     "react-router-dom": "^7.4.1",
     "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "yup": "^1.6.1"
   },
   "scripts": {
     "start": "react-scripts start",

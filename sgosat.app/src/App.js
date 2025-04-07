@@ -7,6 +7,8 @@ import { EditarUsuario } from './paginas/Usuarios/EditarUsuario';
 import { Clientes } from './paginas/Clientes/Clientes';
 import { NovoCliente } from './paginas/Clientes/NovoCliente';
 import { EditarCliente } from './paginas/Clientes/EditarCliente';
+import { OrdensServico } from './paginas/OrdensServico/OrdensServico';
+import { NovaOrdemServico } from './paginas/OrdensServico/NovaOrdemServico';
 
 function App() {
   return (
@@ -19,6 +21,8 @@ function App() {
         <Route path="/usuarios" element={<Usuarios />} />
         <Route path="/usuarios/novo" element={<NovoUsuario />} />
         <Route path="/usuarios/editar" element={<EditarUsuario />} />
+        <Route path="/ordens" element={<OrdensServico />} />
+        <Route path='/ordens/nova' element={<NovaOrdemServico />} />
       </Routes>
     </BrowserRouter>
   );

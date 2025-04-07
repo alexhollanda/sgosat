@@ -13,6 +13,7 @@ export function Breadcrumbs() {
             case 'usuarios': return 'Usuários';
             case 'cliente': return 'Cliente';
             case 'novo': return 'Novo';
+            case 'nova': return 'Nova';
             case 'editar': return 'Editar';
             case 'ordens': return 'Ordens de Serviço';
             case 'funcionarios': return 'Funcionários';

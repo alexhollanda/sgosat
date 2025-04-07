@@ -27,19 +27,24 @@ export function NovoCliente() {
     const [bairro, setBairro] = useState('');
     const [cidade, setCidade] = useState('');
     const [uf, setUF] = useState('');
-    const [cliente, setCliente] = useState(false);;
+    const [cliente, setCliente] = useState(true);;
     const [funcionario, setFuncionario] = useState(false);
 
-    const [isUpdate, setIsUpdate] = useState(false); // Pra saber se é atualização ou criação de cliente
-    const [campos, setCampos] = useState(false); // Campos habilitados se o documento for preenchido
-    const [campoDoc, setCampoDoc] = useState(false); // Habilitar ou Desabilitar o campo do documento
+    const [modoAtualizacao, setModoAtualizacao] = useState(false);
+    const [formDesabilitado, setFormDesabilitado] = useState(true);
+    const [carregando, setCarregando] = useState(false);
 
 
     const navigate = useNavigate();
 
-    async function buscarCliente(docCliente) {
+    const buscarClientePorDocumento = async (documento, setValues) => {
+        if (!documento || documento.length < 5) return;
+
+        setCarregando(true);
+
         try {
-            const response = await PessoaAPI.obterPorDocAsync(removeMask(docCliente));
+            const response = await PessoaAPI.obterPorDocAsync(documento);
+
             if (response) {
                 setId(response.id);
                 setNome(response.nome);
@@ -54,15 +59,46 @@ export function NovoCliente() {
                 setCidade(response.cidade);
                 setUF(response.uf);
                 setCliente(response.cliente);
-                setFuncionario(response.funcionario);       
+                setFuncionario(response.funcionario);
+                setModoAtualizacao(true);
+                setFormDesabilitado(false);
+            } else {
+                setModoAtualizacao(false);
+                setFormDesabilitado(false);
+                setId(null);
             }
+        } catch (error) {
+            console.error('Erro ao buscar cliente:', error);
+        } finally {
+            setCarregando(false);
+        }
+    };
 
-        }
-        catch (error) {
-            setCampos(true); // Se não encontrar, habilita os campos para criação
-            setIsUpdate(false);
-            //console.error("Nenhum cliente encontrado:", error);
-        }
+    async function buscarCliente(docCliente) {
+        // try {
+        //     const response = await PessoaAPI.obterPorDocAsync(removeMask(docCliente));
+        //     if (response) {
+        //         setId(response.id);
+        //         setNome(response.nome);
+        //         setTipoPessoa(response.tipoPessoa);
+        //         setTelefone(formataPhone(response.telefone));
+        //         setEmail(response.email);
+        //         setCep(aplicarMascaraCep(response.cep));
+        //         setLogradouro(response.logradouro);
+        //         setNumero(response.numero);
+        //         setComplemento(response.complemento);
+        //         setBairro(response.bairro);
+        //         setCidade(response.cidade);
+        //         setUF(response.uf);
+        //         setCliente(response.cliente);
+        //         setFuncionario(response.funcionario);
+        //     }
+        // }
+        // catch (error) {
+        //     setCampos(true); // Se não encontrar, habilita os campos para criação
+        //     setIsUpdate(false);
+        //     //console.error("Nenhum cliente encontrado:", error);
+        // }
     }
 
 
@@ -273,26 +309,57 @@ export function NovoCliente() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        // Remove as máscaras antes de enviar
+        const dadosSemMascara = {
+            telefoneLimpo: removeMask(telefone),
+            documentoLimpo: removeMask(documento),
+            cepLimpo: removeMask(cep)
+        };
+
         if (isFormValid()) {
-            const dadosSemMascara = {
-                telefoneLimpo: removeMask(telefone),
-                documentoLimpo: removeMask(documento),
-                cepLimpo: removeMask(cep)
-            };
-            // Remove as máscaras antes de enviar
-            if (isUpdate) // Se estiver atualizando os dados recuperados da pessoa
-                await PessoaAPI.atualizarAsync(id, nome, tipoPessoa, dadosSemMascara.documentoLimpo, dadosSemMascara.telefoneLimpo,
-                    email, dadosSemMascara.cepLimpo, logradouro, numero, complemento, bairro,
-                    cidade, uf, true, funcionario);
-            else // Chama a API para criar o cliente
-                await PessoaAPI.criarAsync(nome, tipoPessoa, dadosSemMascara.documentoLimpo, dadosSemMascara.telefoneLimpo,
-                    email, dadosSemMascara.cepLimpo, logradouro, numero, complemento, bairro,
-                    cidade, uf, cliente, funcionario);
-            navigate("/clientes");
+            try {
+                if (modoAtualizacao) {
+                    await PessoaAPI.atualizarAsync(id, nome, tipoPessoa, dadosSemMascara.documentoLimpo,
+                        dadosSemMascara.telefoneLimpo, email, dadosSemMascara.cepLimpo,
+                        logradouro, numero, complemento, bairro, cidade, uf, true, funcionario)
+                } else {
+                    PessoaAPI.criarAsync(nome, tipoPessoa, dadosSemMascara.documentoLimpo, dadosSemMascara.telefoneLimpo,
+                        email, dadosSemMascara.cepLimpo, logradouro, numero, complemento, bairro,
+                        cidade, uf, cliente, funcionario);
+                }
+                navigate("/clientes");
+            } catch (error) {
+                console.log("Erro ao salvar o cliente:", error);
+            }
+
         } else {
             alert("Por favor, preencha todos os campos obrigatórios.");
         }
-    };
+    }
+
+
+
+    // alert(isUpdate);
+    // if (isFormValid()) {
+    //     const dadosSemMascara = {
+    //         telefoneLimpo: removeMask(telefone),
+    //         documentoLimpo: removeMask(documento),
+    //         cepLimpo: removeMask(cep)
+    //     };
+
+    //     if (isUpdate) // Se estiver atualizando os dados recuperados da pessoa
+    //         await PessoaAPI.atualizarAsync(id, nome, tipoPessoa, dadosSemMascara.documentoLimpo, dadosSemMascara.telefoneLimpo,
+    //             email, dadosSemMascara.cepLimpo, logradouro, numero, complemento, bairro,
+    //             cidade, uf, true, funcionario);
+    //     else // Chama a API para criar o cliente
+    //         await PessoaAPI.criarAsync(nome, tipoPessoa, dadosSemMascara.documentoLimpo, dadosSemMascara.telefoneLimpo,
+    //             email, dadosSemMascara.cepLimpo, logradouro, numero, complemento, bairro,
+    //             cidade, uf, cliente, funcionario);
+    //     navigate("/clientes");
+    // } else {
+    //     alert("Por favor, preencha todos os campos obrigatórios.");
+    // }
+
 
     const isFormValid = () => {
         return (nome && tipoPessoa && documento && telefone && email && cep
@@ -344,7 +411,7 @@ export function NovoCliente() {
                                             name="nome"
                                             value={nome}
                                             onChange={(e) => setNome(e.target.value.toUpperCase()) || ""}
-                                            disabled={!campos}
+                                            disabled={!formDesabilitado}
                                             required
                                         />
                                     </Form.Group>
@@ -368,7 +435,7 @@ export function NovoCliente() {
                                             onBlur={handleBlurTelefone}   // Aplica máscara ao sair
                                             placeholder="(99) 9 9999-9999"
                                             isInvalid={!!errorPhone}
-                                            disabled={!campos}
+                                            disabled={!formDesabilitado}
                                             required
                                         />
                                         {errorPhone && (
@@ -388,7 +455,7 @@ export function NovoCliente() {
                                             name="email"
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value.toLowerCase())}
-                                            disabled={!campos}
+                                            disabled={!formDesabilitado}
                                             required
                                         />
                                     </Form.Group>
@@ -407,7 +474,7 @@ export function NovoCliente() {
                                             onChange={handleCepChange}
                                             onBlur={buscarCep}
                                             isInvalid={!!errorCep}
-                                            disabled={!campos}
+                                            disabled={!formDesabilitado}
                                             required
                                         />
                                         {errorCep && (
@@ -427,7 +494,7 @@ export function NovoCliente() {
                                             name="logradouro"
                                             value={logradouro}
                                             onChange={(e) => setLogradouro(e.target.value.toUpperCase())}
-                                            disabled={!campos}
+                                            disabled={!formDesabilitado}
                                             required
                                         />
                                     </Form.Group>
@@ -442,7 +509,7 @@ export function NovoCliente() {
                                             name="numero"
                                             value={numero}
                                             onChange={(e) => setNumero(e.target.value)}
-                                            disabled={!campos}
+                                            disabled={!formDesabilitado}
                                             required
                                         />
                                     </Form.Group>
@@ -459,7 +526,7 @@ export function NovoCliente() {
                                             name="complemento"
                                             value={complemento}
                                             onChange={(e) => setComplemento(e.target.value.toUpperCase())}
-                                            disabled={!campos}
+                                            disabled={!formDesabilitado}
                                         />
                                     </Form.Group>
                                 </Col>
@@ -473,7 +540,7 @@ export function NovoCliente() {
                                             name="bairro"
                                             value={bairro}
                                             onChange={(e) => setBairro(e.target.value.toUpperCase())}
-                                            disabled={!campos}
+                                            disabled={!formDesabilitado}
                                             required
                                         />
                                     </Form.Group>
@@ -490,7 +557,7 @@ export function NovoCliente() {
                                             name="cidade"
                                             value={cidade}
                                             onChange={(e) => setCidade(e.target.value.toUpperCase())}
-                                            disabled={!campos}
+                                            disabled={!formDesabilitado}
                                             required
                                         />
                                     </Form.Group>
@@ -504,7 +571,7 @@ export function NovoCliente() {
                                             name="uf"
                                             value={uf}
                                             onChange={(e) => setUF(e.target.value)}
-                                            disabled={!campos}
+                                            disabled={!formDesabilitado}
                                             required
                                         >
                                             <option value="" disabled>Selecione a UF</option>
@@ -555,4 +622,9 @@ export function NovoCliente() {
             </Topbar>
         </Sidebar>
     )
-}
+
+
+
+
+};
+
