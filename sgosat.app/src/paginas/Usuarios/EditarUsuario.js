@@ -9,6 +9,7 @@ import UsuarioAPI from "../../services/usuarioAPI";
 import PessoaAPI from "../../services/pessoaAPI";
 
 export function EditarUsuario() {
+    const [colapsada, setColapsada] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -72,8 +73,8 @@ export function EditarUsuario() {
 
 
     return (
-        <Sidebar>
-            <Topbar>
+        <Sidebar colapsada={colapsada} setColapsada={setColapsada}>
+            <Topbar texto="Editar Usuário" colapsada={colapsada}>
                 <div className={style.pagina_conteudo}>
                     <h3>Editar Usuário</h3>
 

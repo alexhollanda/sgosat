@@ -7,6 +7,8 @@
     height: 100%;
     overflow-x: hidden;
     transition: width 0.3s ease;
+
+    z-index: 1000; /* para ficar acima da página */
 }
 
 .colapsada {
@@ -21,6 +23,12 @@
 .expandido {
     margin-left: 70px;
 }
+
+.active {
+    background-color: rgba(255, 255, 255, 0.2);
+    font-weight: bold;
+}
+
 
 .sidebar_header {
     display: flex;

@@ -1,35 +1,64 @@
-.topbar_conteudo {
-    background-color: #A2B29F;
-
+.topbar_wrapper {
     position: fixed;
     top: 0;
-    bottom: 0;
-
-    width: 80%;
+    left: 0;
+    right: 0;
     height: 10vh;
-
+    background-color: #A2B29F;
+    border-bottom: 1px solid #000;
     display: flex;
-    justify-content: flex-start;
-
-    border-bottom: 1px solid #000000;
-    /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.445); */
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    transition: padding-left 0.3s ease;
+    z-index: 999;
 }
 
-.topbar_conteudo_right {
-    justify-content: flex-end;
+.topbar_wrapper.expandida {
+    padding-left: 20%;
+}
+
+.topbar_wrapper.colapsada {
+    padding-left: 70px;
+}
+
+.topbar_conteudo {
+    display: flex;
+    align-items: center;
+}
+
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #333;
+    margin-left: 20px;
+}
+
+.breadcrumb a {
+    text-decoration: none;
+    color: #444;
+}
+
+.breadcrumb a:hover {
+    color: #222;
+}
+
+.separator {
+    margin: 0 4px;
+    color: #888;
 }
 
 .pagina_conteudo {
     margin-top: 10vh;
+    padding: 20px;
 }
 
 .botao_deslogar {
     text-decoration: none;
     color: #E69215;
     font-size: 3.5vh;
-
     display: flex;
     align-items: center;
-
-    margin-right: 20px;
 }

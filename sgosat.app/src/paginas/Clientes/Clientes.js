@@ -12,6 +12,7 @@ import Button from 'react-bootstrap/Button';
 
 
 export function Clientes() {
+    const [colapsada, setColapsada] = useState(false);
     const [clientes, setClientes] = useState([]);
     const [mostrarModal, setMostrarModal] = useState(false);
     const [clienteSelecionado, setClienteSelecionado] = useState(null);
@@ -91,12 +92,12 @@ export function Clientes() {
 
 
     return (
-        <Sidebar>
-            <Topbar>
+        <Sidebar colapsada={colapsada} setColapsada={setColapsada}>
+            <Topbar colapsada={colapsada}>
                 <div className={style.pagina_conteudo}>
                     <div className={style.pagina_cabecalho}>
                         <h3>Clientes</h3>
-                        <Button variant="danger" type="button" className={style.botao_novo} onClick={() => navigate("/cliente/novo")}>
+                        <Button variant="danger" type="button" className={style.botao_novo} onClick={() => navigate("/clientes/novo")}>
                             <BsFillPersonPlusFill />Novo
                         </Button>
                     </div>

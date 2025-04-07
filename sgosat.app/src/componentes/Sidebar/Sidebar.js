@@ -4,9 +4,8 @@ import Logo from '../../assets/logo.png';
 import { SidebarItem } from '../SidebarItem/SidebarItem';
 import { BsPersonCircle, BsList } from "react-icons/bs";
 
-export function Sidebar({ children }) {
-    const [colapsada, setColapsada] = useState(false);
-
+// Sidebar.js
+export function Sidebar({ children, colapsada, setColapsada }) {
     const toggleSidebar = () => setColapsada(!colapsada);
 
     return (
@@ -27,9 +26,9 @@ export function Sidebar({ children }) {
                     <SidebarItem texto="Clientes" link="/clientes" logo={<BsPersonCircle />} colapsada={colapsada} />
                     <SidebarItem texto="Funcionários" link="/funcionarios" logo={<BsPersonCircle />} colapsada={colapsada} />
                     <SidebarItem texto="Usuários" link="/usuarios" logo={<BsPersonCircle />} colapsada={colapsada} />
-
                 </div>
             </div>
+
             <div className={`${style.pagina_conteudo} ${colapsada ? style.expandido : ''}`}>
                 {children}
             </div>

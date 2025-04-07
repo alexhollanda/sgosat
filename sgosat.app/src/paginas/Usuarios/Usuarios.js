@@ -13,6 +13,7 @@ import Button from 'react-bootstrap/Button';
 
 
 export function Usuarios() {
+    const [colapsada, setColapsada] = useState(false);
     const [usuarios, setUsuarios] = useState([]);
     const [funcionarios, setFuncionarios] = useState([]);
     const [mostrarModal, setMostrarModal] = useState(false);
@@ -67,8 +68,8 @@ export function Usuarios() {
 
 
     return (
-        <Sidebar>
-            <Topbar>
+        <Sidebar colapsada={colapsada} setColapsada={setColapsada}>
+            <Topbar texto="Usuários" colapsada={colapsada}>
                 <div className={style.pagina_conteudo}>
                     <div className={style.pagina_cabecalho}>
                         <h3>Usuários</h3>
@@ -89,12 +90,12 @@ export function Usuarios() {
                                 </tr>
                             </thead>
                             <tbody className={style.tabela_corpo}>
-                                
+
                                 {usuarios.map((usuario) => {
                                     return (
 
                                         <tr key={usuario.id}>
-                                            <td>{String(usuario.id).padStart(6,'0')}</td>
+                                            <td>{String(usuario.id).padStart(6, '0')}</td>
                                             <td>{funcionarios.find(f => f.id === usuario.pessoaID)?.nome || "Não encontrado"}</td>
                                             <td>{usuario.userName}</td>
                                             <td>{funcionarios.find(f => f.id === usuario.pessoaID)?.email || "Não encontrado"}</td>

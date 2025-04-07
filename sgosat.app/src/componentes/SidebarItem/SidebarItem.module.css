@@ -19,13 +19,16 @@
     align-items: center;
     justify-content: center;
     min-width: 32px;
+    transition: font-size 0.3s ease;
 }
 
 .sidebar_item_text {
     margin-left: 10px;
     white-space: nowrap;
+    transition: opacity 0.3s ease;
 }
 
+/* Colapsado */
 .colapsada {
     flex-direction: column;
     justify-content: center;

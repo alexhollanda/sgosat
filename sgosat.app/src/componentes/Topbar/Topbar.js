@@ -1,22 +1,27 @@
 import { Link } from 'react-router-dom';
 import style from './Topbar.module.css';
 import { BsDoorOpenFill } from "react-icons/bs";
+import { Breadcrumbs } from '../Breadcrumbs/Breadcrumbs';
 
-
-export function Topbar({ texto, children }) {
+export function Topbar({ children, colapsada }) {
     return (
-        <div>
-            <div className={style.topbar_conteudo}>
-                <h3>{texto}</h3>
+        <>
+            <div
+                className={`${style.topbar_wrapper} ${colapsada ? style.colapsada : style.expandida}`}
+            >
+                <div className={style.topbar_conteudo}>
+                    <Breadcrumbs />
+                </div>
+                <div className={style.topbar_conteudo}>
+                    <Link to="/login" className={style.botao_deslogar}>
+                        <BsDoorOpenFill />
+                    </Link>
+                </div>
             </div>
-            <div className={`${style.topbar_conteudo} ${style.topbar_conteudo_right}`}>                
-                <Link to="/login" className={style.botao_deslogar}>
-                    <BsDoorOpenFill />
-                </Link>
-            </div>
+
             <div className={style.pagina_conteudo}>
                 {children}
             </div>
-        </div>
+        </>
     );
 }
