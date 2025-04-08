@@ -13,27 +13,23 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { Spinner } from 'react-bootstrap';
 
-const getFormDataDefault = (documento = "") => ({
-    nome: "",
-    tipoPessoa: "",
-    documento,
-    telefone: "",
-    email: "",
-    cep: "",
-    logradouro: "",
-    numero: "",
-    complemento: "",
-    bairro: "",
-    cidade: "",
-    uf: "",
-    cliente: true,
-    funcionario: false
-});
-
 export function NovoCliente() {
     const [colapsada, setColapsada] = useState(false);
-    const [formData, setFormData] = useState(getFormDataDefault());
     const [id, setId] = useState(null);
+    const [nome, setNome] = useState('');
+    const [tipoPessoa, setTipoPessoa] = useState('');
+    const [documento, setDocumento] = useState('');
+    const [telefone, setTelefone] = useState('');
+    const [email, setEmail] = useState('');
+    const [cep, setCep] = useState('');
+    const [logradouro, setLogradouro] = useState('');
+    const [numero, setNumero] = useState('');
+    const [complemento, setComplemento] = useState('');
+    const [bairro, setBairro] = useState('');
+    const [cidade, setCidade] = useState('');
+    const [uf, setUF] = useState('');
+    const [cliente, setCliente] = useState(true);
+    const [funcionario, setFuncionario] = useState(false);
     const [modoAtualizacao, setModoAtualizacao] = useState(false);
     const [formDesabilitado, setFormDesabilitado] = useState(true);
     const [carregando, setCarregando] = useState(false);
@@ -41,27 +37,29 @@ export function NovoCliente() {
 
     const navigate = useNavigate();
 
-    const handleChange = (e) => {
-        const { name, value, type, checked } = e.target;
-
-        setFormData((prev) => ({
-            ...prev,
-            [name]: type === "checkbox" ? checked : value,
-        }));
-    };
-
     const buscarClientePorDocumento = async (documento) => {
         setCarregando(true);
         try {
             const cliente = await PessoaAPI.obterPorDocAsync(documento);
             setId(cliente.id);
-            setFormData(cliente);
+            setNome(cliente.nome);
+            setTipoPessoa(cliente.tipoPessoa);
+            setDocumento(maskDocument(cliente.documento));
+            setTelefone(formataPhone(cliente.telefone));
+            setEmail(cliente.email);
+            setCep(aplicarMascaraCep(cliente.cep));
+            setLogradouro(cliente.logradouro);
+            setNumero(cliente.numero);
+            setBairro(cliente.bairro);
+            setCidade(cliente.cidade);
+            setUF(cliente.uf);
+            setCliente(true);
+            setFuncionario(cliente.funcionario);
             setModoAtualizacao(true);
-            setFormDesabilitado(false);
+            setFormDesabilitado(false);            
         } catch (error) {
             // Cliente não encontrado (erro 400)
             if (error?.response?.status === 400) {
-                setFormData(getFormDataDefault(formData.documento));
                 setModoAtualizacao(false);
                 setFormDesabilitado(false);
                 setId(null);
@@ -74,6 +72,40 @@ export function NovoCliente() {
         }
     };
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        // Remove as máscaras antes de enviar
+        const dadosSemMascara = {
+            telefoneLimpo: removeMask(telefone),
+            documentoLimpo: removeMask(documento),
+            cepLimpo: removeMask(cep)
+        };
+
+        if (isFormValid()) {
+            try {
+                if (modoAtualizacao && id) {
+                    await PessoaAPI.atualizarAsync(id, nome, dadosSemMascara.telefoneLimpo, email, dadosSemMascara.cepLimpo, logradouro,
+                        numero, complemento, bairro, cidade, uf, cliente, funcionario)
+                } else {
+                    PessoaAPI.criarAsync(nome, tipoPessoa, dadosSemMascara.documentoLimpo,
+                        dadosSemMascara.telefoneLimpo, email, dadosSemMascara.cepLimpo, logradouro,
+                        numero, complemento, bairro, cidade, uf, true, funcionario);
+                }
+                navigate("/clientes");
+            } catch (error) {
+                console.log("Erro ao salvar o cliente:", error);
+            }
+
+        } else {
+            alert("Por favor, preencha todos os campos obrigatórios.");
+        }
+    }
+
+    const isFormValid = () => {
+        return (nome && tipoPessoa && documento && telefone && email && cep
+                && logradouro && numero && bairro && cidade && uf);
+    };
+
 
     //#region Funções e Validação e Máscaras
     const [errorDocumento, setErrorDocumento] = useState(''); // Mensagem de erro pro CPF/CNPJ
@@ -81,7 +113,7 @@ export function NovoCliente() {
     const [errorCep, setErrorCep] = useState(''); // Mensagem de erro pro CEP
 
     const buscarCep = async () => {
-        const cepLimpo = getRawValue(formData.cep);
+        const cepLimpo = getRawValue(cep);
 
         if (cepLimpo.length !== 8) {
             setErrorCep("CEP inválido.");
@@ -100,17 +132,10 @@ export function NovoCliente() {
                     cidade: resposta.data.localidade.toUpperCase(),
                     uf: resposta.data.uf,
                 }
-                // setLogradouro(cepEncontrado.logradouro);
-                // setBairro(cepEncontrado.bairro);
-                // setCidade(cepEncontrado.cidade);
-                // setUF(cepEncontrado.uf);
-                setFormData((prev) => ({
-                    ...prev,
-                    logradouro: cepEncontrado.logradouro,
-                    bairro: cepEncontrado.bairro,
-                    cidade: cepEncontrado.cidade,
-                    uf: cepEncontrado.uf
-                }));
+                setLogradouro(cepEncontrado.logradouro);
+                setBairro(cepEncontrado.bairro);
+                setCidade(cepEncontrado.cidade);
+                setUF(cepEncontrado.uf);
             }
         } catch (err) {
             setErrorCep("Erro ao buscar CEP.");
@@ -126,10 +151,7 @@ export function NovoCliente() {
 
     const handleCepChange = (e) => {
         const valorComMascara = aplicarMascaraCep(e.target.value);
-        setFormData((prev) => ({
-            ...prev,
-            cep: valorComMascara
-        }));
+        setCep(valorComMascara);
     }
 
     function formataCPF(value) {
@@ -167,18 +189,12 @@ export function NovoCliente() {
         if (!value) return ''; // Verifica se o valor é vazio ou undefined
 
         if (value.length === 11) {
-            setFormData((prev) => ({
-                ...prev,
-                tipoPessoa: "PF"
-            }));
+            setTipoPessoa("PF");
             return formataCPF(value);
         }
 
         if (value.length === 14) {
-            setFormData((prev) => ({
-                ...prev,
-                tipoPessoa: "PJ"
-            }));
+            setTipoPessoa("PJ");
             return formataCNPJ(value);
         }
     };
@@ -244,30 +260,16 @@ export function NovoCliente() {
     }
 
     const handleFocusDocumento = () => {
-        if (formData.documento != null)
-            setFormData((prev) => ({
-                ...prev,
-                documento: getRawValue(formData.documento) // Remove a máscara ao focar
-            }));
+        if (documento != null) setDocumento(getRawValue(documento)) // Remove a máscara ao focar
     }
 
     const handleDocumentoChange = (event) => {
-        const rawValue = event.target.value.replace(/\D/g, ''); // Remove a máscara anterior
-        setFormData((prev) => ({
-            ...prev,
-            documento: rawValue
-        }));
+        setDocumento(getRawValue(event.target.value)); // Remove a máscara anterior
         setErrorDocumento('');
     }
 
-    const handleBlurDocumento = () => {
-        const maskedValue = maskDocument(formData.documento);
-        setFormData((prev) => ({
-            ...prev,
-            documento: maskedValue
-        }));
-
-        const rawValue = getRawValue(formData.documento);
+    const handleBlurDocumento = () => {  
+        const rawValue = getRawValue(documento);
 
         // Validação de CPF ou CNPJ
         if (rawValue?.length !== 11 && rawValue?.length !== 14) {
@@ -275,44 +277,35 @@ export function NovoCliente() {
             return;
         }
 
-        if (rawValue?.length === 11 && !isValidCPF(formData.documento)) {
+        if (rawValue?.length === 11 && !isValidCPF(documento)) {
             setErrorDocumento('CPF inválido!');
             return;
         }
 
-        if (rawValue?.length === 14 && !isValidCNPJ(formData.documento)) {
+        if (rawValue?.length === 14 && !isValidCNPJ(documento)) {
             setErrorDocumento('CNPJ inválido!');
             return;
         }
 
+        setDocumento(maskDocument(documento));
         setErrorDocumento(''); // Limpa o erro se for válido
         buscarClientePorDocumento(rawValue); // Chama a função para buscar o cliente
     };
 
     const handleTelefoneChange = (event) => {
-        setFormData((prev) => ({
-            ...prev,
-            telefone: getRawValue(event.target.value)
-        }));
+        setTelefone(getRawValue(event.target.value));
         setErrorPhone('');
     };
 
     const handleFocusTelefone = () => {
-        setFormData((prev) => ({
-            ...prev,
-            telefone: getRawValue(formData.telefone) // Remove a máscara ao focar
-        }));
+        setTelefone(getRawValue(telefone)); // Remove a máscara ao focar
     };
 
     const handleBlurTelefone = () => {
-        const maskedValue = formataPhone(formData.telefone);
-        setFormData((prev) => ({
-            ...prev,
-            telefone: maskedValue
-        }));
+        setTelefone(formataPhone(telefone));
 
         // Validação básica para telefone (10 ou 11 dígitos)
-        const rawValue = getRawValue(formData.telefone);
+        const rawValue = getRawValue(telefone);
         if (rawValue.length < 10 || rawValue.length > 11) {
             setErrorPhone('Número de telefone inválido!');
         } else {
@@ -321,43 +314,6 @@ export function NovoCliente() {
     };
 
     //#endregion
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        // Remove as máscaras antes de enviar
-        const dadosSemMascara = {
-            telefoneLimpo: removeMask(formData.telefone),
-            documentoLimpo: removeMask(formData.documento),
-            cepLimpo: removeMask(formData.cep)
-        };
-
-        if (isFormValid()) {
-            try {
-                if (modoAtualizacao && id) {
-                    await PessoaAPI.atualizarAsync(id, formData.nome, formData.tipoPessoa, dadosSemMascara.documentoLimpo,
-                        dadosSemMascara.telefoneLimpo, formData.email, dadosSemMascara.cepLimpo, formData.logradouro,
-                        formData.numero, formData.complemento, formData.bairro, formData.cidade, formData.uf,
-                        formData.cliente, formData.funcionario)
-                } else {
-                    PessoaAPI.criarAsync(formData.nome, formData.tipoPessoa, dadosSemMascara.documentoLimpo,
-                        dadosSemMascara.telefoneLimpo, formData.email, dadosSemMascara.cepLimpo, formData.logradouro,
-                        formData.numero, formData.complemento, formData.bairro, formData.cidade, formData.uf,
-                        formData.cliente, formData.funcionario);
-                }
-                navigate("/clientes");
-            } catch (error) {
-                console.log("Erro ao salvar o cliente:", error);
-            }
-
-        } else {
-            alert("Por favor, preencha todos os campos obrigatórios.");
-        }
-    }   
-
-    const isFormValid = () => {
-        return (formData.nome && formData.tipoPessoa && formData.documento && formData.telefone && formData.email
-            && formData.cep && formData.logradouro && formData.numero && formData.bairro && formData.cidade && formData.uf);
-    };
 
     return (
         <Sidebar colapsada={colapsada} setColapsada={setColapsada}>
@@ -376,7 +332,7 @@ export function NovoCliente() {
                                             <Form.Control
                                                 type="text"
                                                 name="documento"
-                                                value={formData.documento}
+                                                value={documento}
                                                 onChange={handleDocumentoChange}
                                                 onFocus={handleFocusDocumento} // Remove máscara ao focar
                                                 onBlur={handleBlurDocumento}   // Aplica máscara ao sair
@@ -401,8 +357,8 @@ export function NovoCliente() {
                                             type="text"
                                             placeholder="Nome do Cliente"
                                             name="nome"
-                                            value={formData.nome}
-                                            onChange={handleChange}
+                                            value={nome}
+                                            onChange={(e) => setNome(e.target.value.toUpperCase()) || ""}
                                             disabled={formDesabilitado}
                                             required
                                         />
@@ -419,7 +375,7 @@ export function NovoCliente() {
                                             type="text"
                                             name="telefone"
                                             maxLength={11}
-                                            value={formData.telefone}
+                                            value={telefone}
                                             onChange={handleTelefoneChange}
                                             onFocus={handleFocusTelefone} // Remove máscara ao focar
                                             onBlur={handleBlurTelefone}   // Aplica máscara ao sair
@@ -443,8 +399,8 @@ export function NovoCliente() {
                                             type="email"
                                             placeholder="E-mail do Cliente"
                                             name="email"
-                                            value={formData.email}
-                                            onChange={handleChange}
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value.toLowerCase())}
                                             disabled={formDesabilitado}
                                             required
                                         />
@@ -460,7 +416,7 @@ export function NovoCliente() {
                                             type="text"
                                             placeholder="CEP"
                                             name="cep"
-                                            value={formData.cep}
+                                            value={cep}
                                             onChange={handleCepChange}
                                             onBlur={buscarCep}
                                             isInvalid={!!errorCep}
@@ -482,8 +438,8 @@ export function NovoCliente() {
                                             type="text"
                                             placeholder="Logradouro"
                                             name="logradouro"
-                                            value={formData.logradouro}
-                                            onChange={handleChange}
+                                            value={logradouro}
+                                            onChange={(e) => setLogradouro(e.target.value.toUpperCase())}
                                             disabled={formDesabilitado}
                                             required
                                         />
@@ -497,8 +453,8 @@ export function NovoCliente() {
                                             type="text"
                                             placeholder="Número"
                                             name="numero"
-                                            value={formData.numero}
-                                            onChange={handleChange}
+                                            value={numero}
+                                            onChange={(e) => setNumero(e.target.value)}
                                             disabled={formDesabilitado}
                                             required
                                         />
@@ -514,8 +470,8 @@ export function NovoCliente() {
                                             type="text"
                                             placeholder="Complemento"
                                             name="complemento"
-                                            value={formData.complemento}
-                                            onChange={handleChange}
+                                            value={complemento}
+                                            onChange={(e) => setComplemento(e.target.value.toUpperCase())}
                                             disabled={formDesabilitado}
                                         />
                                     </Form.Group>
@@ -528,8 +484,8 @@ export function NovoCliente() {
                                             type="text"
                                             placeholder="Bairro"
                                             name="bairro"
-                                            value={formData.bairro}
-                                            onChange={handleChange}
+                                            value={bairro}
+                                            onChange={(e) => setBairro(e.target.value.toUpperCase())}
                                             disabled={formDesabilitado}
                                             required
                                         />
@@ -545,8 +501,8 @@ export function NovoCliente() {
                                             type="text"
                                             placeholder="Cidade"
                                             name="cidade"
-                                            value={formData.cidade}
-                                            onChange={handleChange}
+                                            value={cidade}
+                                            onChange={(e) => setCidade(e.target.value.toUpperCase())}
                                             disabled={formDesabilitado}
                                             required
                                         />
@@ -559,8 +515,8 @@ export function NovoCliente() {
                                         <Form.Control
                                             as="select"
                                             name="uf"
-                                            value={formData.uf}
-                                            onChange={handleChange}
+                                            value={uf}
+                                            onChange={(e) => setUF(e.target.value)}
                                             disabled={formDesabilitado}
                                             required
                                         >

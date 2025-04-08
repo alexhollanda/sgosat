@@ -145,15 +145,13 @@ const PessoaAPI = {
             throw error;
         }
     },
-    async atualizarAsync(pessoaID, nome, tipoPessoa, documento, telefone, email, cep, logradouro, numero,
+    async atualizarAsync(pessoaID, nome, telefone, email, cep, logradouro, numero,
         complemento, bairro, cidade, uf, cliente, funcionario)
     {
         try {
             const pessoaAtualizar = {
                 ID: pessoaID,
                 Nome: nome,
-                TipoPessoa: tipoPessoa,
-                Documento: documento,
                 Telefone: telefone,
                 Email: email,
                 CEP: cep,

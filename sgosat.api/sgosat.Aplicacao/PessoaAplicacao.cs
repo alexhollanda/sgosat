@@ -30,7 +30,7 @@ namespace sgosat.Aplicacao
             if (pessoaDominio == null)
                 throw new Exception("Pessoa não encontrada!");
             
-            ValidarInformacoesPessoa(pessoa);
+            //ValidarInformacoesPessoa(pessoa);
 
             var pessoaCompare = await _pessoaRepositorio.ObterPorEmail(pessoa.Email, true);
             if (pessoaCompare.ID != pessoa.ID)
@@ -46,6 +46,8 @@ namespace sgosat.Aplicacao
             pessoaDominio.Bairro = pessoa.Bairro;
             pessoaDominio.Cidade = pessoa.Cidade;
             pessoaDominio.UF = pessoa.UF;
+            pessoaDominio.Cliente = pessoa.Cliente;
+            pessoaDominio.Funcionario = pessoa.Funcionario;
 
             await _pessoaRepositorio.Atualizar(pessoaDominio);
         }
