@@ -9,6 +9,7 @@ import { NovoCliente } from './paginas/Clientes/NovoCliente';
 import { EditarCliente } from './paginas/Clientes/EditarCliente';
 import { OrdensServico } from './paginas/OrdensServico/OrdensServico';
 import { NovaOrdemServico } from './paginas/OrdensServico/NovaOrdemServico';
+import { Funcionarios } from './paginas/Funcionarios/Funcionarios';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/clientes" element={<Clientes />} />
         <Route path="/clientes/novo" element={<NovoCliente />} />
         <Route path="/clientes/editar" element={<EditarCliente />} />
+        <Route path="/funcionarios" element={<Funcionarios />} />
         <Route path="/usuarios" element={<Usuarios />} />
         <Route path="/usuarios/novo" element={<NovoUsuario />} />
         <Route path="/usuarios/editar" element={<EditarUsuario />} />

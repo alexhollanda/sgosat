@@ -332,6 +332,18 @@ namespace sgosat.Api.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("ObterPorTermo")]
+        public async Task<ActionResult> ObterPorTermo([FromQuery] string query)
+        {
+            if (string.IsNullOrWhiteSpace(query))
+                return BadRequest("Termo de busca não pode ser vazio.");
+            
+            var pessoas = await _pessoaAplicacao.ObterPorTermo(query, true);
+
+            return Ok(pessoas);
+        }
+
         [HttpPost]
         [Route("Criar")]
         public async Task<IActionResult> Criar([FromBody] PessoaCriar pessoaCriar)

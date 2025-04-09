@@ -2,7 +2,7 @@ import Table from "react-bootstrap/esm/Table";
 import { Link, useNavigate } from "react-router-dom";
 import { Sidebar } from "../../componentes/Sidebar/Sidebar";
 import { Topbar } from "../../componentes/Topbar/Topbar";
-import style from "./Clientes.module.css";
+import style from "./Funcionarios.module.css";
 import { MdEdit, MdDelete } from "react-icons/md";
 import { useEffect, useState } from "react";
 import PessoaAPI from "../../services/pessoaAPI";
@@ -11,11 +11,11 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 
 
-export function Clientes() {
+export function Funcionarios() {
     const [colapsada, setColapsada] = useState(false);
-    const [clientes, setClientes] = useState([]);
+    const [funcionarios, setFuncionarios] = useState([]);
     const [mostrarModal, setMostrarModal] = useState(false);
-    const [clienteSelecionado, setClienteSelecionado] = useState(null);
+    const [funcionarioSelecionado, setFuncionarioSelecionado] = useState(null);
 
     // Função para formatar CPF ou CNPJ
     function formataDocumento(value) {
@@ -55,17 +55,17 @@ export function Clientes() {
 
     const navigate = useNavigate();
 
-    const handleClickDeletar = (cliente) => {
-        setClienteSelecionado(cliente);
+    const handleClickDeletar = (funcionario) => {
+        setFuncionarioSelecionado(funcionario);
         setMostrarModal(true);
     }
 
     const handleDeletar = async () => {
         try {
-            await PessoaAPI.deletarClienteAsync(clienteSelecionado.id);
-            setClientes(clientes.filter(cliente => cliente.id !== clienteSelecionado.id));
+            await PessoaAPI.deletarClienteAsync(funcionarioSelecionado.id);
+            setFuncionarios(funcionarios.filter(funcionario => funcionario.id !== funcionarioSelecionado.id));
         } catch (error) {
-            console.error("Erro ao deletar cliente:", error);
+            console.error("Erro ao deletar funcionário:", error);
         } finally {
             handleFechareModal();
         }
@@ -73,20 +73,20 @@ export function Clientes() {
 
     const handleFechareModal = () => {
         setMostrarModal(false);
-        setClienteSelecionado(null);
+        setFuncionarioSelecionado(null);
     }
 
-    async function fetchClientes() {
+    async function fetchFuncionarios() {
         try {
-            const listaClientes = await PessoaAPI.listarClientesAsync(true);
-            setClientes(listaClientes);
+            const listaFuncionarios = await PessoaAPI.listarFuncionariosAsync(true);
+            setFuncionarios(listaFuncionarios);
         } catch (error) {
-            console.error("Erro ao carregar clientes:", error);
+            console.error("Erro ao carregar funcionarios:", error);
         }
     }
 
     useEffect(() => {
-        fetchClientes();
+        fetchFuncionarios();
     }, []);
 
 
@@ -96,8 +96,8 @@ export function Clientes() {
             <Topbar colapsada={colapsada}>
                 <div className={style.pagina_conteudo}>
                     <div className={style.pagina_cabecalho}>
-                        <h3>Clientes</h3>
-                        <Button variant="danger" type="button" className={style.botao_novo} onClick={() => navigate("/clientes/novo")}>
+                        <h3>Funcionários</h3>
+                        <Button variant="danger" type="button" className={style.botao_novo} onClick={() => navigate("/funcionarios/novo")}>
                             <BsFillPersonPlusFill />Novo
                         </Button>
                     </div>
@@ -116,20 +116,20 @@ export function Clientes() {
                             </thead>
                             <tbody className={style.tabela_corpo}>
 
-                                {clientes.map((cliente) => {
+                                {funcionarios.map((funcionario) => {
                                     return (
 
-                                        <tr key={cliente.id}>
-                                            <td>{String(cliente.id).padStart(5, '0')}</td>
-                                            <td>{cliente.nome.substring(0,40) + (cliente.nome.length > 40 ? "..." : "")}</td>
-                                            <td>{formataDocumento(cliente.documento)}</td>
-                                            <td>{formataPhone(cliente.telefone)}</td>
-                                            <td>{cliente.email}</td>
+                                        <tr key={funcionario.id}>
+                                            <td>{String(funcionario.id).padStart(5, '0')}</td>
+                                            <td>{funcionario.nome.substring(0,40) + (funcionario.nome.length > 40 ? "..." : "")}</td>
+                                            <td>{formataDocumento(funcionario.documento)}</td>
+                                            <td>{formataPhone(funcionario.telefone)}</td>
+                                            <td>{funcionario.email}</td>
                                             <td>
-                                                <Link to='/clientes/editar' state={cliente.id} className={style.botao_editar}>
+                                                <Link to='/funcionarios/editar' state={funcionario.id} className={style.botao_editar}>
                                                     <MdEdit />
                                                 </Link>
-                                                <button onClick={() => handleClickDeletar(cliente)} className={style.botao_deletar}>
+                                                <button onClick={() => handleClickDeletar(funcionario)} className={style.botao_deletar}>
                                                     <MdDelete />
                                                 </button>
                                             </td>
@@ -147,7 +147,7 @@ export function Clientes() {
                         </Modal.Header>
 
                         <Modal.Body className={style.modal_content}>
-                            Tem certeza que deseja deletar o cliente <b>{clienteSelecionado?.nome}</b>?
+                            Tem certeza que deseja deletar o funcinário <b>{funcionarioSelecionado?.nome}</b>?
                         </Modal.Body>
 
                         <Modal.Footer className={style.modal_footer}>

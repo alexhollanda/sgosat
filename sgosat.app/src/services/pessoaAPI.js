@@ -81,7 +81,16 @@ const PessoaAPI = {
             console.error("Erro ao obter funcionário:", error);
             throw error;
         }
-    },    
+    },
+    async obterPorTermoAsync(query) {
+        try {
+            const response = await HTTPClient.get(`Pessoa/ObterPorTermo?query=${query}`);
+            return response.data;
+        } catch (error) {
+            console.error("Erro ao listar pessoas:", error);
+            throw error;
+        }
+    },   
     async listarAsync(ativos) {
         try {
             const response = await HTTPClient.get(`/Pessoa/Listar?ativos=${ativos}`);

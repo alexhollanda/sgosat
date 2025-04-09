@@ -1,24 +1,21 @@
-import style from "./EditarCliente.module.css";
+import style from './NovoCliente.module.css';
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import PessoaAPI from "../../services/pessoaAPI";
-import axios from "axios";
-import { Sidebar } from "../../componentes/Sidebar/Sidebar";
-import { Topbar } from "../../componentes/Topbar/Topbar";
+import axios from 'axios';
+import { Sidebar } from '../../componentes/Sidebar/Sidebar';
+import { Topbar } from '../../componentes/Topbar/Topbar';
 import Form from 'react-bootstrap/Form';
+import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import { Spinner } from 'react-bootstrap';
 
 export function EditarCliente() {
-    const location = useLocation();
-    const navigate = useNavigate();
-
-    const [id] = useState(location.state);
-
+    const [colapsada, setColapsada] = useState(false);
     const [nome, setNome] = useState('');
-    const [tipoPessoa, setTipoPessoa] = useState('');
     const [documento, setDocumento] = useState('');
     const [telefone, setTelefone] = useState('');
     const [email, setEmail] = useState('');
@@ -29,23 +26,74 @@ export function EditarCliente() {
     const [bairro, setBairro] = useState('');
     const [cidade, setCidade] = useState('');
     const [uf, setUF] = useState('');
-    const cliente = true; // Para indicar que é um cliente
-    const funcionario = false; // Para indicar que não é um funcionário
+    const [cliente, setCliente] = useState(true);
+    const [funcionario, setFuncionario] = useState(false);
+
+    const location = useLocation();
+    const navigate = useNavigate();
+    const [id] = useState(location.state);
+
+    useEffect(() => {
+        const fetchClientes = async () => {
+            try {
+                const response = await PessoaAPI.obterClienteAsync(id);
+                if (response.tipoPessoa == "PF")
+                    setDocumento(formataCPF(response.documento));
+                else setDocumento(formataCNPJ(response.documento));
+                setNome(response.nome);
+                setTelefone(formataPhone(response.telefone));
+                setEmail(response.email);
+                setCep(aplicarMascaraCep(response.cep));
+                setLogradouro(response.logradouro);
+                setNumero(response.numero);
+                setComplemento(response.complemento);
+                setBairro(response.bairro);
+                setCidade(response.cidade);
+                setUF(response.uf);
+                setCliente(response.cliente);
+                setFuncionario(response.funcionario);
+            } catch (error) {
+                console.error("Erro ao buscar clientes: ", error);
+            }
+        }
+
+        fetchClientes();
+    }, []);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        // Remove as máscaras antes de enviar
+        const dadosSemMascara = {
+            telefoneLimpo: removeMask(telefone),
+            documentoLimpo: removeMask(documento),
+            cepLimpo: removeMask(cep)
+        };
+
+        if (isFormValid()) {
+            try {
+                await PessoaAPI.atualizarAsync(id, nome, dadosSemMascara.telefoneLimpo, email, dadosSemMascara.cepLimpo, logradouro,
+                    numero, complemento, bairro, cidade, uf, cliente, funcionario)
+                navigate("/clientes");
+            } catch (error) {
+                console.log("Erro ao salvar o cliente:", error);
+            }
+
+        } else {
+            alert("Por favor, preencha todos os campos obrigatórios.");
+        }
+    }
+
+    const isFormValid = () => {
+        return (nome && telefone && email && cep && logradouro && numero && bairro && cidade && uf);
+    };
 
 
     //#region Funções e Validação e Máscaras
-
-    useEffect(() => {
-        formataDocumento();
-        carregarTelefone();
-        handleCepChange({target: { value: cep }}); // Aplica a máscara ao carregar o componente
-    }, [documento, tipoPessoa, telefone]);
-
     const [errorPhone, setErrorPhone] = useState(''); // Mensagem de erro pro Telefone
     const [errorCep, setErrorCep] = useState(''); // Mensagem de erro pro CEP
 
     const buscarCep = async () => {
-        const cepLimpo = cep.replace(/\D/g, "");
+        const cepLimpo = getRawValue(cep);
 
         if (cepLimpo.length !== 8) {
             setErrorCep("CEP inválido.");
@@ -86,6 +134,19 @@ export function EditarCliente() {
         setCep(valorComMascara);
     }
 
+    function formataPhone(value) {
+        value = value.replace(/\D/g, '');
+        if (value.length <= 10) {
+            return value
+                .replace(/^(\d{2})(\d)/, '($1) $2')
+                .replace(/(\d{4})(\d)/, '$1-$2');
+        } else {
+            return value
+                .replace(/^(\d{2})(\d)/, '($1) $2')
+                .replace(/(\d{1})(\d{4})(\d)/, '$1 $2-$3');
+        }
+    }
+
     function formataCPF(value) {
         return value
             .replace(/\D/g, '') // Remove tudo que não for dígito
@@ -103,28 +164,6 @@ export function EditarCliente() {
             .replace(/(\d{4})(\d{1,2})$/, '$1-$2'); // Coloca o traço
     };
 
-    function maskDocument(value, type) {
-        return type === 'PF' ? formataCPF(value) : formataCNPJ(value);
-    };
-
-    const formataDocumento = () => {
-        const maskedValue = maskDocument(documento, tipoPessoa);
-        setDocumento(maskedValue);
-    };
-
-    function formataPhone(value) {
-        value = value.replace(/\D/g, '');
-        if (value.length <= 10) {
-            return value
-                .replace(/^(\d{2})(\d)/, '($1) $2')
-                .replace(/(\d{4})(\d)/, '$1-$2');
-        } else {
-            return value
-                .replace(/^(\d{2})(\d)/, '($1) $2')
-                .replace(/(\d{1})(\d{4})(\d)/, '$1 $2-$3');
-        }
-    }
-
     // Função para remover a máscara e obter o valor puro
     function getRawValue(value) {
         return value.replace(/[().\s\-\/]/g, '');
@@ -133,25 +172,18 @@ export function EditarCliente() {
     const removeMask = (value) => {
         return value.replace(/\D/g, ''); // Remove tudo que não for dígito
     }
-
+    
     const handleTelefoneChange = (event) => {
         setTelefone(getRawValue(event.target.value));
         setErrorPhone('');
     };
 
     const handleFocusTelefone = () => {
-        const rawValue = getRawValue(telefone);
-        setTelefone(rawValue); // Remove a máscara ao focar
-    };
-
-    const carregarTelefone = () => {
-        const maskedValue = formataPhone(telefone);
-        setTelefone(maskedValue);
+        setTelefone(getRawValue(telefone)); // Remove a máscara ao focar
     };
 
     const handleBlurTelefone = () => {
-        const maskedValue = formataPhone(telefone);
-        setTelefone(maskedValue);
+        setTelefone(formataPhone(telefone));
 
         // Validação básica para telefone (10 ou 11 dígitos)
         const rawValue = getRawValue(telefone);
@@ -164,66 +196,31 @@ export function EditarCliente() {
 
     //#endregion
 
-
-    useEffect(() => {
-        const fetchCliente = async () => {
-            try {
-                const cliente = await PessoaAPI.obterClienteAsync(id);
-                setNome(cliente.nome);
-                setTipoPessoa(cliente.tipoPessoa);
-                setDocumento(cliente.documento);
-                setTelefone(cliente.telefone);
-                setEmail(cliente.email);
-                setCep(cliente.cep);
-                setLogradouro(cliente.logradouro);
-                setNumero(cliente.numero);
-                setComplemento(cliente.complemento);
-                setBairro(cliente.bairro);
-                setCidade(cliente.cidade);
-                setUF(cliente.uf);
-            } catch (error) {
-                console.error("Erro ao buscar dados do cliente:", error);
-            }
-        };
-
-        fetchCliente();
-    }, []);
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        if (isFormValid()) {
-            const dadosSemMascara = {
-                telefoneLimpo: removeMask(telefone),
-                documentoLimpo: removeMask(documento),
-                cepLimpo: removeMask(cep)
-            };
-            // Remove as máscaras antes de enviar
-
-            // Chama a API para criar o cliente
-            await PessoaAPI.atualizarAsync(id, nome, tipoPessoa, dadosSemMascara.documentoLimpo, dadosSemMascara.telefoneLimpo,
-                email, dadosSemMascara.cepLimpo, logradouro, numero, complemento, bairro,
-                cidade, uf, cliente, funcionario);
-            navigate("/clientes");
-        } else {
-            alert("Por favor, preencha todos os campos obrigatórios.");
-        }
-    };
-
-    const isFormValid = () => {
-        return (nome && tipoPessoa && documento && telefone && email && cep
-            && logradouro && numero && bairro && cidade && uf);
-    };
-
     return (
-        <Sidebar>
-            <Topbar>
+        <Sidebar colapsada={colapsada} setColapsada={setColapsada}>
+            <Topbar colapsada={colapsada}>
                 <div className={style.pagina_conteudo}>
-                    <h3>Editar Cliente</h3>
+                    <h3>Novo Cliente</h3>
                     <hr></hr>
 
                     <Form onSubmit={handleSubmit}>
                         <Container>
                             <Row>
+                                <Col sm={4}>
+                                    <Form.Group controlId="formDocumento" className="mb-3">
+                                        <Form.Label>Documento</Form.Label>
+                                        <InputGroup>
+                                            <Form.Control
+                                                type="text"
+                                                name="documento"
+                                                value={documento}
+                                                disabled
+                                                required
+                                            />
+                                        </InputGroup>
+                                    </Form.Group>
+                                </Col>
+
                                 <Col sm={8}>
                                     <Form.Group controlId="formNome" className="mb-3">
                                         <Form.Label>Nome do Cliente</Form.Label>
@@ -236,45 +233,18 @@ export function EditarCliente() {
                                             required
                                         />
                                     </Form.Group>
-
-                                </Col>
-                                <Col sm={4}>
-                                    <Form.Group controlId="formTipoPessoa" className="mb-3">
-                                        <Form.Label>Tipo de Pessoa</Form.Label>
-                                        <Form.Control
-                                            as="select"
-                                            name="tipoPessoa"
-                                            value={tipoPessoa}
-                                            required
-                                            disabled
-                                        >
-                                            <option value="PF">PESSOA FÍSICA</option>
-                                            <option value="PJ">PESSOA JURÍDICA</option>
-                                        </Form.Control>
-                                    </Form.Group>
                                 </Col>
                             </Row>
 
                             <Row>
-                                <Col sm>
-                                    <Form.Group controlId="formDocumento" className="mb-3">
-                                        <Form.Label>Documento</Form.Label>
-                                        <Form.Control
-                                            type="text"
-                                            name="documento"
-                                            maxLength={tipoPessoa === 'PF' ? 11 : 14}
-                                            value={documento}
-                                            disabled
-                                        />
-                                    </Form.Group>
-                                </Col>
 
-                                <Col sm>
+                                <Col sm={6}>
                                     <Form.Group controlId="formTelefone" className="mb-3">
                                         <Form.Label>Telefone:</Form.Label>
                                         <Form.Control
                                             type="text"
                                             name="telefone"
+                                            maxLength={11}
                                             value={telefone}
                                             onChange={handleTelefoneChange}
                                             onFocus={handleFocusTelefone} // Remove máscara ao focar
@@ -291,7 +261,7 @@ export function EditarCliente() {
                                     </Form.Group>
                                 </Col>
 
-                                <Col sm>
+                                <Col sm={6}>
                                     <Form.Group controlId="formEmail" className="mb-3">
                                         <Form.Label>E-mail</Form.Label>
                                         <Form.Control
@@ -367,7 +337,6 @@ export function EditarCliente() {
                                             name="complemento"
                                             value={complemento}
                                             onChange={(e) => setComplemento(e.target.value.toUpperCase())}
-
                                         />
                                     </Form.Group>
                                 </Col>
@@ -444,18 +413,21 @@ export function EditarCliente() {
                                     </Form.Group>
                                 </Col>
                             </Row>
+
+                            <Button variant="success" type="submit" className={style.btn} disabled={!isFormValid()}>
+                                Salvar
+                            </Button>
+
+                            <Button variant="danger" type="button" className={style.btn} onClick={() => navigate("/clientes")}>
+                                Cancelar
+                            </Button>
                         </Container>
 
-                        <Button variant="success" type="submit" className={style.btn} disabled={!isFormValid()}>
-                            Salvar
-                        </Button>
 
-                        <Button variant="danger" type="button" className={style.btn} onClick={() => navigate("/clientes")}>
-                            Cancelar
-                        </Button>
                     </Form>
                 </div>
             </Topbar>
         </Sidebar>
     )
-}
+
+};

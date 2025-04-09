@@ -15,6 +15,7 @@ namespace sgosat.Repositorio.Interfaces
         Task<Pessoa> ObterPorEmail(string email, bool Ativo);
         Task<Pessoa> ObterClientePorEmail(string email, bool Ativo);
         Task<Pessoa> ObterFuncionarioPorEmail(string email, bool Ativo);
+        Task<IEnumerable<Pessoa>> ObterPorTermo(string query, bool Ativo);
         Task<IEnumerable<Pessoa>> Listar(bool ativo);
         Task<IEnumerable<Pessoa>> ListarClientes(bool ativo);
         Task<IEnumerable<Pessoa>> ListarFuncionarios(bool ativo);

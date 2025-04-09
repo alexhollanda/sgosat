@@ -214,6 +214,10 @@ namespace sgosat.Aplicacao
 
             return pessoaDominio;
         }
+        public async Task<IEnumerable<Pessoa>> ObterPorTermo(string query, bool Ativo)
+        {
+            return await _pessoaRepositorio.ObterPorTermo(query, Ativo);
+        }
 
         public async Task<IEnumerable<Pessoa>> Listar(bool Ativo)
         {

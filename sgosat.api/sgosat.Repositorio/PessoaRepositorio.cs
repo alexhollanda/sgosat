@@ -103,6 +103,15 @@ namespace sgosat.Repositorio
                         .FirstOrDefaultAsync();
         }
 
+        public async Task<IEnumerable<Pessoa>> ObterPorTermo(string query, bool Ativo)
+        {
+            return await _contexto.Pessoas
+                        .Where(p => p.Nome.Contains(query) || p.Documento.Contains(query))
+                        .Where(p => p.Ativo == Ativo)
+                        .Take(10)
+                        .ToListAsync();
+        }
+
         public async Task<IEnumerable<Pessoa>> Listar(bool Ativo)
         {
             return await _contexto.Pessoas.Where(p => p.Ativo == Ativo).ToListAsync();

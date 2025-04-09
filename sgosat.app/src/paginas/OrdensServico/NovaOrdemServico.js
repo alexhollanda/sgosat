@@ -12,6 +12,8 @@ import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import { AsyncTypeahead, Typeahead } from 'react-bootstrap-typeahead';
+import 'react-bootstrap-typeahead/css/Typeahead.css';
 
 export function NovaOrdemServico() {
     const [colapsada, setColapsada] = useState(false);
@@ -23,24 +25,34 @@ export function NovaOrdemServico() {
 
     const navigate = useNavigate();
 
+    async function fetchClientes() {
+        try {
+            const listaClientes = await PessoaAPI.listarClientesAsync(true);
+            setClientes(listaClientes);
+            setLoading(false);
+        }
+        catch (error) {
+            console.error('Erro ao carregar clientes:', error);
+            setLoading(false);
+        }
+    }
+
     useEffect(() => {
-        // Substitua a URL abaixo pela sua rota real da API
-        PessoaAPI.listarClientesAsync(true)
-        .then((response) => {
-            setClientes(response.data);
-            setLoading(false);
-        })
-        .catch((error) => {
-            console.error('Erro ao buscar clientes:', error);
-            setLoading(false);
-        });        
-      }, []);
+        const hoje = new Date();
+        const ano = hoje.getFullYear();
+        const mes = String(hoje.getMonth() + 1).padStart(2, '0'); // Janeiro = 0
+        const dia = String(hoje.getDate()).padStart(2, '0');
+
+        const dataFormatada = `${ano}-${mes}-${dia}`;
+        setData(dataFormatada);
+        fetchClientes();
+    }, [])
 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (isFormValid()) {
-            
+
             navigate("/ordens");
         } else {
             alert("Por favor, preencha todos os campos obrigatórios.");
@@ -48,7 +60,7 @@ export function NovaOrdemServico() {
     };
 
     const isFormValid = () => {
-        
+
     };
 
     return (
@@ -63,7 +75,7 @@ export function NovaOrdemServico() {
 
                             <Row>
                                 <Col sm={4}>
-                                    <Form.Group controlId="formData">
+                                    <Form.Group className="mb-3" controlId="formData">
                                         <Form.Label>Data da Ordem de Serviço</Form.Label>
                                         <Form.Control
                                             type="date"
@@ -75,27 +87,51 @@ export function NovaOrdemServico() {
                                 </Col>
 
                                 <Col sm={8}>
-                                    <Form.Group controlId="formCliente">
+                                    <Form.Group className="mb-3" controlId="formCliente">
                                         <Form.Label>Cliente</Form.Label>
                                         {loading ? (
                                             <Spinner animation="border" />
                                         ) : (
-                                            <Form.Select
-                                                value={clienteSelecionado}
-                                                onChange={(e) => setClienteSelecionado(e.target.value)}
-                                                required
-                                            >
-                                                <option value="">Selecione um cliente</option>
-                                                {clientes.map((cliente) => (
-                                                    <option key={cliente.id} value={cliente.id}>
-                                                        {cliente.nome}
-                                                    </option>
-                                                ))}
-                                            </Form.Select>
+                                            <Typeahead
+                                                id="cliente-typeahead"
+                                                labelKey="nome"
+                                                options={clientes}
+                                                placeholder="Digite para buscar o cliente..."
+                                                onChange={setClienteSelecionado}
+                                                selected={clienteSelecionado}
+                                                minLength={2}
+                                            />
                                         )}
                                     </Form.Group>
                                 </Col>
-                            </Row>                                                 
+                            </Row>
+
+                            <Row>
+                                <Col sm={12}>
+                                    <Form.Group className="mb-3" controlId="descricaoProblema">
+                                        <Form.Label>Descrição do Problema</Form.Label>
+                                        <Form.Control as="textarea" rows={3} style={{ resize: 'none' }} placeholder="Descreva o problema aqui..." />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+
+                            <Row>
+                                <Col sm={12}>
+                                    <Form.Group className="mb-3" controlId="servicoRealizado">
+                                        <Form.Label>Serviço Realizado</Form.Label>
+                                        <Form.Control as="textarea" rows={3} style={{ resize: 'none' }} placeholder="Informe o que foi feito..." />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+
+                            <Row>
+                                <Col sm={12}>
+                                    <Form.Group className="mb-3" controlId="observacoes">
+                                        <Form.Label>Observações</Form.Label>
+                                        <Form.Control as="textarea" rows={3} style={{ resize: 'none' }} placeholder="Alguma observação adicional?" />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
 
                             <Button variant="success" type="submit" className={style.btn} disabled={!isFormValid()}>
                                 Salvar
