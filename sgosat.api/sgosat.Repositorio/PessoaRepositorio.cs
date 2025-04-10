@@ -4,133 +4,55 @@ using sgosat.Repositorio.Interfaces;
 
 namespace sgosat.Repositorio
 {
-    public class PessoaRepositorio : BaseRepositorio, IPessoaRepositorio
+    public class PessoaRepositorio : BaseRepositorio, IClienteRepositorio
     {
         public PessoaRepositorio(sgosatContexto contexto) : base(contexto)
         {
             
         }
 
-        public async Task<int> Salvar(Pessoa pessoa)
+        public async Task<int> Salvar(Cliente cliente)
         {
-            _contexto.Pessoas.Add(pessoa);
+            _contexto.Clientes.Add(cliente);
             await _contexto.SaveChangesAsync();
 
-            return pessoa.ID;
+            return cliente.ID;
         }
 
-        public async Task Atualizar(Pessoa pessoa)
+        public async Task Atualizar(Cliente cliente)
         {
-            _contexto.Pessoas.Update(pessoa);
+            _contexto.Clientes.Update(cliente);
             await _contexto.SaveChangesAsync();
         }
 
-        public async Task<Pessoa> Obter(int pessoaID, bool Ativo)
+        public async Task<Cliente> Obter(int clienteID, bool Ativo)
         {
-            return await _contexto.Pessoas
-                        .Where(p => p.ID == pessoaID)
-                        .Where(p => p.Ativo == Ativo)
-                        .FirstOrDefaultAsync();
-        }
-
-        public async Task<Pessoa> ObterCliente(int pessoaID, bool Ativo)
-        {
-            return await _contexto.Pessoas
-                        .Where(p => p.ID == pessoaID)
-                        .Where(p => p.Cliente == true)
-                        .Where(p => p.Ativo == Ativo)
-                        .FirstOrDefaultAsync();
-        }
-
-        public async Task<Pessoa> ObterFuncionario(int pessoaID, bool Ativo)
-        {
-            return await _contexto.Pessoas
-                        .Where(p => p.ID == pessoaID)
-                        .Where(p => p.Funcionario == true)
-                        .Where(p => p.Ativo == Ativo)
+            return await _contexto.Clientes
+                        .Where(c => c.ID == clienteID)
+                        .Where(c => c.Ativo == Ativo)
                         .FirstOrDefaultAsync();
         }
         
-        public async Task<Pessoa> ObterPorDoc(string doc, bool Ativo)
+        public async Task<Cliente> ObterPorDoc(string doc, bool Ativo)
         {
-            return await _contexto.Pessoas
+            return await _contexto.Clientes
                         .Where(p => p.Documento == doc)
                         .Where(p => p.Ativo == Ativo)
                         .FirstOrDefaultAsync();
         }
-        
-        public async Task<Pessoa> ObterClientePorDoc(string doc, bool Ativo)
-        {
-            return await _contexto.Pessoas
-                        .Where(p => p.Documento == doc)
-                        .Where(p => p.Cliente == true)
-                        .Where(p => p.Ativo == Ativo)
-                        .FirstOrDefaultAsync();
-        }
-        
-        public async Task<Pessoa> ObterFuncionarioPorDoc(string doc, bool Ativo)
-        {
-            return await _contexto.Pessoas
-                        .Where(p => p.Documento == doc)
-                        .Where(p => p.Funcionario == true)
-                        .Where(p => p.Ativo == Ativo)
-                        .FirstOrDefaultAsync();
-        }        
 
-        public async Task<Pessoa> ObterPorEmail(string email, bool Ativo)
+        public async Task<IEnumerable<Cliente>> ObterPorTermo(string query, bool Ativo)
         {
-            return await _contexto.Pessoas
-                        .Where(p => p.Email == email)
-                        .Where(p => p.Ativo == Ativo)
-                        .FirstOrDefaultAsync();
-        }
-
-        public async Task<Pessoa> ObterClientePorEmail(string email, bool Ativo)
-        {
-            return await _contexto.Pessoas
-                        .Where(p => p.Email == email)
-                        .Where(p => p.Cliente == true)
-                        .Where(p => p.Ativo == Ativo)
-                        .FirstOrDefaultAsync();
-        }
-
-        public async Task<Pessoa> ObterFuncionarioPorEmail(string email, bool Ativo)
-        {
-            return await _contexto.Pessoas
-                        .Where(p => p.Email == email)
-                        .Where(p => p.Funcionario == true)
-                        .Where(p => p.Ativo == Ativo)
-                        .FirstOrDefaultAsync();
-        }
-
-        public async Task<IEnumerable<Pessoa>> ObterPorTermo(string query, bool Ativo)
-        {
-            return await _contexto.Pessoas
-                        .Where(p => p.Nome.Contains(query) || p.Documento.Contains(query))
-                        .Where(p => p.Ativo == Ativo)
+            return await _contexto.Clientes
+                        .Where(c => c.Nome.Contains(query) || c.Documento.Contains(query))
+                        .Where(c => c.Ativo == Ativo)
                         .Take(10)
                         .ToListAsync();
         }
 
-        public async Task<IEnumerable<Pessoa>> Listar(bool Ativo)
+        public async Task<IEnumerable<Cliente>> Listar(bool Ativo)
         {
-            return await _contexto.Pessoas.Where(p => p.Ativo == Ativo).ToListAsync();
-        }
-
-        public async Task<IEnumerable<Pessoa>> ListarClientes(bool Ativo)
-        {
-            return await _contexto.Pessoas
-                            .Where(p => p.Cliente == true)
-                            .Where(p => p.Ativo == Ativo)
-                            .ToListAsync();
-        }
-
-        public async Task<IEnumerable<Pessoa>> ListarFuncionarios(bool Ativo)
-        {
-            return await _contexto.Pessoas
-                            .Where(p => p.Funcionario == true)
-                            .Where(p => p.Ativo == Ativo)
-                            .ToListAsync();
+            return await _contexto.Clientes.Where(c => c.Ativo == Ativo).ToListAsync();
         }
     }
 }

@@ -17,6 +17,8 @@ namespace sgosat.Dominio.Entidades
         public string Cidade { get; set; }
         public string UF { get; set; }
         public bool Ativo { get; set; }
+        [JsonIgnore]
+        public List<OrdemServico> OrdensServicos { get; set; }
 
         public Cliente()
         {

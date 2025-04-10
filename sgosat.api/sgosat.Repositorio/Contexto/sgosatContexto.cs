@@ -9,10 +9,9 @@ public class sgosatContexto : DbContext
     /// <summary>
     /// Define o conjunto de entidades.
     /// </summary>
-    public DbSet<Pessoa> Pessoas { get; set; }
+    public DbSet<Cliente> Clientes { get; set; }
     public DbSet<Usuario> Usuarios { get; set; }
     public DbSet<OrdemServico> OrdensServicos { get; set; }
-    public DbSet<OrdemServicoPessoas> OrdemServicoPessoas { get; set; }
 
     public sgosatContexto()
     { }
@@ -40,23 +39,11 @@ public class sgosatContexto : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
 
-        modelBuilder.ApplyConfiguration(new PessoaConfiguracoes());
+        modelBuilder.ApplyConfiguration(new ClienteConfiguracoes());
         modelBuilder.ApplyConfiguration(new UsuarioConfiguracoes());
         modelBuilder.ApplyConfiguration(new OrdemServicoConfiguracoes());
         modelBuilder.ApplyConfiguration(new OrdemServicoPessoasConfiguracoes());
 
-        modelBuilder.Entity<OrdemServicoPessoas>()
-            .HasKey(osp => new { osp.OrdemServicoID, osp.PessoaID });
-        
-        modelBuilder.Entity<OrdemServicoPessoas>()
-            .HasOne(osp => osp.OrdemServico)
-            .WithMany(os => os.OrdemServicoPessoas)
-            .HasForeignKey(osp => osp.OrdemServicoID);
-
-        modelBuilder.Entity<OrdemServicoPessoas>()
-            .HasOne(osp => osp.Pessoa)
-            .WithMany(p => p.OrdemServicoPessoas)
-            .HasForeignKey(osp => osp.PessoaID);
 
     }
 }
