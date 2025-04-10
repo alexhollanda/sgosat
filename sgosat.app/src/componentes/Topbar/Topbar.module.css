@@ -4,7 +4,7 @@
     left: 0;
     right: 0;
     height: 10vh;
-    background-color: #A2B29F;
+    background-color: #48A6A7;
     border-bottom: 1px solid #000;
     display: flex;
     align-items: center;
@@ -57,7 +57,7 @@
 
 .botao_deslogar {
     text-decoration: none;
-    color: #E69215;
+    color: #006A71;
     font-size: 3.5vh;
     display: flex;
     align-items: center;

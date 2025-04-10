@@ -1,5 +1,5 @@
-import style from './NovoCliente.module.css';
-import React, { useEffect, useState } from "react";
+import style from './NovoFuncionario.module.css';
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PessoaAPI from "../../services/pessoaAPI";
 import axios from 'axios';
@@ -13,7 +13,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { Spinner } from 'react-bootstrap';
 
-export function NovoCliente() {
+export function NovoFuncionario() {
     const [colapsada, setColapsada] = useState(false);
     const [id, setId] = useState(null);
     const [nome, setNome] = useState('');
@@ -28,8 +28,8 @@ export function NovoCliente() {
     const [bairro, setBairro] = useState('');
     const [cidade, setCidade] = useState('');
     const [uf, setUF] = useState('');
-    const [cliente, setCliente] = useState(true);
-    const [funcionario, setFuncionario] = useState(false);
+    const [cliente, setCliente] = useState(false);
+    const [funcionario, setFuncionario] = useState(true);
     const [modoAtualizacao, setModoAtualizacao] = useState(false);
     const [formDesabilitado, setFormDesabilitado] = useState(true);
     const [carregando, setCarregando] = useState(false);
@@ -40,32 +40,32 @@ export function NovoCliente() {
     const buscarClientePorDocumento = async (documento) => {
         setCarregando(true);
         try {
-            const cliente = await PessoaAPI.obterPorDocAsync(documento);
-            setId(cliente.id);
-            setNome(cliente.nome);
-            setTipoPessoa(cliente.tipoPessoa);
-            setDocumento(maskDocument(cliente.documento));
-            setTelefone(formataPhone(cliente.telefone));
-            setEmail(cliente.email);
-            setCep(aplicarMascaraCep(cliente.cep));
-            setLogradouro(cliente.logradouro);
-            setNumero(cliente.numero);
-            setBairro(cliente.bairro);
-            setCidade(cliente.cidade);
-            setUF(cliente.uf);
-            setCliente(true);
-            setFuncionario(cliente.funcionario);
+            const funcionario = await PessoaAPI.obterPorDocAsync(documento);
+            setId(funcionario.id);
+            setNome(funcionario.nome);
+            setTipoPessoa(funcionario.tipoPessoa);
+            setDocumento(maskDocument(funcionario.documento));
+            setTelefone(formataPhone(funcionario.telefone));
+            setEmail(funcionario.email);
+            setCep(aplicarMascaraCep(funcionario.cep));
+            setLogradouro(funcionario.logradouro);
+            setNumero(funcionario.numero);
+            setBairro(funcionario.bairro);
+            setCidade(funcionario.cidade);
+            setUF(funcionario.uf);
+            setCliente(funcionario.cliente);
+            setFuncionario(true);
             setModoAtualizacao(true);
             setFormDesabilitado(false);            
         } catch (error) {
-            // Cliente não encontrado (erro 400)
+            // Funcionário não encontrado (erro 400)
             if (error?.response?.status === 400) {
                 setModoAtualizacao(false);
                 setFormDesabilitado(false);
                 setId(null);
             }
             else {
-                console.error("Erro inesperado ao buscar cliente:", error);
+                console.error("Erro inesperado ao buscar funcionário:", error);
             }
         } finally {
             setCarregando(false);
@@ -91,9 +91,9 @@ export function NovoCliente() {
                         dadosSemMascara.telefoneLimpo, email, dadosSemMascara.cepLimpo, logradouro,
                         numero, complemento, bairro, cidade, uf, true, funcionario);
                 }
-                navigate("/clientes");
+                navigate("/funcionarios");
             } catch (error) {
-                console.log("Erro ao salvar o cliente:", error);
+                console.log("Erro ao salvar o funcionário:", error);
             }
 
         } else {
@@ -319,7 +319,7 @@ export function NovoCliente() {
         <Sidebar colapsada={colapsada} setColapsada={setColapsada}>
             <Topbar colapsada={colapsada}>
                 <div className={style.pagina_conteudo}>
-                    <h3>Novo Cliente</h3>
+                    <h3>Novo Funcionário</h3>
                     <hr></hr>
                     <Form onSubmit={handleSubmit}>
                         <Container>
@@ -556,7 +556,7 @@ export function NovoCliente() {
                                 Salvar
                             </Button>
 
-                            <Button variant="danger" type="button" className={style.btn} onClick={() => navigate("/clientes")}>
+                            <Button variant="danger" type="button" className={style.btn} onClick={() => navigate("/funcionarios")}>
                                 Cancelar
                             </Button>
                         </Container>
@@ -566,4 +566,3 @@ export function NovoCliente() {
         </Sidebar>
     )
 };
-

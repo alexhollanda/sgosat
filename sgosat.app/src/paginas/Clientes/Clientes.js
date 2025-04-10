@@ -103,7 +103,7 @@ export function Clientes() {
                     </div>
 
                     <div className={style.tabela}>
-                        <Table responsive striped hover>
+                        <Table responsive hover>
                             <thead className={style.tabela_cabecalho}>
                                 <tr>
                                     <th>ID</th>

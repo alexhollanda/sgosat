@@ -10,6 +10,7 @@ import { EditarCliente } from './paginas/Clientes/EditarCliente';
 import { OrdensServico } from './paginas/OrdensServico/OrdensServico';
 import { NovaOrdemServico } from './paginas/OrdensServico/NovaOrdemServico';
 import { Funcionarios } from './paginas/Funcionarios/Funcionarios';
+import { NovoFuncionario } from './paginas/Funcionarios/NovoFuncionario';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/clientes/novo" element={<NovoCliente />} />
         <Route path="/clientes/editar" element={<EditarCliente />} />
         <Route path="/funcionarios" element={<Funcionarios />} />
+        <Route path="/funcionarios/novo" element={<NovoFuncionario />} />
         <Route path="/usuarios" element={<Usuarios />} />
         <Route path="/usuarios/novo" element={<NovoUsuario />} />
         <Route path="/usuarios/editar" element={<EditarUsuario />} />
