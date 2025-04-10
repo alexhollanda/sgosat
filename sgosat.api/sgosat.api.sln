@@ -11,8 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sgosat.Aplicacao", "sgosat.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sgosat.Api", "sgosat.Api\sgosat.Api.csproj", "{7A49ACB5-661E-4A8D-AAE3-9370BEF09F50}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sgosat.Servicos", "sgosat.Servicos\sgosat.Servicos.csproj", "{B76FC0D6-8299-427D-9797-95DE327BA494}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,9 +36,5 @@ Global
 		{7A49ACB5-661E-4A8D-AAE3-9370BEF09F50}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A49ACB5-661E-4A8D-AAE3-9370BEF09F50}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A49ACB5-661E-4A8D-AAE3-9370BEF09F50}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B76FC0D6-8299-427D-9797-95DE327BA494}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B76FC0D6-8299-427D-9797-95DE327BA494}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B76FC0D6-8299-427D-9797-95DE327BA494}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B76FC0D6-8299-427D-9797-95DE327BA494}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

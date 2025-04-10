@@ -4,13 +4,11 @@ using sgosat.Aplicacao;
 using sgosat.Aplicacao.Interfaces;
 using sgosat.Repositorio;
 using sgosat.Repositorio.Interfaces;
-using sgosat.Servicos.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Adicione serviços ao contêiner.
 builder.Services.AddScoped<IUsuarioAplicacao, UsuarioAplicacao>();
-builder.Services.AddScoped<ICepAplicacao, CepAplicacao>();
 builder.Services.AddScoped<IPessoaAplicacao, PessoaAplicacao>();
 
 // Adicione as interfaces de banco de dados
@@ -18,8 +16,6 @@ builder.Services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
 builder.Services.AddScoped<IPessoaRepositorio, PessoaRepositorio>();
 
 // Adicione o serviço
-
-builder.Services.AddScoped<IBrasilAPICep, BrasilAPICep>();
 
 builder.Services.AddCors(options =>
 {

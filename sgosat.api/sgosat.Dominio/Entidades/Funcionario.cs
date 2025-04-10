@@ -1,20 +1,20 @@
 using System.Text.Json.Serialization;
-using sgosat.Dominio.Enumeradores;
 
 namespace sgosat.Dominio.Entidades
 {
-    public class Usuario
+    public class Funcionario
     {
         public int ID { get; set; }
-        public string UserName { get; set; }
-        public string Senha { get; set; }
+        public string Nome { get; set; }
+        public string Documento { get; set; }
+        public string Telefone { get; set; }
+        public decimal Salario { get; set; }
         public bool Ativo { get; set; }
-        public int PessoaID { get; set; }
-        public int TipoUsuarioID { get; set; }
+        public int TipoFuncionarioID { get; set; }
         [JsonIgnore]
-        public Funcionario Funcionario { get; set; }
-        
-        public Usuario()
+        public Usuario Usuario { get; set; }
+
+        public Funcionario()
         {
             Ativo = true;
         }
