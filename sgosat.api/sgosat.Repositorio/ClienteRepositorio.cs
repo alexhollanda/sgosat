@@ -4,9 +4,9 @@ using sgosat.Repositorio.Interfaces;
 
 namespace sgosat.Repositorio
 {
-    public class PessoaRepositorio : BaseRepositorio, IClienteRepositorio
+    public class ClienteRepositorio : BaseRepositorio, IClienteRepositorio
     {
-        public PessoaRepositorio(sgosatContexto contexto) : base(contexto)
+        public ClienteRepositorio(sgosatContexto contexto) : base(contexto)
         {
             
         }

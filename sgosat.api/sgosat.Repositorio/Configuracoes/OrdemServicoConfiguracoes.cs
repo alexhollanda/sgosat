@@ -13,9 +13,12 @@ namespace sgosat.Repositorio.Configuracoes
             builder.Property(nameof(OrdemServico.ID)).HasColumnName("ID");
             builder.Property(nameof(OrdemServico.DataAbertura)).HasColumnName("DataAbertura").IsRequired(true);
             builder.Property(nameof(OrdemServico.DataConclusao)).HasColumnName("DataConclusao");
+            builder.Property(nameof(OrdemServico.ClienteID)).HasColumnName("ClienteID");
+            builder.Property(nameof(OrdemServico.FuncionarioID)).HasColumnName("FuncionarioID");
             builder.Property(nameof(OrdemServico.DescricaoProblema)).HasColumnName("DescricaoProblema").IsRequired(true);
-            builder.Property(nameof(OrdemServico.DescricaoProblema)).HasColumnName("ServicoRealizado");
-            builder.Property(nameof(OrdemServico.DescricaoProblema)).HasColumnName("Observacoes");
+            builder.Property(nameof(OrdemServico.ServicoRealizado)).HasColumnName("ServicoRealizado");
+            builder.Property(nameof(OrdemServico.Observacoes)).HasColumnName("Observacoes");
+            builder.Property(nameof(OrdemServico.Valor)).HasColumnName("Valor");
             builder.Property(nameof(OrdemServico.StatusOSID)).HasColumnName("StatusOSID").IsRequired(true);
             builder.Property(nameof(OrdemServico.Ativo)).HasColumnName("Ativo").IsRequired(true);
         }

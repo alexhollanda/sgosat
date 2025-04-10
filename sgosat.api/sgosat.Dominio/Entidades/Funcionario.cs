@@ -13,7 +13,9 @@ namespace sgosat.Dominio.Entidades
         public int TipoFuncionarioID { get; set; }
         [JsonIgnore]
         public Usuario Usuario { get; set; }
-
+        [JsonIgnore]
+        public List<OrdemServico> OrdensServicos { get; set; }
+        
         public Funcionario()
         {
             Ativo = true;

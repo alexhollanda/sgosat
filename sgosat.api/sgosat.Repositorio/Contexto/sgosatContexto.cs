@@ -10,6 +10,7 @@ public class sgosatContexto : DbContext
     /// Define o conjunto de entidades.
     /// </summary>
     public DbSet<Cliente> Clientes { get; set; }
+    public DbSet<Funcionario> Funcionarios { get; set; }
     public DbSet<Usuario> Usuarios { get; set; }
     public DbSet<OrdemServico> OrdensServicos { get; set; }
 
@@ -40,9 +41,9 @@ public class sgosatContexto : DbContext
     {
 
         modelBuilder.ApplyConfiguration(new ClienteConfiguracoes());
+        modelBuilder.ApplyConfiguration(new FuncionarioConfiguracoes());
         modelBuilder.ApplyConfiguration(new UsuarioConfiguracoes());
         modelBuilder.ApplyConfiguration(new OrdemServicoConfiguracoes());
-        modelBuilder.ApplyConfiguration(new OrdemServicoPessoasConfiguracoes());
 
 
     }
