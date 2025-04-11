@@ -49,7 +49,6 @@ namespace sgosat.Api.Controllers
             }
         }        
         
-
         [HttpGet]
         [Route("ObterPorDoc/{doc}")]
         public async Task<ActionResult> ObterPorDoc([FromRoute] string doc)
@@ -195,19 +194,19 @@ namespace sgosat.Api.Controllers
             {
                 var clienteDominio = await _clienteAplicacao.Listar(ativos);
 
-                var clientes = clienteDominio.Select(p => new ClienteResponse(){
-                    ID = p.ID,
-                    Nome = p.Nome,
-                    TipoPessoa = p.TipoPessoa,
-                    Documento = p.Documento,
-                    Telefone = p.Telefone,
-                    CEP = p.CEP,
-                    Logradouro = p.Logradouro,
-                    Numero = p.Numero,
-                    Complemento = p.Complemento,
-                    Bairro = p.Bairro,
-                    Cidade = p.Cidade,
-                    UF = p.UF
+                var clientes = clienteDominio.Select(c => new ClienteResponse(){
+                    ID = c.ID,
+                    Nome = c.Nome,
+                    TipoPessoa = c.TipoPessoa,
+                    Documento = c.Documento,
+                    Telefone = c.Telefone,
+                    CEP = c.CEP,
+                    Logradouro = c.Logradouro,
+                    Numero = c.Numero,
+                    Complemento = c.Complemento,
+                    Bairro = c.Bairro,
+                    Cidade = c.Cidade,
+                    UF = c.UF
                 }).ToList();
 
                 return Ok(clientes);
