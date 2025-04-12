@@ -9,7 +9,8 @@ namespace sgosat.Aplicacao.Interfaces
         Task Deletar(int ordemServicoID);
         Task Restaurar(int ordemServicoID);
         Task<OrdemServico> Obter(int ordemServicoID);
-        Task<OrdemServico> Listar(bool Ativo);
-        Task<OrdemServico> ListarPorStatus(int statusID, bool Ativo);
+        Task<IEnumerable<OrdemServico>> Listar(bool Ativo);
+        Task<IEnumerable<OrdemServico>> ListarPorCliente(int clienteID, bool Ativo);
+        Task<IEnumerable<OrdemServico>> ListarPorStatus(int statusID, bool Ativo);
     }
 }

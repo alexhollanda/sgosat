@@ -8,12 +8,17 @@ using sgosat.Repositorio.Interfaces;
 var builder = WebApplication.CreateBuilder(args);
 
 // Adicione serviços ao contêiner.
+builder.Services.AddScoped<IClienteAplicacao, ClienteAplicacao>();
+builder.Services.AddScoped<IFuncionarioAplicacao, FuncionarioAplicacao>();
+builder.Services.AddScoped<IOrdemServicoAplicacao, OrdemServicoAplicacao>();
 builder.Services.AddScoped<IUsuarioAplicacao, UsuarioAplicacao>();
-builder.Services.AddScoped<IPessoaAplicacao, PessoaAplicacao>();
+
 
 // Adicione as interfaces de banco de dados
+builder.Services.AddScoped<IClienteRepositorio, ClienteRepositorio>();
+builder.Services.AddScoped<IFuncionarioRepositorio, FuncionarioRepositorio>();
+builder.Services.AddScoped<IOrdemServicoRepositorio, OrdemServicoRepositorio>();
 builder.Services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
-builder.Services.AddScoped<IPessoaRepositorio, PessoaRepositorio>();
 
 // Adicione o serviço
 

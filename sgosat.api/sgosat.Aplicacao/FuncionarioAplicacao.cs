@@ -55,7 +55,7 @@ namespace sgosat.Aplicacao
 
         public async Task Restaurar(int funcionarioID)
         {
-            var funcionarioDominio = await _funcionarioRepositorio.Obter(funcionarioID, true);
+            var funcionarioDominio = await _funcionarioRepositorio.Obter(funcionarioID, false);
 
             if (funcionarioDominio == null)
                 throw new Exception("Cliente não encontrado!");
