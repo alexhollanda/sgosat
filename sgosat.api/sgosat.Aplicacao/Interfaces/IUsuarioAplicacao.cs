@@ -10,6 +10,7 @@ namespace sgosat.Aplicacao.Interfaces
         Task Deletar(int usuarioID);
         Task Restaurar(int usuarioID);
         Task<Usuario> Obter(int usuarioID);
+        Task<Usuario> ObterPorUserName(string userName);
         Task<Usuario> ObterPorEmail(string email);
         public Task<IEnumerable<Usuario>> Listar(bool Ativo);
     }

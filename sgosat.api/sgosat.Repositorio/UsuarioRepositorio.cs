@@ -33,11 +33,18 @@ namespace sgosat.Repositorio
                         .FirstOrDefaultAsync();
         }
 
+        public async Task<Usuario> ObterPorUserName(string userName, bool Ativo)
+        {
+            return await _contexto.Usuarios
+                        .Where(u => u.UserName == userName)
+                        .Where(u => u.Ativo == Ativo)
+                        .FirstOrDefaultAsync();
+        }
+
         public async Task<Usuario> ObterPorEmail(string email, bool Ativo)
         {
             return await _contexto.Usuarios
-                        .Include(u => u.Pessoa)
-                        .Where(u => u.Pessoa.Email == email)
+                        .Where(u => u.Email == email)
                         .Where(u => u.Ativo == Ativo)
                         .FirstOrDefaultAsync();
         }

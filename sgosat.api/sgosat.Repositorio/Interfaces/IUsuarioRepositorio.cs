@@ -7,6 +7,7 @@ namespace sgosat.Repositorio.Interfaces
         Task<int> Salvar(Usuario usuario);
         Task Atualizar(Usuario usuario);
         Task<Usuario> Obter(int usuarioID, bool Ativo);
+        Task<Usuario> ObterPorUserName(string userName, bool Ativo);
         Task<Usuario> ObterPorEmail(string email, bool Ativo);
         Task<IEnumerable<Usuario>> Listar(bool ativo);
     }

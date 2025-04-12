@@ -29,13 +29,23 @@ namespace sgosat.Aplicacao
         public async Task Atualizar(Usuario usuario)
         {
             var usuarioDominio = await _usuarioRepositorio.Obter(usuario.ID, true);
-
             if (usuarioDominio == null)
                 throw new Exception("Usuário não encontrado!");
+
+            var usuarioUserName = await _usuarioRepositorio.ObterPorUserName(usuario.UserName, true);
+            if (usuarioUserName.ID != usuario.ID)
+                throw new Exception("Já existe um usuário cadastrado com o Nome de Usuário informado!");
             
+            var usuarioEmail = await _usuarioRepositorio.ObterPorEmail(usuario.Email, true);
+            if (usuarioEmail.ID != usuario.ID)
+                throw new Exception("Já existe um usuário cadastrado com o E-mail informado!");
+
             if (!String.IsNullOrEmpty(usuario.UserName) && !String.IsNullOrWhiteSpace(usuario.UserName))
-                usuarioDominio.UserName = usuario.UserName;                
+                usuarioDominio.UserName = usuario.UserName;
             
+            if (!String.IsNullOrEmpty(usuario.Email) && !String.IsNullOrWhiteSpace(usuario.Email))
+                usuarioDominio.Email = usuario.Email;
+
             usuarioDominio.TipoUsuarioID = usuario.TipoUsuarioID;
 
             await _usuarioRepositorio.Atualizar(usuarioDominio);
@@ -47,7 +57,7 @@ namespace sgosat.Aplicacao
 
             if (usuarioDominio == null)
                 throw new Exception("Usuário não encontrado!");
-            
+
             if (usuarioDominio.Senha != senhaAntiga)
                 throw new Exception("Senha Antiga Inválida!");
 
@@ -55,14 +65,14 @@ namespace sgosat.Aplicacao
 
             await _usuarioRepositorio.Atualizar(usuarioDominio);
         }
-        
+
         public async Task Deletar(int usuarioID)
         {
             var usuarioDominio = await _usuarioRepositorio.Obter(usuarioID, true);
 
             if (usuarioDominio == null)
                 throw new Exception("Usuário não encontrado!");
-            
+
             usuarioDominio.Deletar();
 
             await _usuarioRepositorio.Atualizar(usuarioDominio);
@@ -74,15 +84,25 @@ namespace sgosat.Aplicacao
 
             if (usuarioDominio == null)
                 throw new Exception("Usuário não encontrado!");
-            
+
             usuarioDominio.Restaurar();
-            
+
             await _usuarioRepositorio.Atualizar(usuarioDominio);
         }
 
         public async Task<Usuario> Obter(int usuarioID)
         {
             var usuarioDominio = await _usuarioRepositorio.Obter(usuarioID, true);
+
+            if (usuarioDominio == null)
+                throw new Exception("Usuário não encontrado!");
+
+            return usuarioDominio;
+        }
+
+        public async Task<Usuario> ObterPorUserName(string userName)
+        {
+            var usuarioDominio = await _usuarioRepositorio.ObterPorUserName(userName, true);
 
             if (usuarioDominio == null)
                 throw new Exception("Usuário não encontrado!");
@@ -111,6 +131,9 @@ namespace sgosat.Aplicacao
         {
             if (string.IsNullOrEmpty(usuario.UserName))
                 throw new Exception("Nome de usuário não pode ser vazio");
+
+            if (string.IsNullOrEmpty(usuario.Email))
+                throw new Exception("E-mail não pode ser vazio");
         }
 
         #endregion

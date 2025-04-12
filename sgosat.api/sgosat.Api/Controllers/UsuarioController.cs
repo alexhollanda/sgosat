@@ -30,8 +30,34 @@ namespace sgosat.Api.Controllers
                 {
                     ID = usuarioDomino.ID,
                     UserName = usuarioDomino.UserName,
-                    TipoUsuarioID = usuarioDomino.TipoUsuarioID,
-                    PessoaID = usuarioDomino.PessoaID
+                    Email = usuarioDomino.Email,
+                    FuncionarioID = usuarioDomino.FuncionarioID,
+                    TipoUsuarioID = usuarioDomino.TipoUsuarioID
+                };
+
+                return Ok(usuarioResponse);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("ObterPorUserName/{userName}")]
+        public async Task<ActionResult> ObterPorUserName([FromRoute] string userName)
+        {
+            try
+            {
+                var usuarioDomino = await _usuarioAplicacao.ObterPorUserName(userName);
+
+                var usuarioResponse = new UsuarioResponse()
+                {
+                    ID = usuarioDomino.ID,
+                    UserName = usuarioDomino.UserName,
+                    Email = usuarioDomino.Email,
+                    FuncionarioID = usuarioDomino.FuncionarioID,
+                    TipoUsuarioID = usuarioDomino.TipoUsuarioID
                 };
 
                 return Ok(usuarioResponse);
@@ -54,8 +80,9 @@ namespace sgosat.Api.Controllers
                 {
                     ID = usuarioDomino.ID,
                     UserName = usuarioDomino.UserName,
-                    TipoUsuarioID = usuarioDomino.TipoUsuarioID,
-                    PessoaID = usuarioDomino.PessoaID
+                    Email = usuarioDomino.Email,
+                    FuncionarioID = usuarioDomino.FuncionarioID,
+                    TipoUsuarioID = usuarioDomino.TipoUsuarioID
                 };
 
                 return Ok(usuarioResponse);
@@ -75,9 +102,10 @@ namespace sgosat.Api.Controllers
                 var usuarioDomino = new Usuario()
                 {
                     UserName = usuarioCriar.UserName,
+                    Email = usuarioCriar.Email,
                     Senha = usuarioCriar.Senha,
-                    TipoUsuarioID = usuarioCriar.TipoUsuarioID,
-                    PessoaID = usuarioCriar.PessoaID
+                    FuncionarioID = usuarioCriar.FuncionarioID,
+                    TipoUsuarioID = usuarioCriar.TipoUsuarioID
                 };
 
                 var usuarioID = await _usuarioAplicacao.Criar(usuarioDomino);
@@ -99,6 +127,7 @@ namespace sgosat.Api.Controllers
                 {
                     ID = usuario.ID,
                     UserName = usuario.UserName,
+                    Email = usuario.Email,
                     TipoUsuarioID = usuario.TipoUsuarioID
                 };
 
@@ -177,8 +206,9 @@ namespace sgosat.Api.Controllers
                 var usuarios = usuarioDomino.Select(u => new UsuarioResponse(){
                     ID = u.ID,
                     UserName = u.UserName,
-                    TipoUsuarioID = u.TipoUsuarioID,
-                    PessoaID = u.PessoaID
+                    Email = u.Email,
+                    FuncionarioID = u.FuncionarioID,
+                    TipoUsuarioID = u.TipoUsuarioID
                 }).ToList();
 
                 return Ok(usuarios);
