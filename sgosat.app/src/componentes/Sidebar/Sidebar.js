@@ -2,7 +2,7 @@ import { useState } from 'react';
 import style from './Sidebar.module.css';
 import Logo from '../../assets/logo.png';
 import { SidebarItem } from '../SidebarItem/SidebarItem';
-import { BsPersonCircle, BsList } from "react-icons/bs";
+import { BsFillPieChartFill, BsClipboard2PlusFill , BsList, BsBriefcaseFill, BsFillPeopleFill, BsFillPersonVcardFill } from "react-icons/bs";
 
 // Sidebar.js
 export function Sidebar({ children, colapsada, setColapsada }) {
@@ -22,10 +22,11 @@ export function Sidebar({ children, colapsada, setColapsada }) {
                 </div>
 
                 <div className={style.sidebar_corpo}>
-                    <SidebarItem texto="Ordens de Serviço" link="/ordens" logo={<BsPersonCircle />} colapsada={colapsada} />
-                    <SidebarItem texto="Clientes" link="/clientes" logo={<BsPersonCircle />} colapsada={colapsada} />
-                    <SidebarItem texto="Funcionários" link="/funcionarios" logo={<BsPersonCircle />} colapsada={colapsada} />
-                    <SidebarItem texto="Usuários" link="/usuarios" logo={<BsPersonCircle />} colapsada={colapsada} />
+                    <SidebarItem texto="Resumo" link="/" logo={<BsFillPieChartFill />} colapsada={colapsada} />
+                    <SidebarItem texto="Ordens de Serviço" link="/ordens" logo={<BsClipboard2PlusFill />} colapsada={colapsada} />
+                    <SidebarItem texto="Clientes" link="/clientes" logo={<BsFillPeopleFill  />} colapsada={colapsada} />
+                    <SidebarItem texto="Funcionários" link="/funcionarios" logo={<BsBriefcaseFill />} colapsada={colapsada} />
+                    <SidebarItem texto="Usuários" link="/usuarios" logo={<BsFillPersonVcardFill />} colapsada={colapsada} />
                 </div>
             </div>
 

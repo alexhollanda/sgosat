@@ -9,7 +9,7 @@ import UsuarioAPI from "../../services/usuarioAPI";
 import PessoaAPI from "../../services/pessoaAPI";
 
 export function EditarUsuario() {
-    const [colapsada, setColapsada] = useState(false);
+    const [colapsada, setColapsada] = useState(true);
     const location = useLocation();
     const navigate = useNavigate();
 

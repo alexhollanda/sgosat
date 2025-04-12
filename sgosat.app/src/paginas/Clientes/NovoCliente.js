@@ -1,7 +1,7 @@
 import style from './NovoCliente.module.css';
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import PessoaAPI from "../../services/pessoaAPI";
+import ClienteAPI from '../../services/clienteAPI';
 import axios from 'axios';
 import { Sidebar } from '../../componentes/Sidebar/Sidebar';
 import { Topbar } from '../../componentes/Topbar/Topbar';
@@ -14,13 +14,12 @@ import Col from 'react-bootstrap/Col';
 import { Spinner } from 'react-bootstrap';
 
 export function NovoCliente() {
-    const [colapsada, setColapsada] = useState(false);
+    const [colapsada, setColapsada] = useState(true);
     const [id, setId] = useState(null);
     const [nome, setNome] = useState('');
     const [tipoPessoa, setTipoPessoa] = useState('');
     const [documento, setDocumento] = useState('');
     const [telefone, setTelefone] = useState('');
-    const [email, setEmail] = useState('');
     const [cep, setCep] = useState('');
     const [logradouro, setLogradouro] = useState('');
     const [numero, setNumero] = useState('');
@@ -28,8 +27,6 @@ export function NovoCliente() {
     const [bairro, setBairro] = useState('');
     const [cidade, setCidade] = useState('');
     const [uf, setUF] = useState('');
-    const [cliente, setCliente] = useState(true);
-    const [funcionario, setFuncionario] = useState(false);
     const [modoAtualizacao, setModoAtualizacao] = useState(false);
     const [formDesabilitado, setFormDesabilitado] = useState(true);
     const [carregando, setCarregando] = useState(false);
@@ -40,21 +37,18 @@ export function NovoCliente() {
     const buscarClientePorDocumento = async (documento) => {
         setCarregando(true);
         try {
-            const cliente = await PessoaAPI.obterPorDocAsync(documento);
+            const cliente = await ClienteAPI.obterPorDocAsync(documento);
             setId(cliente.id);
             setNome(cliente.nome);
             setTipoPessoa(cliente.tipoPessoa);
             setDocumento(maskDocument(cliente.documento));
             setTelefone(formataPhone(cliente.telefone));
-            setEmail(cliente.email);
             setCep(aplicarMascaraCep(cliente.cep));
             setLogradouro(cliente.logradouro);
             setNumero(cliente.numero);
             setBairro(cliente.bairro);
             setCidade(cliente.cidade);
             setUF(cliente.uf);
-            setCliente(true);
-            setFuncionario(cliente.funcionario);
             setModoAtualizacao(true);
             setFormDesabilitado(false);            
         } catch (error) {
@@ -84,12 +78,11 @@ export function NovoCliente() {
         if (isFormValid()) {
             try {
                 if (modoAtualizacao && id) {
-                    await PessoaAPI.atualizarAsync(id, nome, dadosSemMascara.telefoneLimpo, email, dadosSemMascara.cepLimpo, logradouro,
-                        numero, complemento, bairro, cidade, uf, cliente, funcionario)
+                    await ClienteAPI.atualizarAsync(id, nome, dadosSemMascara.telefoneLimpo, dadosSemMascara.cepLimpo,
+                                                    logradouro, numero, complemento, bairro, cidade, uf)
                 } else {
-                    PessoaAPI.criarAsync(nome, tipoPessoa, dadosSemMascara.documentoLimpo,
-                        dadosSemMascara.telefoneLimpo, email, dadosSemMascara.cepLimpo, logradouro,
-                        numero, complemento, bairro, cidade, uf, true, funcionario);
+                    ClienteAPI.criarAsync(nome, tipoPessoa, dadosSemMascara.documentoLimpo, dadosSemMascara.telefoneLimpo,
+                                        dadosSemMascara.cepLimpo, logradouro, numero, complemento, bairro, cidade, uf);
                 }
                 navigate("/clientes");
             } catch (error) {
@@ -102,7 +95,7 @@ export function NovoCliente() {
     }
 
     const isFormValid = () => {
-        return (nome && tipoPessoa && documento && telefone && email && cep
+        return (nome && tipoPessoa && documento && telefone && cep
                 && logradouro && numero && bairro && cidade && uf);
     };
 
@@ -324,7 +317,7 @@ export function NovoCliente() {
                     <Form onSubmit={handleSubmit}>
                         <Container>
                             <Row>
-                                <Col sm={4}>
+                                <Col sm={3}>
                                     <Form.Group controlId="formDocumento" className="mb-3">
                                         <Form.Label>Documento:</Form.Label>
                                         <InputGroup>
@@ -349,7 +342,7 @@ export function NovoCliente() {
                                     </Form.Group>
                                 </Col>
 
-                                <Col sm={8}>
+                                <Col sm={6}>
                                     <Form.Group controlId="formNome" className="mb-3">
                                         <Form.Label>Nome do Cliente:</Form.Label>
                                         <Form.Control
@@ -363,11 +356,8 @@ export function NovoCliente() {
                                         />
                                     </Form.Group>
                                 </Col>
-                            </Row>
 
-                            <Row>
-
-                                <Col sm={6}>
+                                <Col sm={3}>
                                     <Form.Group controlId="formTelefone" className="mb-3">
                                         <Form.Label>Telefone:</Form.Label>
                                         <Form.Control
@@ -388,21 +378,6 @@ export function NovoCliente() {
                                                 {errorPhone}
                                             </Form.Control.Feedback>
                                         )}
-                                    </Form.Group>
-                                </Col>
-
-                                <Col sm={6}>
-                                    <Form.Group controlId="formEmail" className="mb-3">
-                                        <Form.Label>E-mail:</Form.Label>
-                                        <Form.Control
-                                            type="email"
-                                            placeholder="E-mail do Cliente"
-                                            name="email"
-                                            value={email}
-                                            onChange={(e) => setEmail(e.target.value.toLowerCase())}
-                                            disabled={formDesabilitado}
-                                            required
-                                        />
                                     </Form.Group>
                                 </Col>
                             </Row>

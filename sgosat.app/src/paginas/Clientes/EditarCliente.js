@@ -1,7 +1,7 @@
 import style from './NovoCliente.module.css';
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import PessoaAPI from "../../services/pessoaAPI";
+import ClienteAPI from '../../services/clienteAPI';
 import axios from 'axios';
 import { Sidebar } from '../../componentes/Sidebar/Sidebar';
 import { Topbar } from '../../componentes/Topbar/Topbar';
@@ -11,14 +11,12 @@ import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { Spinner } from 'react-bootstrap';
 
 export function EditarCliente() {
-    const [colapsada, setColapsada] = useState(false);
+    const [colapsada, setColapsada] = useState(true);
     const [nome, setNome] = useState('');
     const [documento, setDocumento] = useState('');
     const [telefone, setTelefone] = useState('');
-    const [email, setEmail] = useState('');
     const [cep, setCep] = useState('');
     const [logradouro, setLogradouro] = useState('');
     const [numero, setNumero] = useState('');
@@ -26,8 +24,6 @@ export function EditarCliente() {
     const [bairro, setBairro] = useState('');
     const [cidade, setCidade] = useState('');
     const [uf, setUF] = useState('');
-    const [cliente, setCliente] = useState(true);
-    const [funcionario, setFuncionario] = useState(false);
 
     const location = useLocation();
     const navigate = useNavigate();
@@ -36,13 +32,12 @@ export function EditarCliente() {
     useEffect(() => {
         const fetchClientes = async () => {
             try {
-                const response = await PessoaAPI.obterClienteAsync(id);
+                const response = await ClienteAPI.obterAsync(id);
                 if (response.tipoPessoa == "PF")
                     setDocumento(formataCPF(response.documento));
                 else setDocumento(formataCNPJ(response.documento));
                 setNome(response.nome);
                 setTelefone(formataPhone(response.telefone));
-                setEmail(response.email);
                 setCep(aplicarMascaraCep(response.cep));
                 setLogradouro(response.logradouro);
                 setNumero(response.numero);
@@ -50,8 +45,6 @@ export function EditarCliente() {
                 setBairro(response.bairro);
                 setCidade(response.cidade);
                 setUF(response.uf);
-                setCliente(response.cliente);
-                setFuncionario(response.funcionario);
             } catch (error) {
                 console.error("Erro ao buscar clientes: ", error);
             }
@@ -71,8 +64,8 @@ export function EditarCliente() {
 
         if (isFormValid()) {
             try {
-                await PessoaAPI.atualizarAsync(id, nome, dadosSemMascara.telefoneLimpo, email, dadosSemMascara.cepLimpo, logradouro,
-                    numero, complemento, bairro, cidade, uf, cliente, funcionario)
+                await ClienteAPI.atualizarAsync(id, nome, dadosSemMascara.telefoneLimpo, dadosSemMascara.cepLimpo,
+                                                logradouro, numero, complemento, bairro, cidade, uf)
                 navigate("/clientes");
             } catch (error) {
                 console.log("Erro ao salvar o cliente:", error);
@@ -84,7 +77,7 @@ export function EditarCliente() {
     }
 
     const isFormValid = () => {
-        return (nome && telefone && email && cep && logradouro && numero && bairro && cidade && uf);
+        return (nome && telefone && cep && logradouro && numero && bairro && cidade && uf);
     };
 
 
@@ -200,13 +193,13 @@ export function EditarCliente() {
         <Sidebar colapsada={colapsada} setColapsada={setColapsada}>
             <Topbar colapsada={colapsada}>
                 <div className={style.pagina_conteudo}>
-                    <h3>Novo Cliente</h3>
+                    <h3>Editar Cliente</h3>
                     <hr></hr>
 
                     <Form onSubmit={handleSubmit}>
                         <Container>
                             <Row>
-                                <Col sm={4}>
+                                <Col sm={3}>
                                     <Form.Group controlId="formDocumento" className="mb-3">
                                         <Form.Label>Documento</Form.Label>
                                         <InputGroup>
@@ -221,7 +214,7 @@ export function EditarCliente() {
                                     </Form.Group>
                                 </Col>
 
-                                <Col sm={8}>
+                                <Col sm={6}>
                                     <Form.Group controlId="formNome" className="mb-3">
                                         <Form.Label>Nome do Cliente</Form.Label>
                                         <Form.Control
@@ -234,11 +227,8 @@ export function EditarCliente() {
                                         />
                                     </Form.Group>
                                 </Col>
-                            </Row>
 
-                            <Row>
-
-                                <Col sm={6}>
+                                <Col sm={3}>
                                     <Form.Group controlId="formTelefone" className="mb-3">
                                         <Form.Label>Telefone:</Form.Label>
                                         <Form.Control
@@ -258,20 +248,6 @@ export function EditarCliente() {
                                                 {errorPhone}
                                             </Form.Control.Feedback>
                                         )}
-                                    </Form.Group>
-                                </Col>
-
-                                <Col sm={6}>
-                                    <Form.Group controlId="formEmail" className="mb-3">
-                                        <Form.Label>E-mail</Form.Label>
-                                        <Form.Control
-                                            type="email"
-                                            placeholder="E-mail do Cliente"
-                                            name="email"
-                                            value={email}
-                                            onChange={(e) => setEmail(e.target.value.toLowerCase())}
-                                            required
-                                        />
                                     </Form.Group>
                                 </Col>
                             </Row>

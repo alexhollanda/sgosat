@@ -12,7 +12,7 @@ import Button from 'react-bootstrap/Button';
 
 
 export function OrdensServico() {
-    const [colapsada, setColapsada] = useState(false);
+    const [colapsada, setColapsada] = useState(true);
     const [clientes, setClientes] = useState([]);
     const [mostrarModal, setMostrarModal] = useState(false);
     const [clienteSelecionado, setClienteSelecionado] = useState(null);

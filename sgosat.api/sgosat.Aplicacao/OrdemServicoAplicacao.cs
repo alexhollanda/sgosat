@@ -20,8 +20,7 @@ namespace sgosat.Aplicacao
             
             ValidarInformacoesOrdemServico(ordemServico);
 
-            return await _ordemServicoRepositorio.Salvar(ordemServico);
-            
+            return await _ordemServicoRepositorio.Salvar(ordemServico);            
 
         }
 

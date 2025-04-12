@@ -20,6 +20,12 @@ namespace sgosat.Aplicacao
 
             ValidarInformacoesCliente(cliente);
 
+            if (string.IsNullOrEmpty(cliente.TipoPessoa))
+                throw new Exception("Selecione o Tipo de Pessoa");
+
+            if (string.IsNullOrEmpty(cliente.Documento))
+                throw new Exception("Digite um número de documento válido!");
+
             return await _clienteRepositorio.Salvar(cliente);
         }
 
@@ -105,13 +111,7 @@ namespace sgosat.Aplicacao
         private static void ValidarInformacoesCliente(Cliente cliente)
         {
             if (string.IsNullOrEmpty(cliente.Nome))
-                throw new Exception("Nome não pode ser vazio");
-
-            if (string.IsNullOrEmpty(cliente.TipoPessoa))
-                throw new Exception("Selecione o Tipo de Pessoa");
-
-            if (string.IsNullOrEmpty(cliente.Documento))
-                throw new Exception("Digite um número de documento válido!");
+                throw new Exception("Nome não pode ser vazio");           
 
             if (string.IsNullOrEmpty(cliente.Telefone))
                 throw new Exception("Telefone não pode ser vazio!");

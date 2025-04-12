@@ -3,6 +3,7 @@ using sgosat.Api.Models.Funcionarios.Request;
 using sgosat.Api.Models.Funcionarios.Response;
 using sgosat.Aplicacao.Interfaces;
 using sgosat.Dominio.Entidades;
+using sgosat.Dominio.Enumeradores;
 
 namespace sgosat.Api.Controllers
 {
@@ -30,6 +31,7 @@ namespace sgosat.Api.Controllers
                     ID = funcionarioDominio.ID,
                     Nome = funcionarioDominio.Nome,
                     Documento = funcionarioDominio.Documento,
+                    DataAdmissao = funcionarioDominio.DataAdmissao,
                     Telefone = funcionarioDominio.Telefone,
                     Salario = funcionarioDominio.Salario,
                     TipoFuncionarioID = funcionarioDominio.TipoFuncionarioID
@@ -56,6 +58,7 @@ namespace sgosat.Api.Controllers
                     ID = funcionarioDominio.ID,
                     Nome = funcionarioDominio.Nome,
                     Documento = funcionarioDominio.Documento,
+                    DataAdmissao = funcionarioDominio.DataAdmissao,
                     Telefone = funcionarioDominio.Telefone,
                     Salario = funcionarioDominio.Salario,
                     TipoFuncionarioID = funcionarioDominio.TipoFuncionarioID
@@ -91,6 +94,7 @@ namespace sgosat.Api.Controllers
                 {
                     Nome = funcionarioCriar.Nome,
                     Documento = funcionarioCriar.Documento,
+                    DataAdmissao = funcionarioCriar.DataAdmissao,
                     Telefone = funcionarioCriar.Telefone,
                     Salario = funcionarioCriar.Salario,
                     TipoFuncionarioID = funcionarioCriar.TipoFuncionarioID
@@ -175,6 +179,7 @@ namespace sgosat.Api.Controllers
                     ID = f.ID,
                     Nome = f.Nome,
                     Documento = f.Documento,
+                    DataAdmissao = f.DataAdmissao,
                     Telefone = f.Telefone,
                     Salario = f.Salario,
                     TipoFuncionarioID = f.TipoFuncionarioID
@@ -186,6 +191,32 @@ namespace sgosat.Api.Controllers
             {
                 return BadRequest(ex.Message);
             }
-        }       
+        }
+
+        [HttpGet]
+        [Route("ListarTiposFuncionarios")]
+        public ActionResult ListarTiposUsuario()
+        {
+            try
+            {
+                List<object> tiposFuncionarios = new List<object>();
+                var idTiposFuncionarios = (int[]) Enum.GetValues(typeof(TiposFuncionarios));
+                var nomeTiposFuncionarios = Enum.GetNames(typeof(TiposFuncionarios));
+
+                for (int i = 0; i < idTiposFuncionarios.Length; i++)
+                {
+                    tiposFuncionarios.Add(new{
+                        id = idTiposFuncionarios[i] + 1,
+                        nome = nomeTiposFuncionarios[i]
+                    });
+                }
+
+                return Ok(tiposFuncionarios);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }      
     }
 }

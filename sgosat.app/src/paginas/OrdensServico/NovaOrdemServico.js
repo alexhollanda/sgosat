@@ -16,7 +16,7 @@ import { AsyncTypeahead, Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 
 export function NovaOrdemServico() {
-    const [colapsada, setColapsada] = useState(false);
+    const [colapsada, setColapsada] = useState(true);
     const [clientes, setClientes] = useState([]);
     const [clienteSelecionado, setClienteSelecionado] = useState('');
     const [data, setData] = useState('');

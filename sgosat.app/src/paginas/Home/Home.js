@@ -4,7 +4,7 @@ import { Topbar } from "../../componentes/Topbar/Topbar";
 import style from "./Home.module.css";
 
 export function Home() {
-    const [colapsada, setColapsada] = useState(false);
+    const [colapsada, setColapsada] = useState(true);
 
     return (
         <div className={style.conteudo}>

@@ -13,7 +13,7 @@ import Button from 'react-bootstrap/Button';
 
 
 export function Usuarios() {
-    const [colapsada, setColapsada] = useState(false);
+    const [colapsada, setColapsada] = useState(true);
     const [usuarios, setUsuarios] = useState([]);
     const [funcionarios, setFuncionarios] = useState([]);
     const [mostrarModal, setMostrarModal] = useState(false);

@@ -5,14 +5,14 @@ import { Topbar } from "../../componentes/Topbar/Topbar";
 import style from "./Funcionarios.module.css";
 import { MdEdit, MdDelete } from "react-icons/md";
 import { useEffect, useState } from "react";
-import PessoaAPI from "../../services/pessoaAPI";
 import { BsFillPersonPlusFill } from "react-icons/bs";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import FuncionarioAPI from "../../services/funcionarioAPI";
 
 
 export function Funcionarios() {
-    const [colapsada, setColapsada] = useState(false);
+    const [colapsada, setColapsada] = useState(true);
     const [funcionarios, setFuncionarios] = useState([]);
     const [mostrarModal, setMostrarModal] = useState(false);
     const [funcionarioSelecionado, setFuncionarioSelecionado] = useState(null);
@@ -62,7 +62,7 @@ export function Funcionarios() {
 
     const handleDeletar = async () => {
         try {
-            await PessoaAPI.deletarClienteAsync(funcionarioSelecionado.id);
+            await FuncionarioAPI.deletarAsync(funcionarioSelecionado.id);
             setFuncionarios(funcionarios.filter(funcionario => funcionario.id !== funcionarioSelecionado.id));
         } catch (error) {
             console.error("Erro ao deletar funcionário:", error);
@@ -78,7 +78,7 @@ export function Funcionarios() {
 
     async function fetchFuncionarios() {
         try {
-            const listaFuncionarios = await PessoaAPI.listarFuncionariosAsync(true);
+            const listaFuncionarios = await FuncionarioAPI.listarAsync(true);
             setFuncionarios(listaFuncionarios);
         } catch (error) {
             console.error("Erro ao carregar funcionarios:", error);
@@ -88,8 +88,6 @@ export function Funcionarios() {
     useEffect(() => {
         fetchFuncionarios();
     }, []);
-
-
 
     return (
         <Sidebar colapsada={colapsada} setColapsada={setColapsada}>
@@ -110,7 +108,6 @@ export function Funcionarios() {
                                     <th>Nome</th>
                                     <th>Documento</th>
                                     <th>Telefone</th>
-                                    <th>E-mail</th>
                                     <th>Ações</th>
                                 </tr>
                             </thead>
@@ -124,7 +121,6 @@ export function Funcionarios() {
                                             <td>{funcionario.nome.substring(0,40) + (funcionario.nome.length > 40 ? "..." : "")}</td>
                                             <td>{formataDocumento(funcionario.documento)}</td>
                                             <td>{formataPhone(funcionario.telefone)}</td>
-                                            <td>{funcionario.email}</td>
                                             <td>
                                                 <Link to='/funcionarios/editar' state={funcionario.id} className={style.botao_editar}>
                                                     <MdEdit />

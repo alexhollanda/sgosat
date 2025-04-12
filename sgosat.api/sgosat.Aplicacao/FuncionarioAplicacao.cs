@@ -19,6 +19,10 @@ namespace sgosat.Aplicacao
                 throw new Exception("Funcionário não pode ser vazio");
 
             ValidarInformacoesFuncionario(funcionario);
+            
+
+            if (string.IsNullOrEmpty(funcionario.Documento))
+                throw new Exception("Digite um número de documento válido!");
 
             return await _funcionarioRepositorio.Salvar(funcionario);
         }
@@ -101,9 +105,6 @@ namespace sgosat.Aplicacao
         {
             if (string.IsNullOrEmpty(funcionario.Nome))
                 throw new Exception("Nome não pode ser vazio");
-
-            if (string.IsNullOrEmpty(funcionario.Documento))
-                throw new Exception("Digite um número de documento válido!");
 
             if (string.IsNullOrEmpty(funcionario.Telefone))
                 throw new Exception("Telefone não pode ser vazio!");

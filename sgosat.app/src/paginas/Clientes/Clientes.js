@@ -5,14 +5,14 @@ import { Topbar } from "../../componentes/Topbar/Topbar";
 import style from "./Clientes.module.css";
 import { MdEdit, MdDelete } from "react-icons/md";
 import { useEffect, useState } from "react";
-import PessoaAPI from "../../services/pessoaAPI";
 import { BsFillPersonPlusFill } from "react-icons/bs";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import ClienteAPI from "../../services/clienteAPI";
 
 
 export function Clientes() {
-    const [colapsada, setColapsada] = useState(false);
+    const [colapsada, setColapsada] = useState(true);
     const [clientes, setClientes] = useState([]);
     const [mostrarModal, setMostrarModal] = useState(false);
     const [clienteSelecionado, setClienteSelecionado] = useState(null);
@@ -62,7 +62,7 @@ export function Clientes() {
 
     const handleDeletar = async () => {
         try {
-            await PessoaAPI.deletarClienteAsync(clienteSelecionado.id);
+            await ClienteAPI.deletarAsync(clienteSelecionado.id);
             setClientes(clientes.filter(cliente => cliente.id !== clienteSelecionado.id));
         } catch (error) {
             console.error("Erro ao deletar cliente:", error);
@@ -78,7 +78,7 @@ export function Clientes() {
 
     async function fetchClientes() {
         try {
-            const listaClientes = await PessoaAPI.listarClientesAsync(true);
+            const listaClientes = await ClienteAPI.listarAsync(true);
             setClientes(listaClientes);
         } catch (error) {
             console.error("Erro ao carregar clientes:", error);

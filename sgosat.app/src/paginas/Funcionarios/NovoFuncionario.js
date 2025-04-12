@@ -1,7 +1,7 @@
 import style from './NovoFuncionario.module.css';
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import PessoaAPI from "../../services/pessoaAPI";
+import FuncionarioAPI from '../../services/funcionarioAPI';
 import axios from 'axios';
 import { Sidebar } from '../../componentes/Sidebar/Sidebar';
 import { Topbar } from '../../componentes/Topbar/Topbar';
@@ -12,24 +12,18 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { Spinner } from 'react-bootstrap';
+import { NumericFormat } from 'react-number-format';
 
 export function NovoFuncionario() {
-    const [colapsada, setColapsada] = useState(false);
+    const [colapsada, setColapsada] = useState(true);
     const [id, setId] = useState(null);
     const [nome, setNome] = useState('');
-    const [tipoPessoa, setTipoPessoa] = useState('');
+    const [dataAdmissao, setDataAdmissao] = useState('');
     const [documento, setDocumento] = useState('');
     const [telefone, setTelefone] = useState('');
-    const [email, setEmail] = useState('');
-    const [cep, setCep] = useState('');
-    const [logradouro, setLogradouro] = useState('');
-    const [numero, setNumero] = useState('');
-    const [complemento, setComplemento] = useState('');
-    const [bairro, setBairro] = useState('');
-    const [cidade, setCidade] = useState('');
-    const [uf, setUF] = useState('');
-    const [cliente, setCliente] = useState(false);
-    const [funcionario, setFuncionario] = useState(true);
+    const [salario, setSalario] = useState(0);
+    const [tipoFuncionarioID, setTipoFuncionarioID] = useState('');
+    const [tiposFuncionarios, setTiposFuncionarios] = useState([]);
     const [modoAtualizacao, setModoAtualizacao] = useState(false);
     const [formDesabilitado, setFormDesabilitado] = useState(true);
     const [carregando, setCarregando] = useState(false);
@@ -37,26 +31,19 @@ export function NovoFuncionario() {
 
     const navigate = useNavigate();
 
-    const buscarClientePorDocumento = async (documento) => {
+    const buscarFuncionarioPorDocumento = async (documento) => {
         setCarregando(true);
         try {
-            const funcionario = await PessoaAPI.obterPorDocAsync(documento);
+            const funcionario = await FuncionarioAPI.obterPorDocAsync(documento);
             setId(funcionario.id);
             setNome(funcionario.nome);
-            setTipoPessoa(funcionario.tipoPessoa);
             setDocumento(maskDocument(funcionario.documento));
+            setDataAdmissao(funcionario.dataAdmissao);
             setTelefone(formataPhone(funcionario.telefone));
-            setEmail(funcionario.email);
-            setCep(aplicarMascaraCep(funcionario.cep));
-            setLogradouro(funcionario.logradouro);
-            setNumero(funcionario.numero);
-            setBairro(funcionario.bairro);
-            setCidade(funcionario.cidade);
-            setUF(funcionario.uf);
-            setCliente(funcionario.cliente);
-            setFuncionario(true);
+            setSalario(funcionario.salario);
+            setTipoFuncionarioID(funcionario.tipoFuncionarioID);
             setModoAtualizacao(true);
-            setFormDesabilitado(false);            
+            setFormDesabilitado(false);
         } catch (error) {
             // Funcionário não encontrado (erro 400)
             if (error?.response?.status === 400) {
@@ -72,24 +59,39 @@ export function NovoFuncionario() {
         }
     };
 
+    useEffect(() => {
+        const fetchTiposFuncionarios = async () => {
+            try {
+                const tipos = await FuncionarioAPI.listarTiposFuncionarios();
+                setTiposFuncionarios(tipos);
+            } catch (error) {
+                console.error("Erro ao buscar Tipos de Funcionários:", error);
+            }
+        }
+
+        const hoje = new Date();
+        const ano = hoje.getFullYear();
+        const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+        const dia = String(hoje.getDate()).padStart(2, '0');
+        setDataAdmissao(`${ano}-${mes}-${dia}`);
+
+        fetchTiposFuncionarios();
+    }, [])
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         // Remove as máscaras antes de enviar
         const dadosSemMascara = {
             telefoneLimpo: removeMask(telefone),
-            documentoLimpo: removeMask(documento),
-            cepLimpo: removeMask(cep)
+            documentoLimpo: removeMask(documento)
         };
 
         if (isFormValid()) {
             try {
                 if (modoAtualizacao && id) {
-                    await PessoaAPI.atualizarAsync(id, nome, dadosSemMascara.telefoneLimpo, email, dadosSemMascara.cepLimpo, logradouro,
-                        numero, complemento, bairro, cidade, uf, cliente, funcionario)
+                    await FuncionarioAPI.atualizarAsync(id, nome, dadosSemMascara.telefoneLimpo, salario, tipoFuncionarioID)
                 } else {
-                    PessoaAPI.criarAsync(nome, tipoPessoa, dadosSemMascara.documentoLimpo,
-                        dadosSemMascara.telefoneLimpo, email, dadosSemMascara.cepLimpo, logradouro,
-                        numero, complemento, bairro, cidade, uf, true, funcionario);
+                    FuncionarioAPI.criarAsync(nome, dadosSemMascara.documentoLimpo, dataAdmissao, dadosSemMascara.telefoneLimpo, salario, tipoFuncionarioID);
                 }
                 navigate("/funcionarios");
             } catch (error) {
@@ -102,57 +104,13 @@ export function NovoFuncionario() {
     }
 
     const isFormValid = () => {
-        return (nome && tipoPessoa && documento && telefone && email && cep
-                && logradouro && numero && bairro && cidade && uf);
+        return (nome && documento && telefone && dataAdmissao && salario && tipoFuncionarioID);
     };
 
 
     //#region Funções e Validação e Máscaras
     const [errorDocumento, setErrorDocumento] = useState(''); // Mensagem de erro pro CPF/CNPJ
     const [errorPhone, setErrorPhone] = useState(''); // Mensagem de erro pro Telefone
-    const [errorCep, setErrorCep] = useState(''); // Mensagem de erro pro CEP
-
-    const buscarCep = async () => {
-        const cepLimpo = getRawValue(cep);
-
-        if (cepLimpo.length !== 8) {
-            setErrorCep("CEP inválido.");
-            return;
-        }
-
-        try {
-            const resposta = await axios.get(`https://viacep.com.br/ws/${cepLimpo}/json/`);
-            if (resposta.data.erro) {
-                setErrorCep("CEP não encontrado.");
-            } else {
-                setErrorCep("");
-                const cepEncontrado = {
-                    logradouro: resposta.data.logradouro.toUpperCase(),
-                    bairro: resposta.data.bairro.toUpperCase(),
-                    cidade: resposta.data.localidade.toUpperCase(),
-                    uf: resposta.data.uf,
-                }
-                setLogradouro(cepEncontrado.logradouro);
-                setBairro(cepEncontrado.bairro);
-                setCidade(cepEncontrado.cidade);
-                setUF(cepEncontrado.uf);
-            }
-        } catch (err) {
-            setErrorCep("Erro ao buscar CEP.");
-        }
-    };
-
-    const aplicarMascaraCep = (valor) => {
-        return valor
-            .replace(/\D/g, '') // Remove tudo que não for número
-            .replace(/^(\d{5})(\d)/, '$1-$2') // Aplica a máscara XXXXX-XXX
-            .slice(0, 9); // Limita a 9 caracteres
-    };
-
-    const handleCepChange = (e) => {
-        const valorComMascara = aplicarMascaraCep(e.target.value);
-        setCep(valorComMascara);
-    }
 
     function formataCPF(value) {
         return value
@@ -160,15 +118,6 @@ export function NovoFuncionario() {
             .replace(/(\d{3})(\d)/, '$1.$2') // Coloca o primeiro ponto
             .replace(/(\d{3})(\d)/, '$1.$2') // Coloca o segundo ponto
             .replace(/(\d{3})(\d{1,2})$/, '$1-$2'); // Coloca o traço
-    };
-
-    function formataCNPJ(value) {
-        return value
-            .replace(/\D/g, '') // Remove tudo que não for dígito
-            .replace(/(\d{2})(\d)/, '$1.$2') // Coloca o primeiro ponto
-            .replace(/(\d{3})(\d)/, '$1.$2') // Coloca o segundo ponto
-            .replace(/(\d{3})(\d)/, '$1/$2') // Coloca a barra
-            .replace(/(\d{4})(\d{1,2})$/, '$1-$2'); // Coloca o traço
     };
 
     function formataPhone(value) {
@@ -185,17 +134,10 @@ export function NovoFuncionario() {
     }
 
     function maskDocument(value) {
-
         if (!value) return ''; // Verifica se o valor é vazio ou undefined
 
         if (value.length === 11) {
-            setTipoPessoa("PF");
             return formataCPF(value);
-        }
-
-        if (value.length === 14) {
-            setTipoPessoa("PJ");
-            return formataCNPJ(value);
         }
     };
 
@@ -229,36 +171,6 @@ export function NovoFuncionario() {
         return digit2 === parseInt(cpf[10]);
     }
 
-    // Validação de CNPJ
-    function isValidCNPJ(cnpj) {
-        cnpj = getRawValue(cnpj);
-        if (cnpj.length !== 14 || /^(\d)\1+$/.test(cnpj)) return false;
-        let length = 12;
-        let numbers = cnpj.substring(0, length);
-        let digits = cnpj.substring(length);
-        let sum = 0;
-        let pos = length - 7;
-
-        for (let i = length; i >= 1; i--) {
-            sum += parseInt(numbers[length - i]) * pos--;
-            if (pos < 2) pos = 9;
-        }
-        let result = sum % 11 < 2 ? 0 : 11 - (sum % 11);
-        if (result !== parseInt(digits[0])) return false;
-
-        length = 13;
-        numbers = cnpj.substring(0, length);
-        sum = 0;
-        pos = length - 7;
-
-        for (let i = length; i >= 1; i--) {
-            sum += parseInt(numbers[length - i]) * pos--;
-            if (pos < 2) pos = 9;
-        }
-        result = sum % 11 < 2 ? 0 : 11 - (sum % 11);
-        return result === parseInt(digits[1]);
-    }
-
     const handleFocusDocumento = () => {
         if (documento != null) setDocumento(getRawValue(documento)) // Remove a máscara ao focar
     }
@@ -268,12 +180,12 @@ export function NovoFuncionario() {
         setErrorDocumento('');
     }
 
-    const handleBlurDocumento = () => {  
+    const handleBlurDocumento = () => {
         const rawValue = getRawValue(documento);
 
         // Validação de CPF ou CNPJ
         if (rawValue?.length !== 11 && rawValue?.length !== 14) {
-            setErrorDocumento('CPF ou CNPJ inválido!');
+            setErrorDocumento('CPF inválido!');
             return;
         }
 
@@ -282,14 +194,9 @@ export function NovoFuncionario() {
             return;
         }
 
-        if (rawValue?.length === 14 && !isValidCNPJ(documento)) {
-            setErrorDocumento('CNPJ inválido!');
-            return;
-        }
-
         setDocumento(maskDocument(documento));
         setErrorDocumento(''); // Limpa o erro se for válido
-        buscarClientePorDocumento(rawValue); // Chama a função para buscar o cliente
+        buscarFuncionarioPorDocumento(rawValue); // Chama a função para buscar o cliente
     };
 
     const handleTelefoneChange = (event) => {
@@ -337,6 +244,7 @@ export function NovoFuncionario() {
                                                 onBlur={handleBlurDocumento}   // Aplica máscara ao sair
                                                 isInvalid={!!errorDocumento}
                                                 disabled={modoAtualizacao || carregando}
+                                                tabIndex={1}
                                                 required
                                             />
                                             {carregando && <Spinner animation="border" size="sm" className="ms-2" />}
@@ -359,6 +267,7 @@ export function NovoFuncionario() {
                                             value={nome}
                                             onChange={(e) => setNome(e.target.value.toUpperCase()) || ""}
                                             disabled={formDesabilitado}
+                                            tabIndex={2}
                                             required
                                         />
                                     </Form.Group>
@@ -367,6 +276,46 @@ export function NovoFuncionario() {
 
                             <Row>
 
+                                <Col sm={6}>
+                                    <Form.Group controlId="formData" className="mb-3">
+                                        <Form.Label>Data de Admissão:</Form.Label>
+                                        <Form.Control
+                                            type="date"
+                                            name="dataAdmissao"
+                                            value={dataAdmissao}
+                                            onChange={(e) => setDataAdmissao(e.target.value)}
+                                            disabled={formDesabilitado}
+                                            tabIndex={3}
+                                            required
+                                        />
+                                        {errorPhone && (
+                                            <Form.Control.Feedback type="invalid">
+                                                {errorPhone}
+                                            </Form.Control.Feedback>
+                                        )}
+                                    </Form.Group>
+                                </Col>
+
+                                <Col sm={6}>
+                                    <Form.Group controlId="formSalario" className="mb-3">
+                                        <Form.Label>Salário:</Form.Label>
+                                        <NumericFormat
+                                            customInput={Form.Control}
+                                            thousandSeparator="."
+                                            decimalSeparator=","
+                                            prefix="R$ "
+                                            name="salario"
+                                            value={salario}
+                                            onValueChange={(val) => setSalario(val.floatValue)}
+                                            disabled={formDesabilitado}
+                                            tabIndex={4}
+                                            isNumericString
+                                        />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+
+                            <Row>
                                 <Col sm={6}>
                                     <Form.Group controlId="formTelefone" className="mb-3">
                                         <Form.Label>Telefone:</Form.Label>
@@ -381,6 +330,7 @@ export function NovoFuncionario() {
                                             placeholder="(99) 9 9999-9999"
                                             isInvalid={!!errorPhone}
                                             disabled={formDesabilitado}
+                                            tabIndex={5}
                                             required
                                         />
                                         {errorPhone && (
@@ -392,164 +342,27 @@ export function NovoFuncionario() {
                                 </Col>
 
                                 <Col sm={6}>
-                                    <Form.Group controlId="formEmail" className="mb-3">
-                                        <Form.Label>E-mail:</Form.Label>
-                                        <Form.Control
-                                            type="email"
-                                            placeholder="E-mail do Cliente"
-                                            name="email"
-                                            value={email}
-                                            onChange={(e) => setEmail(e.target.value.toLowerCase())}
-                                            disabled={formDesabilitado}
-                                            required
-                                        />
-                                    </Form.Group>
-                                </Col>
-                            </Row>
-
-                            <Row>
-                                <Col sm={3}>
-                                    <Form.Group controlId="formCep" className="mb-3">
-                                        <Form.Label>CEP:</Form.Label>
-                                        <Form.Control
-                                            type="text"
-                                            placeholder="CEP"
-                                            name="cep"
-                                            value={cep}
-                                            onChange={handleCepChange}
-                                            onBlur={buscarCep}
-                                            isInvalid={!!errorCep}
-                                            disabled={formDesabilitado}
-                                            required
-                                        />
-                                        {errorCep && (
-                                            <Form.Control.Feedback type="invalid">
-                                                {errorCep}
-                                            </Form.Control.Feedback>
-                                        )}
-                                    </Form.Group>
-                                </Col>
-
-                                <Col sm={7}>
-                                    <Form.Group controlId="formLogradouro" className="mb-3">
-                                        <Form.Label>Logradouro:</Form.Label>
-                                        <Form.Control
-                                            type="text"
-                                            placeholder="Logradouro"
-                                            name="logradouro"
-                                            value={logradouro}
-                                            onChange={(e) => setLogradouro(e.target.value.toUpperCase())}
-                                            disabled={formDesabilitado}
-                                            required
-                                        />
-                                    </Form.Group>
-                                </Col>
-
-                                <Col sm={2}>
-                                    <Form.Group controlId="formNumero" className="mb-3">
-                                        <Form.Label>Número:</Form.Label>
-                                        <Form.Control
-                                            type="text"
-                                            placeholder="Número"
-                                            name="numero"
-                                            value={numero}
-                                            onChange={(e) => setNumero(e.target.value)}
-                                            disabled={formDesabilitado}
-                                            required
-                                        />
-                                    </Form.Group>
-                                </Col>
-                            </Row>
-
-                            <Row>
-                                <Col sm={6}>
-                                    <Form.Group controlId="formComplemento" className="mb-3">
-                                        <Form.Label>Complemento:</Form.Label>
-                                        <Form.Control
-                                            type="text"
-                                            placeholder="Complemento"
-                                            name="complemento"
-                                            value={complemento}
-                                            onChange={(e) => setComplemento(e.target.value.toUpperCase())}
-                                            disabled={formDesabilitado}
-                                        />
-                                    </Form.Group>
-                                </Col>
-
-                                <Col sm={6}>
-                                    <Form.Group controlId="formBairro" className="mb-3">
-                                        <Form.Label>Bairro:</Form.Label>
-                                        <Form.Control
-                                            type="text"
-                                            placeholder="Bairro"
-                                            name="bairro"
-                                            value={bairro}
-                                            onChange={(e) => setBairro(e.target.value.toUpperCase())}
-                                            disabled={formDesabilitado}
-                                            required
-                                        />
-                                    </Form.Group>
-                                </Col>
-                            </Row>
-
-                            <Row>
-                                <Col sm={9}>
-                                    <Form.Group controlId="formCidade" className="mb-3">
-                                        <Form.Label>Cidade:</Form.Label>
-                                        <Form.Control
-                                            type="text"
-                                            placeholder="Cidade"
-                                            name="cidade"
-                                            value={cidade}
-                                            onChange={(e) => setCidade(e.target.value.toUpperCase())}
-                                            disabled={formDesabilitado}
-                                            required
-                                        />
-                                    </Form.Group>
-                                </Col>
-
-                                <Col sm={3}>
-                                    <Form.Group controlId="formUF" className="mb-3">
-                                        <Form.Label>UF:</Form.Label>
+                                    <Form.Group controlId="formTipoUsuario" className="mb-3">
+                                        <Form.Label>Tipo de Usuário</Form.Label>
                                         <Form.Control
                                             as="select"
-                                            name="uf"
-                                            value={uf}
-                                            onChange={(e) => setUF(e.target.value)}
+                                            name="tipoFuncionarioID"
+                                            value={tipoFuncionarioID}
+                                            onChange={(e) => setTipoFuncionarioID(e.target.value)}
+                                            tabIndex={6}
                                             disabled={formDesabilitado}
                                             required
                                         >
-                                            <option value="" disabled>Selecione a UF</option>
-                                            <option value="AC">AC - Acre</option>
-                                            <option value="AL">AL - Alagoas</option>
-                                            <option value="AM">AM - Amazonas</option>
-                                            <option value="AP">AP - Amapá</option>
-                                            <option value="BA">BA - Bahia</option>
-                                            <option value="CE">CE - Ceará</option>
-                                            <option value="DF">DF - Distrito Federal</option>
-                                            <option value="ES">ES - Espírito Santo</option>
-                                            <option value="GO">GO - Goiás</option>
-                                            <option value="MA">MA - Maranhão</option>
-                                            <option value="MG">MG - Minas Gerais</option>
-                                            <option value="MS">MS - Mato Grosso do Sul</option>
-                                            <option value="MT">MS - Mato Grosso</option>
-                                            <option value="PA">PA - Pará</option>
-                                            <option value="PB">PB - Paraíba</option>
-                                            <option value="PE">PE - Pernambuco</option>
-                                            <option value="PI">PI - Piauí</option>
-                                            <option value="PR">PR - Paraná</option>
-                                            <option value="RJ">RJ - Rio de Janeiro</option>
-                                            <option value="RN">RN - Rio Grande do Norte</option>
-                                            <option value="RO">RO - Rondônia</option>
-                                            <option value="RR">RR - Roraima</option>
-                                            <option value="RS">RS - Rio Grande do Sul</option>
-                                            <option value="SC">SC - Santa Catarina</option>
-                                            <option value="SE">SE - Sergipe</option>
-                                            <option value="SP">SP - São Paulo</option>
-                                            <option value="TO">TO - Tocantins</option>
+                                            <option value="" disabled>Selecione um tipo de usuário</option>
+                                            {tiposFuncionarios.map((tipo) => (
+                                                <option key={tipo.id} value={tipo.id}>
+                                                    {tipo.nome}
+                                                </option>
+                                            ))}
                                         </Form.Control>
                                     </Form.Group>
                                 </Col>
+
                             </Row>
 
                             <Button variant="success" type="submit" className={style.btn} disabled={!isFormValid()}>
