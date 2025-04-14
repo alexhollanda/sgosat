@@ -42,7 +42,8 @@ export function EditarFuncionario() {
                 const response = await FuncionarioAPI.obterAsync(id);
                 setDocumento(formataCPF(response.documento));
                 setNome(response.nome);
-                setDataAdmissao(response.dataAdmissao?.ToString("yyyy-MM-dd"));
+                const dataFormatada = response.dataAdmissao?.split("T")[0]
+                setDataAdmissao(dataFormatada);
                 setTelefone(formataPhone(response.telefone));
                 setSalario(response.salario);
                 setTipoFuncionarioID(response.tipoFuncionarioID);

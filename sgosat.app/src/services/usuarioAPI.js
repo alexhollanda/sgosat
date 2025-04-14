@@ -28,12 +28,13 @@ const UsuarioAPI = {
             throw error;
         }
     },
-    async criarAsync(userName, senha, pessoaID, tipoUsuarioID) {
+    async criarAsync(userName, email, senha, funcionarioID, tipoUsuarioID) {
         try {
             const usuarioCriar = {
                 UserName: userName,
+                Email: email,
                 Senha: senha,
-                PessoaID: pessoaID,
+                FuncionarioID: funcionarioID,
                 TipoUsuarioID: tipoUsuarioID
             }
             const response = await HTTPClient.post("/Usuario/Criar", usuarioCriar);
@@ -43,11 +44,12 @@ const UsuarioAPI = {
             throw error;
         }
     },
-    async atualizarAsync(usuarioID, userName, tipoUsuarioID) {
+    async atualizarAsync(usuarioID, userName, email, tipoUsuarioID) {
         try {
             const usuarioAtualizar = {
                 ID: usuarioID,
                 UserName: userName,
+                Email: email,
                 TipoUsuarioID: tipoUsuarioID
             }
             const response = await HTTPClient.put("/Usuario/Atualizar", usuarioAtualizar);

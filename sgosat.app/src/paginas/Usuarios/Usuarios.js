@@ -6,10 +6,10 @@ import style from "./Usuarios.module.css";
 import { MdEdit, MdDelete } from "react-icons/md";
 import UsuarioAPI from "../../services/usuarioAPI";
 import { useEffect, useState } from "react";
-import PessoaAPI from "../../services/pessoaAPI";
 import { BsFillPersonPlusFill } from "react-icons/bs";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import FuncionarioAPI from "../../services/funcionarioAPI";
 
 
 export function Usuarios() {
@@ -53,7 +53,7 @@ export function Usuarios() {
 
     async function fetchFuncionarios() {
         try {
-            const listaFuncionarios = await PessoaAPI.listarFuncionariosAsync(true);
+            const listaFuncionarios = await FuncionarioAPI.listarAsync(true);
             setFuncionarios(listaFuncionarios);
         } catch (error) {
             console.error("Erro ao carregar funcionários:", error);
@@ -73,7 +73,7 @@ export function Usuarios() {
                 <div className={style.pagina_conteudo}>
                     <div className={style.pagina_cabecalho}>
                         <h3>Usuários</h3>
-                        <Button variant="danger" type="button" className={style.botao_novo} onClick={() => navigate("/usuario/novo")}>
+                        <Button variant="danger" type="button" className={style.botao_novo} onClick={() => navigate("/usuarios/novo")}>
                             <BsFillPersonPlusFill />Novo
                         </Button>
                     </div>
@@ -83,7 +83,7 @@ export function Usuarios() {
                             <thead className={style.tabela_cabecalho}>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Nome</th>
+                                    <th>Funcionário</th>
                                     <th>Nome do Usuário</th>
                                     <th>E-mail</th>
                                     <th>Ações</th>
@@ -96,9 +96,9 @@ export function Usuarios() {
 
                                         <tr key={usuario.id}>
                                             <td>{String(usuario.id).padStart(6, '0')}</td>
-                                            <td>{funcionarios.find(f => f.id === usuario.pessoaID)?.nome || "Não encontrado"}</td>
+                                            <td>{funcionarios.find(f => f.id === usuario.funcionarioID)?.nome || "Não encontrado"}</td>
                                             <td>{usuario.userName}</td>
-                                            <td>{funcionarios.find(f => f.id === usuario.pessoaID)?.email || "Não encontrado"}</td>
+                                            <td>{usuario.email}</td>
                                             <td>
                                                 <Link to='/usuario/editar' state={usuario.id} className={style.botao_editar}>
                                                     <MdEdit />

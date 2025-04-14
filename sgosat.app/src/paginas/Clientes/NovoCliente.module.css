@@ -27,10 +27,3 @@
     margin-right: 10px;
     width: 80px;
 }
-
-.btn_pesquisar_doc {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-    background-color: #E69215;
-    border-color: #E69215;
-}
