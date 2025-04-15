@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Sidebar } from "../../componentes/Sidebar/Sidebar";
 import { Topbar } from "../../componentes/Topbar/Topbar";
 import style from "./Usuarios.module.css";
-import { MdEdit, MdDelete } from "react-icons/md";
+import { MdEdit, MdDelete, MdOutlineKey } from "react-icons/md";
 import UsuarioAPI from "../../services/usuarioAPI";
 import { useEffect, useState } from "react";
 import { BsFillPersonPlusFill } from "react-icons/bs";
@@ -100,12 +100,16 @@ export function Usuarios() {
                                             <td>{usuario.userName}</td>
                                             <td>{usuario.email}</td>
                                             <td>
-                                                <Link to='/usuario/editar' state={usuario.id} className={style.botao_editar}>
+                                                <Link to='/usuarios/editar' state={usuario.id} className={style.botao_editar}>
                                                     <MdEdit />
                                                 </Link>
                                                 <button onClick={() => handleClickDeletar(usuario)} className={style.botao_deletar}>
                                                     <MdDelete />
                                                 </button>
+                                                <Link to='/usuarios/alterarsenha' state={usuario.id} className={style.botao_editar}>
+                                                    <MdOutlineKey />
+                                                </Link>
+                                                
                                             </td>
                                         </tr>
                                     );

@@ -12,6 +12,7 @@ import { NovaOrdemServico } from './paginas/OrdensServico/NovaOrdemServico';
 import { Funcionarios } from './paginas/Funcionarios/Funcionarios';
 import { NovoFuncionario } from './paginas/Funcionarios/NovoFuncionario';
 import { EditarFuncionario } from './paginas/Funcionarios/EditarFuncionario';
+import { AlterarSenha } from './paginas/Usuarios/AlterarSenha';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
         <Route path="/usuarios" element={<Usuarios />} />
         <Route path="/usuarios/novo" element={<NovoUsuario />} />
         <Route path="/usuarios/editar" element={<EditarUsuario />} />
+        <Route path="/usuarios/alterarsenha" element={<AlterarSenha />} />
         <Route path="/ordens" element={<OrdensServico />} />
         <Route path='/ordens/nova' element={<NovaOrdemServico />} />
       </Routes>

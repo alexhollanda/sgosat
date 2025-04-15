@@ -2,12 +2,11 @@ import style from './NovaOrdemServico.module.css';
 import React, { useState, useEffect } from 'react';
 import { Spinner } from 'react-bootstrap';
 import { useNavigate } from "react-router-dom";
-import PessoaAPI from "../../services/pessoaAPI";
-import axios from 'axios';
+import ClienteAPI from "../../services/clienteAPI";
+import FuncionarioAPI from "../../services/funcionarioAPI";
 import { Sidebar } from '../../componentes/Sidebar/Sidebar';
 import { Topbar } from '../../componentes/Topbar/Topbar';
 import Form from 'react-bootstrap/Form';
-import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -19,6 +18,8 @@ export function NovaOrdemServico() {
     const [colapsada, setColapsada] = useState(true);
     const [clientes, setClientes] = useState([]);
     const [clienteSelecionado, setClienteSelecionado] = useState('');
+    const [funcionarios, setFuncionarios] = useState([]);
+    const [funcionarioSelecionado, setFuncionarioSelecionado] = useState('');
     const [data, setData] = useState('');
     const [loading, setLoading] = useState(true);
 
@@ -27,12 +28,24 @@ export function NovaOrdemServico() {
 
     async function fetchClientes() {
         try {
-            const listaClientes = await PessoaAPI.listarClientesAsync(true);
+            const listaClientes = await ClienteAPI.listarAsync(true);
             setClientes(listaClientes);
             setLoading(false);
         }
         catch (error) {
             console.error('Erro ao carregar clientes:', error);
+            setLoading(false);
+        }
+    }
+
+    async function fetchFuncionarios() {
+        try {
+            const listaFuncionarios = await FuncionarioAPI.listarAsync(true);
+            setClientes(listaFuncionarios);
+            setLoading(false);
+        }
+        catch (error) {
+            console.error('Erro ao carregar funcionarios:', error);
             setLoading(false);
         }
     }
@@ -137,7 +150,7 @@ export function NovaOrdemServico() {
                                 Salvar
                             </Button>
 
-                            <Button variant="danger" type="button" className={style.btn} onClick={() => navigate("/clientes")}>
+                            <Button variant="danger" type="button" className={style.btn} onClick={() => navigate("/ordens")}>
                                 Cancelar
                             </Button>
                         </Container>

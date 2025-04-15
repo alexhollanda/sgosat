@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("sgosat.Dominio")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+67d41be75bf267c0b7e1c8577792ea7607a17b2e")]
 [assembly: System.Reflection.AssemblyProductAttribute("sgosat.Dominio")]
 [assembly: System.Reflection.AssemblyTitleAttribute("sgosat.Dominio")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

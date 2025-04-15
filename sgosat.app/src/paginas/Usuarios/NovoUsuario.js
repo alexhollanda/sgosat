@@ -12,6 +12,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
 export function NovoUsuario() {
+    const [colapsada, setColapsada] = useState(true);
     const [userName, setUserName] = useState('');
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
@@ -62,7 +63,7 @@ export function NovoUsuario() {
 
 
     return (
-        <Sidebar>
+        <Sidebar colapsada={colapsada} setColapsada={setColapsada}>
             <Topbar>
                 <div className={style.pagina_conteudo}>
                     <h3>Novo Usuário</h3>

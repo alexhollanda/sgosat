@@ -3,6 +3,7 @@ import { Topbar } from "../../componentes/Topbar/Topbar";
 import style from "./EditarUsuario.module.css";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { Alert } from "react-bootstrap";
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import UsuarioAPI from "../../services/usuarioAPI";
@@ -11,7 +12,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-export function EditarUsuario() {
+export function AlterarSenha() {
     const [colapsada, setColapsada] = useState(true);
     const location = useLocation();
     const navigate = useNavigate();
@@ -25,6 +26,11 @@ export function EditarUsuario() {
     const [funcionarioID, setFuncionarioID] = useState('');
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
+    const [senhaAtual, setSenhaAtual] = useState('');
+    const [novaSenha, setNovaSenha] = useState('');
+    const [confirmarSenha, setConfirmarSenha] = useState("");
+    const [mensagem, setMensagem] = useState("");
+    const [erro, setErro] = useState(false);
 
     useEffect(() => {
         const fetchTiposUsuarios = async () => {
@@ -51,6 +57,7 @@ export function EditarUsuario() {
                 const usuario = await UsuarioAPI.obterAsync(id);
                 setTipoUsuarioID(usuario.tipoUsuarioID);
                 setUserName(usuario.userName);
+                setSenha(usuario.senha);
                 setFuncionarioID(usuario.funcionarioID);
                 setEmail(usuario.email);
             } catch (error) {
@@ -66,15 +73,37 @@ export function EditarUsuario() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (isFormValid()) {
-            await UsuarioAPI.atualizarAsync(id, userName, tipoUsuarioID);
-            navigate("/usuarios");
+            if (senha != senhaAtual) {
+                setMensagem("A senha atual informada não confere!" + senha);
+                setErro(true);
+                return;
+            }
+
+            if (novaSenha !== confirmarSenha) {
+                setMensagem("A nova senha e a confirmação não conferem!");
+                setErro(true);
+                return;
+            }
+            try {
+                await UsuarioAPI.alterarSenhaAsync(id, novaSenha, senhaAtual);
+                setMensagem("Senha alterada com sucesso!");
+                setSenhaAtual("");
+                setNovaSenha("");
+                setConfirmarSenha("");
+                setTimeout(() => {
+                    navigate("/usuarios"); // ou qualquer rota desejada
+                  }, 1000);
+            } catch (error) {
+                setMensagem(error.response?.data || "Erro ao alterar senha.");
+                setErro(true);
+            }
         } else {
             alert("Por favor, preencha todos os campos obrigatórios.");
         }
     };
 
     const isFormValid = () => {
-        return userName && tipoUsuarioID;
+        return senhaAtual && novaSenha && confirmarSenha;
     }
 
 
@@ -82,9 +111,12 @@ export function EditarUsuario() {
         <Sidebar colapsada={colapsada} setColapsada={setColapsada}>
             <Topbar texto="Editar Usuário" colapsada={colapsada}>
                 <div className={style.pagina_conteudo}>
-                    <h3>Editar Usuário</h3>
+                    <h3>Alterar Senha do Usuário</h3>
 
                     <Form onSubmit={handleSubmit}>
+                        {mensagem && (
+                            <Alert variant={erro ? "danger" : "success"}>{mensagem}</Alert>
+                        )}
                         <Container>
                             <Row>
                                 <Col sm={12}>
@@ -109,7 +141,7 @@ export function EditarUsuario() {
                             </Row>
 
                             <Row>
-                                <Col sm={12}>
+                                <Col sm={6}>
                                     <Form.Group controlId="formUserName" className="mb-3">
                                         <Form.Label>Nome de Usuário:</Form.Label>
                                         <Form.Control
@@ -119,13 +151,12 @@ export function EditarUsuario() {
                                             value={userName}
                                             onChange={(e) => setUserName(e.target.value)}
                                             required
+                                            disabled
                                         />
                                     </Form.Group>
                                 </Col>
-                            </Row>
 
-                            <Row>
-                                <Col sm={12}>
+                                <Col sm={6}>
                                     <Form.Group controlId="formUserName" className="mb-3">
                                         <Form.Label>E-mail:</Form.Label>
                                         <Form.Control
@@ -133,24 +164,8 @@ export function EditarUsuario() {
                                             placeholder="E-mail"
                                             name="email"
                                             value={email}
-                                            onChange={(e) => setEmail(e.target.value)}
-                                            required
-                                        />
-                                    </Form.Group>
-                                </Col>
-                            </Row>
-
-                            <Row>
-                                <Col sm={12}>
-                                    <Form.Group controlId="formSenha" className="mb-3">
-                                        <Form.Label>Senha:</Form.Label>
-                                        <Form.Control
-                                            type="password"
-                                            placeholder="************"
-                                            name="senha"
-                                            value={senha}
-                                            required
                                             disabled
+                                            required
                                         />
                                     </Form.Group>
                                 </Col>
@@ -166,6 +181,7 @@ export function EditarUsuario() {
                                             value={tipoUsuarioID}
                                             onChange={(e) => setTipoUsuarioID(e.target.value)}
                                             required
+                                            disabled
                                         >
                                             <option value="" disabled>Selecione um tipo de usuário</option>
                                             {tiposUsuarios.map((tipo) => (
@@ -174,6 +190,53 @@ export function EditarUsuario() {
                                                 </option>
                                             ))}
                                         </Form.Control>
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+
+                            <Row>
+                                <Col sm={4}>
+                                    <Form.Group controlId="formSenhaAtual" className="mb-3">
+                                        <Form.Label>Digite a Senha Atual:</Form.Label>
+                                        <Form.Control
+                                            type="password"
+                                            placeholder="************"
+                                            name="senhaAtual"
+                                            value={senhaAtual}
+                                            onChange={(e) => setSenhaAtual(e.target.value)}
+                                            required
+
+                                        />
+                                    </Form.Group>
+                                </Col>
+
+                                <Col sm={4}>
+                                    <Form.Group controlId="formNovaSenha" className="mb-3">
+                                        <Form.Label>Digite a Nova Senha:</Form.Label>
+                                        <Form.Control
+                                            type="password"
+                                            placeholder="************"
+                                            name="novaSenha"
+                                            value={novaSenha}
+                                            onChange={(e) => setNovaSenha(e.target.value)}
+                                            required
+
+                                        />
+                                    </Form.Group>
+                                </Col>
+
+                                <Col sm={4}>
+                                    <Form.Group controlId="formConfirmaSenha" className="mb-3">
+                                        <Form.Label>Confirme a Nova Senha:</Form.Label>
+                                        <Form.Control
+                                            type="password"
+                                            placeholder="************"
+                                            name="confirmaSenha"
+                                            value={confirmarSenha}
+                                            onChange={(e) => setConfirmarSenha(e.target.value)}
+                                            required
+
+                                        />
                                     </Form.Group>
                                 </Col>
                             </Row>
