@@ -13,14 +13,22 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { AsyncTypeahead, Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
+import OrdemServicoAPI from '../../services/ordemServicoAPI';
 
 export function NovaOrdemServico() {
     const [colapsada, setColapsada] = useState(true);
+    const [dataAbertura, setDataAbertura] = useState('');
+    const [dataConclusao, setDataConclusao] = useState('');
     const [clientes, setClientes] = useState([]);
     const [clienteSelecionado, setClienteSelecionado] = useState('');
     const [funcionarios, setFuncionarios] = useState([]);
     const [funcionarioSelecionado, setFuncionarioSelecionado] = useState('');
-    const [data, setData] = useState('');
+    const [descricaoProblema, setDescricaoProblema] = useState('');
+    const [servicoRealizado, setServicoRealizado] = useState('');
+    const [observacoes, setObservacoes] = useState('');
+    const [valor, serValor] = useState('');
+    const [statusOSID, setStatusOSID] = useState('');
+    const [statusOS, setStatusOS] = useState([]);
     const [loading, setLoading] = useState(true);
 
 
@@ -41,7 +49,7 @@ export function NovaOrdemServico() {
     async function fetchFuncionarios() {
         try {
             const listaFuncionarios = await FuncionarioAPI.listarAsync(true);
-            setClientes(listaFuncionarios);
+            setFuncionarios(listaFuncionarios);
             setLoading(false);
         }
         catch (error) {
@@ -57,8 +65,21 @@ export function NovaOrdemServico() {
         const dia = String(hoje.getDate()).padStart(2, '0');
 
         const dataFormatada = `${ano}-${mes}-${dia}`;
-        setData(dataFormatada);
+        setDataAbertura(dataFormatada);
+
+        const fetchStatusOS = async () => {
+            try {
+                const status = await OrdemServicoAPI.listarStatusOS();
+                setStatusOS(status);
+
+            } catch (error) {
+                console.error("Erro ao listar os status das ordens de serviço:", error);
+            }
+        }
+
         fetchClientes();
+        fetchFuncionarios();
+        fetchStatusOS();
     }, [])
 
 
@@ -89,17 +110,55 @@ export function NovaOrdemServico() {
                             <Row>
                                 <Col sm={4}>
                                     <Form.Group className="mb-3" controlId="formData">
-                                        <Form.Label>Data da Ordem de Serviço</Form.Label>
+                                        <Form.Label>Data de Abertura:</Form.Label>
                                         <Form.Control
                                             type="date"
-                                            value={data}
-                                            onChange={(e) => setData(e.target.value)}
+                                            name="dataAbertura"
+                                            value={dataAbertura}
+                                            onChange={(e) => setDataAbertura(e.target.value)}
                                             required
                                         />
                                     </Form.Group>
                                 </Col>
 
-                                <Col sm={8}>
+                                <Col sm={4}>
+                                    <Form.Group className="mb-3" controlId="formDataConclusao">
+                                        <Form.Label>Data de Conclusão:</Form.Label>
+                                        <Form.Control
+                                            type="date"
+                                            name="dataConclusao"
+                                            value={dataConclusao}
+                                            onChange={(e) => setDataConclusao(e.target.value)}
+                                            required
+                                        />
+                                    </Form.Group>
+                                </Col>
+
+                                <Col sm={4}>
+                                    <Form.Group className="mb-3" controlId="formStatusOS">
+                                        <Form.Label>Status:</Form.Label>
+                                        <Form.Control
+                                            as="select"
+                                            name="statusOSID"
+                                            value={statusOSID}
+                                            onChange={(e) => setStatusOSID(e.target.value)}
+                                            required
+                                        >
+                                            <option value="" disabled>Status da Ordem de Serviço</option>
+                                            {statusOS.map((status) => (
+                                                <option key={status.id} value={status.id}>
+                                                    {status.nome}
+                                                </option>
+                                            ))}
+                                        </Form.Control>
+                                    </Form.Group>
+                                </Col>
+
+
+                            </Row>
+
+                            <Row>
+                                <Col sm={12}>
                                     <Form.Group className="mb-3" controlId="formCliente">
                                         <Form.Label>Cliente</Form.Label>
                                         {loading ? (
@@ -142,6 +201,46 @@ export function NovaOrdemServico() {
                                     <Form.Group className="mb-3" controlId="observacoes">
                                         <Form.Label>Observações</Form.Label>
                                         <Form.Control as="textarea" rows={3} style={{ resize: 'none' }} placeholder="Alguma observação adicional?" />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+
+                            <Row>
+                                <Col sm={9}>
+                                    <Form.Group className="mb-3" controlId="formFuncionario">
+                                        <Form.Label>Funcionario:</Form.Label>
+                                        {loading ? (
+                                            <Spinner animation="border" />
+                                        ) : (
+                                            <Typeahead
+                                                id="funcionario-typeahead"
+                                                labelKey="nome"
+                                                options={funcionarios}
+                                                placeholder="Digite para buscar o funcionário..."
+                                                onChange={setFuncionarioSelecionado}
+                                                selected={funcionarioSelecionado}
+                                                minLength={2}
+                                            />
+                                        )}
+                                    </Form.Group>
+                                </Col>
+
+                                <Col sm={3}>
+                                    <Form.Group className="mb-3" controlId="formFuncionario">
+                                        <Form.Label>Funcionario:</Form.Label>
+                                        {loading ? (
+                                            <Spinner animation="border" />
+                                        ) : (
+                                            <Typeahead
+                                                id="funcionario-typeahead"
+                                                labelKey="nome"
+                                                options={funcionarios}
+                                                placeholder="Digite para buscar o funcionário..."
+                                                onChange={setFuncionarioSelecionado}
+                                                selected={funcionarioSelecionado}
+                                                minLength={2}
+                                            />
+                                        )}
                                     </Form.Group>
                                 </Col>
                             </Row>

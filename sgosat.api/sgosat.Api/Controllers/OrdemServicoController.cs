@@ -3,6 +3,7 @@ using sgosat.Api.Models.OrdensServico.Request;
 using sgosat.Api.Models.OrdensServico.Response;
 using sgosat.Aplicacao.Interfaces;
 using sgosat.Dominio.Entidades;
+using sgosat.Dominio.Enumeradores;
 
 namespace sgosat.Api.Controllers
 {
@@ -164,12 +165,12 @@ namespace sgosat.Api.Controllers
         }
 
         [HttpGet]
-        [Route("ListarPorCliente/{idCliente}")]
-        public async Task<ActionResult> ListarPorCliente([FromRoute] int idCliente, [FromQuery] bool ativos)
+        [Route("ListarPorCliente/{clienteID}")]
+        public async Task<ActionResult> ListarPorCliente([FromRoute] int clienteID, [FromQuery] bool ativos)
         {
             try
             {
-                var osDominio = await _osAplicacao.ListarPorCliente(idCliente, ativos);
+                var osDominio = await _osAplicacao.ListarPorCliente(clienteID, ativos);
 
                 var ordens = osDominio.Select(o => new OrdemServicoResponse(){
                     ID = o.ID,
@@ -193,7 +194,36 @@ namespace sgosat.Api.Controllers
         }
 
         [HttpGet]
-        [Route("ListarPorStatus")]
+        [Route("ListarPorFuncionario/{funcionarioID}")]
+        public async Task<ActionResult> ListarPorFuncionario([FromRoute] int funcionarioID, [FromQuery] bool ativos)
+        {
+            try
+            {
+                var osDominio = await _osAplicacao.ListarPorFuncionario(funcionarioID, ativos);
+
+                var ordens = osDominio.Select(o => new OrdemServicoResponse(){
+                    ID = o.ID,
+                    DataAbertura = o.DataAbertura,
+                    DataConclusao = o.DataConclusao,
+                    ClienteID = o.ClienteID,
+                    FuncionarioID = o.FuncionarioID,
+                    DescricaoProblema = o.DescricaoProblema,
+                    ServicoRealizado = o.ServicoRealizado,
+                    Observacoes = o.Observacoes,
+                    Valor = o.Valor,
+                    StatusOSID = o.StatusOSID
+                }).ToList();
+
+                return Ok(ordens);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("ListarPorStatus/{statusID}")]
         public async Task<ActionResult> ListarPorStatus([FromRoute] int statusID, [FromQuery] bool ativos)
         {
             try
@@ -214,6 +244,33 @@ namespace sgosat.Api.Controllers
                 }).ToList();
 
                 return Ok(ordens);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+        [HttpGet]
+        [Route("ListarStatusOS")]
+        public ActionResult ListarStatusOS()
+        {
+            try
+            {
+                List<object> statusOS = new List<object>();
+                var idStatusOS = (int[]) Enum.GetValues(typeof(StatusOS));
+                var nomeStatusOS = Enum.GetNames(typeof(StatusOS));
+
+                for (int i = 0; i < idStatusOS.Length; i++)
+                {
+                    statusOS.Add(new{
+                        id = idStatusOS[i] + 1,
+                        nome = nomeStatusOS[i]
+                    });
+                }
+
+                return Ok(statusOS);
             }
             catch (Exception ex)
             {

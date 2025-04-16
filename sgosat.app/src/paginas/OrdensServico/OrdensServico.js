@@ -5,10 +5,10 @@ import { Topbar } from "../../componentes/Topbar/Topbar";
 import style from "./OrdensServico.module.css";
 import { MdEdit, MdDelete } from "react-icons/md";
 import { useEffect, useState } from "react";
-import PessoaAPI from "../../services/pessoaAPI";
 import { BsFillPersonPlusFill } from "react-icons/bs";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import ClienteAPI from "../../services/clienteAPI";
 
 
 export function OrdensServico() {
@@ -61,14 +61,14 @@ export function OrdensServico() {
     }
 
     const handleDeletar = async () => {
-        try {
-            await PessoaAPI.deletarClienteAsync(clienteSelecionado.id);
-            setClientes(clientes.filter(cliente => cliente.id !== clienteSelecionado.id));
-        } catch (error) {
-            console.error("Erro ao deletar cliente:", error);
-        } finally {
-            handleFechareModal();
-        }
+        // try {
+        //     await PessoaAPI.deletarClienteAsync(clienteSelecionado.id);
+        //     setClientes(clientes.filter(cliente => cliente.id !== clienteSelecionado.id));
+        // } catch (error) {
+        //     console.error("Erro ao deletar cliente:", error);
+        // } finally {
+        //     handleFechareModal();
+        // }
     };
 
     const handleFechareModal = () => {
@@ -78,7 +78,7 @@ export function OrdensServico() {
 
     async function fetchClientes() {
         try {
-            const listaClientes = await PessoaAPI.listarClientesAsync(true);
+            const listaClientes = await ClienteAPI.listarAsync(true);
             setClientes(listaClientes);
         } catch (error) {
             console.error("Erro ao carregar clientes:", error);

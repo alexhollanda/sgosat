@@ -36,10 +36,18 @@ namespace sgosat.Repositorio
         {
             return await _contexto.OrdensServicos.Where(os => os.Ativo == Ativo).ToListAsync();
         }
+
         public async Task<IEnumerable<OrdemServico>> ListarPorCliente(int clienteID, bool Ativo)
         {
             return await _contexto.OrdensServicos
                         .Where(os => os.ClienteID == clienteID)
+                        .Where(os => os.Ativo == Ativo).ToListAsync();
+        }
+
+        public async Task<IEnumerable<OrdemServico>> ListarPorFuncionario(int funcionarioID, bool Ativo)
+        {
+            return await _contexto.OrdensServicos
+                        .Where(os => os.FuncionarioID == funcionarioID)
                         .Where(os => os.Ativo == Ativo).ToListAsync();
         }
 

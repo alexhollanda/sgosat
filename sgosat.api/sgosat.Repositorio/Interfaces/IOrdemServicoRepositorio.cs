@@ -9,6 +9,7 @@ namespace sgosat.Repositorio.Interfaces
         Task<OrdemServico> Obter(int osID, bool Ativo);
         Task<IEnumerable<OrdemServico>> Listar(bool Ativo);
         Task<IEnumerable<OrdemServico>> ListarPorCliente(int clienteID, bool Ativo);
+        Task<IEnumerable<OrdemServico>> ListarPorFuncionario(int funcionarioID, bool Ativo);
         Task<IEnumerable<OrdemServico>> ListarPorStatus(int statusID, bool Ativo);
     }
 }

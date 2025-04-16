@@ -2,9 +2,10 @@ namespace sgosat.Dominio.Enumeradores
 {
     public enum StatusOS
     {
-        Pendente,
+        Aberto,
         Andamento,
+        Cancelado,
         Concluído,
-        Cancelado
+        Pendente
     }
 }

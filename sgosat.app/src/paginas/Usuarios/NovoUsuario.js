@@ -17,9 +17,9 @@ export function NovoUsuario() {
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
     const [funcionarioID, setFuncionarioID] = useState('');
+    const [funcionarios, setFuncionarios] = useState([]);
     const [tipoUsuarioID, setTipoUsuarioID] = useState('');
     const [tiposUsuarios, setTiposUsuarios] = useState([]);
-    const [funcionarios, setFuncionarios] = useState([]);
 
     const navigate = useNavigate();
 

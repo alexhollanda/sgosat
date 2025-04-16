@@ -84,6 +84,11 @@ namespace sgosat.Aplicacao
             return await _ordemServicoRepositorio.ListarPorCliente(clienteID, Ativo);
         }
         
+        public async Task<IEnumerable<OrdemServico>> ListarPorFuncionario(int funcionarioID, bool Ativo)
+        {
+            return await _ordemServicoRepositorio.ListarPorFuncionario(funcionarioID, Ativo);
+        }
+        
         public async Task<IEnumerable<OrdemServico>> ListarPorStatus(int statusID, bool Ativo)
         {
             return await _ordemServicoRepositorio.ListarPorStatus(statusID, Ativo); 
