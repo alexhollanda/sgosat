@@ -24,10 +24,19 @@ const FuncionarioAPI = {
             const response = await HTTPClient.get(`/Funcionario/ObterPorTermo?query=${query}`);
             return response.data;
         } catch (error) {
-            console.error("Erro ao listar clientes:", error);
+            console.error("Erro ao listar funcionários:", error);
             throw error;
         }
-    },   
+    },
+    async obterTecnicoAsync() {
+        try {
+            const response = await HTTPClient.get(`/Funcionario/ObterTecnico`);
+            return response.data;
+        } catch (error) {
+            console.error("Erro ao listar funcionários:", error);
+            throw error;
+        }
+    },    
     async listarAsync(ativos) {
         try {
             const response = await HTTPClient.get(`/Funcionario/Listar?ativos=${ativos}`);
@@ -86,7 +95,7 @@ const FuncionarioAPI = {
             const response = await HTTPClient.delete(`/Funcionario/Deletar/${funcionarioID}`);
             return response.data;
         } catch (error) {
-            console.error("Erro ao deletar Cliente:", error);
+            console.error("Erro ao deletar Funcionário:", error);
             throw error;
         }
     },

@@ -18,8 +18,6 @@ namespace sgosat.Aplicacao
             if (ordemServico == null)
                 throw new Exception("Ordem de Serviço não pode ser vazia!");
             
-            ValidarInformacoesOrdemServico(ordemServico);
-
             return await _ordemServicoRepositorio.Salvar(ordemServico);            
 
         }

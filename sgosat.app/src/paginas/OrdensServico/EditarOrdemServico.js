@@ -1,7 +1,7 @@
 import style from './NovaOrdemServico.module.css';
 import React, { useState, useEffect } from 'react';
 import { Alert } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import ClienteAPI from "../../services/clienteAPI";
 import FuncionarioAPI from "../../services/funcionarioAPI";
 import { Sidebar } from '../../componentes/Sidebar/Sidebar';
@@ -15,14 +15,11 @@ import Select from "react-select";
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import OrdemServicoAPI from '../../services/ordemServicoAPI';
 
-export function NovaOrdemServico() {
+export function EditarOrdemServico() {
     const [colapsada, setColapsada] = useState(true);
     const [dataAbertura, setDataAbertura] = useState('');
     const [dataConclusao, setDataConclusao] = useState(null);
-    //const [clientes, setClientes] = useState([]);
-    //const [clienteID, setClienteID] = useState('');
-    const [clienteBusca, setClienteBusca] = useState("");
-    const [clienteOpcoes, setClienteOpcoes] = useState([]);
+    const [clientes, setClientes] = useState([]);
     const [clienteSelecionado, setClienteSelecionado] = useState(null);
     const [funcionarios, setFuncionarios] = useState([]);
     const [funcionarioID, setFuncionarioID] = useState('');
@@ -32,15 +29,14 @@ export function NovaOrdemServico() {
     const [valor, setValor] = useState(0);
     const [statusOSID, setStatusOSID] = useState('');
     const [statusOS, setStatusOS] = useState([]);
-    //const [opcoes, setOpcoes] = useState([]);
-    //const [busca, setBusca] = useState("");
     const [erros, setErros] = useState({});
-    const [loading, setLoading] = useState(false);
-    const [mensagem, setMensagem] = useState("");
     const [erro, setErro] = useState(false);
+    const [mensagem, setMensagem] = useState("");
 
 
     const navigate = useNavigate();
+    const location = useLocation();
+    const [id] = useState(location.state);
 
     function formatarMoeda(valor) {
         return valor.toLocaleString("pt-BR", {
@@ -66,105 +62,38 @@ export function NovaOrdemServico() {
             .replace(/(\d{4})(\d{1,2})$/, '$1-$2'); // Coloca o traço
     };
 
-    function maskDocument(value) {
-
-        if (!value) return ''; // Verifica se o valor é vazio ou undefined
-
-        if (value.length === 11) {
-            return formataCPF(value);
-        }
-
-        if (value.length === 14) {
-            return formataCNPJ(value);
-        }
+    function maskDocument(tipoPessoa, documento) {
+        return tipoPessoa === 'PF' ? formataCPF(documento) : formataCNPJ(documento);
     };
 
-    // Busca dinâmica de clientes com debounce
-    useEffect(() => {
-        const delay = setTimeout(() => {
-            if (clienteBusca.length >= 3) {
-                buscarClientes(clienteBusca);
-            }
-        }, 400);
-
-        return () => clearTimeout(delay);
-    }, [clienteBusca]);
-
-    const buscarClientes = async (termo) => {
-        setLoading(true);
+    async function fecthOrdem(idOrdem) {
         try {
-            const resposta = await ClienteAPI.obterPorTermoAsync(termo);
-            const clientes = Array.isArray(resposta)
-                ? resposta.map((c) => ({
-                    value: c.id,
-                    label: `${c.nome} (${maskDocument(c.documento)})`,
-                    dados: c,
-                }))
-                : [];
-
-            setClienteOpcoes(clientes);
-        } catch (err) {
-            console.error("Erro ao buscar clientes", err);
-            setClienteOpcoes([]); // limpa opções em caso de erro
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const validar = () => {
-        const novosErros = {};
-        if (!dataAbertura) novosErros.dataAbertura = "Data de Abertura é obrigatória";
-        if (!statusOSID) novosErros.statusOSID = "Selecione um Status para a Ordem de Serviço";
-        if (!descricaoProblema.trim()) novosErros.descricaoProblema = "Descrição é obrigatória";
-        if (!clienteSelecionado) novosErros.cliente = "Selecione um cliente";
-        if (!funcionarioID) novosErros.funcionarioID = "Selecione o técnico responsável";
-        return novosErros;
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const errosValidados = validar();
-        if (Object.keys(errosValidados).length > 0) {
-            setErros(errosValidados);
-            return;
-        }
-
-        const payload = {
-            DataAbertura: dataAbertura ? dataAbertura : new Date().toISOString(),
-            DataConclusao: dataConclusao ? dataConclusao : null,
-            ClienteId: clienteSelecionado?.value,
-            FuncionarioID: funcionarioID,
-            DescricaoProblema: descricaoProblema,
-            ServicoRealizado: servicoRealizado,
-            Observacoes: observacoes,
-            Valor: valor,
-            StatusOSID: statusOSID
-        };
-
-        try {
-            await OrdemServicoAPI.criarAsync(payload);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            setMensagem("Ordem de Serviço incluída com Sucesso!");
-            setErro(false);
-            setDataAbertura(null);
-            setDataConclusao(null);
-            setStatusOSID(0);
-            setClienteSelecionado(null);
-            setDescricaoProblema("");
-            setServicoRealizado("");
-            setObservacoes("");
-            setFuncionarioID(null);
-            setValor(0);
-            setTimeout(() => {
-                navigate("/ordens");
-            }, 1000);
+            const response = await OrdemServicoAPI.obterAsync(idOrdem);
+            setDataAbertura(response.dataAbertura?.split("T")[0]);
+            setDataConclusao(response.dataConclusao?.split("T")[0]);
+            setStatusOSID(response.statusOSID);
+            setClienteSelecionado(response.clienteID);
+            setDescricaoProblema(response.descricaoProblema);
+            setServicoRealizado(response.servicoRealizado);
+            setObservacoes(response.observacoes);
+            setFuncionarioID(response.funcionarioID);
+            setValor(response.valor);
         } catch (error) {
-            console.error(error);
-            alert("Erro ao criar ordem de serviço.");
-            setMensagem("Erro ao criar ordem de serviço.");
+            console.log("Erro ao buscar ordem de serviço:", true);
+        }
+    }
+
+    async function fetchClientes() {
+        try {
+            const listaClientes = await ClienteAPI.listarAsync(true);
+            setClientes(listaClientes);
+        }
+        catch (error) {
+            console.error("Erro ao carregar clientes:", error);
+            setMensagem("Erro ao carregar clientes:");
             setErro(true);
         }
-    };
+    }
 
     async function fetchFuncionarios() {
         try {
@@ -190,25 +119,70 @@ export function NovaOrdemServico() {
         }
     }
 
+    const validar = () => {
+        const novosErros = {};
+        if (!statusOSID) novosErros.statusOSID = "Selecione um Status para a Ordem de Serviço";
+        if (!descricaoProblema.trim()) novosErros.descricaoProblema = "Descrição é obrigatória";
+        if (!funcionarioID) novosErros.funcionarioID = "Selecione o técnico responsável";
+        return novosErros;
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const errosValidados = validar();
+        if (Object.keys(errosValidados).length > 0) {
+            setErros(errosValidados);
+            return;
+        }
+
+        const payload = {
+            ID: id,
+            DataConclusao: dataConclusao ? dataConclusao : null,
+            FuncionarioID: funcionarioID,
+            DescricaoProblema: descricaoProblema,
+            ServicoRealizado: servicoRealizado,
+            Observacoes: observacoes,
+            Valor: valor,
+            StatusOSID: statusOSID
+        };
+        await OrdemServicoAPI.atualizarAsync(payload);
+
+        try {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            setMensagem("Ordem de Serviço Atualizada com Sucesso!");
+            setErro(false);
+            setDataAbertura(null);
+            setDataConclusao(null);
+            setStatusOSID(0);
+            setClienteSelecionado(null);
+            setDescricaoProblema("");
+            setServicoRealizado("");
+            setObservacoes("");
+            setFuncionarioID(null);
+            setValor(0);
+            setTimeout(() => {
+                navigate("/ordens");
+            }, 1000);
+        } catch (error) {
+            console.error(error);
+            alert("Erro ao criar ordem de serviço.");
+            setMensagem("Erro ao criar ordem de serviço.");
+            setErro(true);
+        }
+    };
+
     useEffect(() => {
-        const hoje = new Date();
-        const ano = hoje.getFullYear();
-        const mes = String(hoje.getMonth() + 1).padStart(2, '0'); // Janeiro = 0
-        const dia = String(hoje.getDate()).padStart(2, '0');
-
-        const dataFormatada = `${ano}-${mes}-${dia}`;
-        setDataAbertura(dataFormatada);
-
-        //fetchClientes();
+        fetchClientes();
         fetchFuncionarios();
         fetchStatusOS();
+        fecthOrdem(id);
     }, []);
 
     return (
         <Sidebar colapsada={colapsada} setColapsada={setColapsada}>
             <Topbar colapsada={colapsada}>
                 <div className={style.pagina_conteudo}>
-                    <h3>Nova Ordem de Serviço:</h3>
+                    <h3>Editar Ordem de Serviço:</h3>
                     <hr></hr>
 
                     <Form onSubmit={handleSubmit}>
@@ -226,6 +200,7 @@ export function NovaOrdemServico() {
                                             value={dataAbertura}
                                             onChange={(e) => setDataAbertura(e.target.value)}
                                             required
+                                            disabled
                                         />
                                     </Form.Group>
                                 </Col>
@@ -269,24 +244,21 @@ export function NovaOrdemServico() {
                                 <Col sm={12}>
                                     <Form.Group className="mb-3" controlId="formCliente">
                                         <Form.Label>Cliente:</Form.Label>
-                                        <Select
-                                            placeholder="Digite o nome do cliente..."
-                                            onInputChange={(input) => setClienteBusca(input)}
-                                            onChange={(opcao) => setClienteSelecionado(opcao)}
-                                            options={clienteOpcoes}
-                                            isLoading={loading}
-                                            isClearable
+                                        <Form.Control
+                                            as="select"
+                                            name="clienteID"
                                             value={clienteSelecionado}
-                                            noOptionsMessage={() =>
-                                                clienteBusca.length < 3
-                                                    ? "Digite pelo menos 3 letras"
-                                                    : "Nenhum cliente encontrado"
-                                            }
+                                            //onChange={(e) => setFuncionarioID(e.target.value)}
+                                            disabled
                                             required
-                                        />
-                                        {erros.cliente && (
-                                            <div className="text-danger mt-1">{erros.cliente}</div>
-                                        )}
+                                        >
+                                            <option value="" disabled>Selecione um Cliente</option>
+                                            {clientes.map((cliente) => (
+                                                <option key={cliente.id} value={cliente.id}>
+                                                   {`${cliente.nome} (${maskDocument(cliente.tipoPessoa, cliente.documento)})`}
+                                                </option>
+                                            ))}
+                                        </Form.Control>
                                     </Form.Group>
                                 </Col>
                             </Row>

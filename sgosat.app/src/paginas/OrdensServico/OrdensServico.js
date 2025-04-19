@@ -9,31 +9,25 @@ import { BsFillPersonPlusFill } from "react-icons/bs";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import ClienteAPI from "../../services/clienteAPI";
+import OrdemServicoAPI from "../../services/ordemServicoAPI";
 
 
 export function OrdensServico() {
     const [colapsada, setColapsada] = useState(true);
     const [clientes, setClientes] = useState([]);
+    const [ordens, setOrdens] = useState([]);
+    const [statusOS, setStatusOS] = useState([]);
     const [mostrarModal, setMostrarModal] = useState(false);
-    const [clienteSelecionado, setClienteSelecionado] = useState(null);
+    const [ordemSelecionada, setOrdemSelecionada] = useState(null);
 
-    // Função para formatar CPF ou CNPJ
-    function formataDocumento(value) {
-        if (!value) return ''; // Verifica se o valor é vazio ou undefined
-
-        const digitos = String(value).replace(/\D/g, ''); // Remove qualquer caractere não numérico
-
-        if (digitos.length === 11) {
-            // Formato CPF: 999.999.999-99
-            return digitos.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
-        } else if (digitos.length === 14) {
-            // Formato CNPJ: 99.999.999/9999-99
-            return digitos.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
-        }
-
-        // Retorna o valor original se não corresponder a CPF ou CNPJ
-        return value;
-    }
+    // Função para formatar a Data
+    const formatarData = (dataISO) => {
+        const data = new Date(dataISO);
+        const dia = String(data.getDate()).padStart(2, '0');
+        const mes = String(data.getMonth() + 1).padStart(2, '0');
+        const ano = data.getFullYear();
+        return `${dia}/${mes}/${ano}`;
+    };
 
     // Função para formatar telefone brasileiro
     function formataPhone(value) {
@@ -55,25 +49,25 @@ export function OrdensServico() {
 
     const navigate = useNavigate();
 
-    const handleClickDeletar = (cliente) => {
-        setClienteSelecionado(cliente);
+    const handleClickDeletar = (ordem) => {
+        setOrdemSelecionada(ordem);
         setMostrarModal(true);
     }
 
     const handleDeletar = async () => {
-        // try {
-        //     await PessoaAPI.deletarClienteAsync(clienteSelecionado.id);
-        //     setClientes(clientes.filter(cliente => cliente.id !== clienteSelecionado.id));
-        // } catch (error) {
-        //     console.error("Erro ao deletar cliente:", error);
-        // } finally {
-        //     handleFechareModal();
-        // }
+        try {
+            await OrdemServicoAPI.deletarAsync(ordemSelecionada.id);
+            setOrdens(ordens.filter(o => o.id !== ordemSelecionada.id));
+        } catch (error) {
+            console.error("Erro ao deletar ordem de serviço:", error);
+        } finally {
+            handleFechareModal();
+        }
     };
 
     const handleFechareModal = () => {
         setMostrarModal(false);
-        setClienteSelecionado(null);
+        setOrdemSelecionada(null);
     }
 
     async function fetchClientes() {
@@ -85,11 +79,29 @@ export function OrdensServico() {
         }
     }
 
+    async function fetchOrdens() {
+        try {
+            const listaOrdens = await OrdemServicoAPI.listarAsync(true);
+            setOrdens(listaOrdens)
+        } catch (error) {
+            console.error("Erro ao carregar ordens de serviço:", error);
+        }
+    }
+
+    async function fetchStatusOS() {
+        try {
+            const listaStatus = await OrdemServicoAPI.listarStatusOS();
+            setStatusOS(listaStatus);
+        } catch (error) {
+            console.error("Erro ao carregar status das ordens de serviço:", error);
+        }
+    }
+
     useEffect(() => {
+        fetchOrdens();
         fetchClientes();
+        fetchStatusOS();
     }, []);
-
-
 
     return (
         <Sidebar colapsada={colapsada} setColapsada={setColapsada}>
@@ -116,20 +128,21 @@ export function OrdensServico() {
                             </thead>
                             <tbody className={style.tabela_corpo}>
 
-                                {clientes.map((cliente) => {
+                                {ordens.map((ordem) => {
                                     return (
 
-                                        <tr key={cliente.id}>
-                                            <td>{String(cliente.id).padStart(5, '0')}</td>
-                                            <td>{cliente.nome.substring(0,40) + (cliente.nome.length > 40 ? "..." : "")}</td>
-                                            <td>{formataDocumento(cliente.documento)}</td>
-                                            <td>{formataPhone(cliente.telefone)}</td>
-                                            <td>{cliente.email}</td>
+                                        <tr key={ordem.id}>
+                                            <td>{String(ordem.id).padStart(5, '0')}</td>
+                                            <td>{formatarData(ordem.dataAbertura)}</td>
+                                            <td>{clientes.find(c => c.id === ordem.clienteID)?.nome.substring(0, 40) +
+                                                (clientes.find(c => c.id === ordem.clienteID)?.nome.length > 40 ? "..." : "") || "Não encontrado"}</td>
+                                            <td>{formataPhone(clientes.find(c => c.id === ordem.clienteID)?.telefone)}</td>
+                                            <td>{statusOS.find(s => s.id === ordem.statusOSID)?.nome || "Não encontrado"}</td>
                                             <td>
-                                                <Link to='/cliente/editar' state={cliente.id} className={style.botao_editar}>
+                                                <Link to='/ordens/editar' state={ordem.id} className={style.botao_editar}>
                                                     <MdEdit />
                                                 </Link>
-                                                <button onClick={() => handleClickDeletar(cliente)} className={style.botao_deletar}>
+                                                <button onClick={() => handleClickDeletar(ordem)} className={style.botao_deletar}>
                                                     <MdDelete />
                                                 </button>
                                             </td>
@@ -147,7 +160,7 @@ export function OrdensServico() {
                         </Modal.Header>
 
                         <Modal.Body className={style.modal_content}>
-                            Tem certeza que deseja deletar o cliente <b>{clienteSelecionado?.nome}</b>?
+                            Tem certeza que deseja deletar a Ordem de Serviço <b>#{String(ordemSelecionada?.id).padStart(5, '0')}</b>?
                         </Modal.Body>
 
                         <Modal.Footer className={style.modal_footer}>

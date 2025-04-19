@@ -94,6 +94,11 @@ namespace sgosat.Aplicacao
             return await _funcionarioRepositorio.ObterPorTermo(query, Ativo);
         }
 
+        public async Task<IEnumerable<Funcionario>> ObterTecnico(bool Ativo)
+        {
+            return await _funcionarioRepositorio.ObterTecnico(Ativo);
+        }
+
         public async Task<IEnumerable<Funcionario>> Listar(bool Ativo)
         {
             return await _funcionarioRepositorio.Listar(Ativo);

@@ -50,6 +50,14 @@ namespace sgosat.Repositorio
                         .ToListAsync();
         }
 
+        public async Task<IEnumerable<Funcionario>> ObterTecnico(bool Ativo)
+        {
+            return await _contexto.Funcionarios
+                        .Where(f => f.TipoFuncionarioID == 3 || f.TipoFuncionarioID == 5)
+                        .Where(f => f.Ativo == Ativo)
+                        .ToListAsync();
+        }
+
         public async Task<IEnumerable<Funcionario>> Listar(bool Ativo)
         {
             return await _contexto.Funcionarios.Where(f => f.Ativo == Ativo).ToListAsync();

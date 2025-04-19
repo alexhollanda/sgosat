@@ -160,7 +160,7 @@ namespace sgosat.Repositorio.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("DataAbertura");
 
-                    b.Property<DateTime>("DataConclusao")
+                    b.Property<DateTime?>("DataConclusao")
                         .HasColumnType("datetime2")
                         .HasColumnName("DataConclusao");
 
@@ -185,7 +185,7 @@ namespace sgosat.Repositorio.Migrations
                         .HasColumnType("int")
                         .HasColumnName("StatusOSID");
 
-                    b.Property<decimal>("Valor")
+                    b.Property<decimal?>("Valor")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)")
                         .HasColumnName("Valor");

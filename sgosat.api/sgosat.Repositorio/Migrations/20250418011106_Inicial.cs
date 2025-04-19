@@ -59,13 +59,13 @@ namespace sgosat.Repositorio.Migrations
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DataAbertura = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DataConclusao = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DataConclusao = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ClienteID = table.Column<int>(type: "int", nullable: false),
                     FuncionarioID = table.Column<int>(type: "int", nullable: false),
                     DescricaoProblema = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ServicoRealizado = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Observacoes = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Valor = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    Valor = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: true),
                     StatusOSID = table.Column<int>(type: "int", nullable: false),
                     Ativo = table.Column<bool>(type: "bit", nullable: false)
                 },

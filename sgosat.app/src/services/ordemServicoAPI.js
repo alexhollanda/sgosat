@@ -55,20 +55,9 @@ const OrdemServicoAPI = {
             throw error;
         }
     },    
-    async criarAsync(dataAbertura, dataConclusao, clienteID, funcionarioID, descricaoProblema, servicoRealizado, observacoes, valor, statusOSID)
+    async criarAsync(ordemServicoCriar)
     {
         try {
-            const ordemServicoCriar = {
-                DataAbertura: dataAbertura,
-                DataConclusao: dataConclusao,
-                ClienteID: clienteID,
-                FuncionarioID: funcionarioID,
-                DescricaoProblema: descricaoProblema,
-                ServicoRealizado: servicoRealizado,
-                Observacoes: observacoes,
-                Valor: valor,
-                StatusOSID: statusOSID
-            }
             const response = await HTTPClient.post("/OrdemServico/Criar", ordemServicoCriar);
             return response.data;
         } catch (error) {
@@ -76,19 +65,9 @@ const OrdemServicoAPI = {
             throw error;
         }
     },
-    async atualizarAsync(osID, dataConclusao, funcionarioID, descricaoProblema, servicoRealizado, observacoes, valor, statusOSID)
+    async atualizarAsync(ordemServicoAtualizar)
     {
         try {
-            const ordemServicoAtualizar = {
-                ID: osID,
-                DataConclusao: dataConclusao,
-                FuncionarioID: funcionarioID,
-                DescricaoProblema: descricaoProblema,
-                ServicoRealizado: servicoRealizado,
-                Observacoes: observacoes,
-                Valor: valor,
-                StatusOSID: statusOSID
-            }
             const response = await HTTPClient.put("/OrdemServico/Atualizar", ordemServicoAtualizar);
             return response.data;
         } catch (error) {

@@ -2,7 +2,6 @@ import style from './NovoFuncionario.module.css';
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FuncionarioAPI from '../../services/funcionarioAPI';
-import axios from 'axios';
 import { Sidebar } from '../../componentes/Sidebar/Sidebar';
 import { Topbar } from '../../componentes/Topbar/Topbar';
 import Form from 'react-bootstrap/Form';
@@ -91,7 +90,7 @@ export function NovoFuncionario() {
                 if (modoAtualizacao && id) {
                     await FuncionarioAPI.atualizarAsync(id, nome, dadosSemMascara.telefoneLimpo, salario, tipoFuncionarioID)
                 } else {
-                    FuncionarioAPI.criarAsync(nome, dadosSemMascara.documentoLimpo, dataAdmissao, dadosSemMascara.telefoneLimpo, salario, tipoFuncionarioID);
+                    await FuncionarioAPI.criarAsync(nome, dadosSemMascara.documentoLimpo, dataAdmissao, dadosSemMascara.telefoneLimpo, salario, tipoFuncionarioID);
                 }
                 navigate("/funcionarios");
             } catch (error) {

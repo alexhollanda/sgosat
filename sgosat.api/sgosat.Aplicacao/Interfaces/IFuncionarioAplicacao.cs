@@ -11,6 +11,7 @@ namespace sgosat.Aplicacao.Interfaces
         Task<Funcionario> Obter(int funcionarioID);
         Task<Funcionario> ObterPorDoc(string doc);
         public Task<IEnumerable<Funcionario>> ObterPorTermo(string query, bool Ativo);
+        public Task<IEnumerable<Funcionario>> ObterTecnico(bool Ativo);
         public Task<IEnumerable<Funcionario>> Listar(bool Ativo); 
     }
 }

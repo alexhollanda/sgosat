@@ -84,6 +84,15 @@ namespace sgosat.Api.Controllers
             return Ok(funcionarios);
         }
 
+        [HttpGet]
+        [Route("ObterTecnico")]
+        public async Task<ActionResult> ObterTecnico()
+        {
+            var funcionarios = await _funcionarioAplicacao.ObterTecnico(true);
+
+            return Ok(funcionarios);
+        }
+
         [HttpPost]
         [Route("Criar")]
         public async Task<IActionResult> Criar([FromBody] FuncionarioCriar funcionarioCriar)

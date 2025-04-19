@@ -87,6 +87,7 @@ export function AlterarSenha() {
             try {
                 await UsuarioAPI.alterarSenhaAsync(id, novaSenha, senhaAtual);
                 setMensagem("Senha alterada com sucesso!");
+                setErro(false);
                 setSenhaAtual("");
                 setNovaSenha("");
                 setConfirmarSenha("");

@@ -6,7 +6,7 @@ namespace sgosat.Dominio.Entidades
     {
         public int ID { get; set; }
         public DateTime DataAbertura { get; set; }
-        public DateTime DataConclusao { get; set; }
+        public DateTime? DataConclusao { get; set; }
         public int ClienteID { get; set; }
         [JsonIgnore]
         public Cliente Cliente { get; set; }
@@ -16,7 +16,7 @@ namespace sgosat.Dominio.Entidades
         public string DescricaoProblema { get; set; }
         public string ServicoRealizado { get; set; }
         public string Observacoes { get; set; }
-        public decimal Valor { get; set; }
+        public decimal? Valor { get; set; }
         public int StatusOSID { get; set; }
         public bool Ativo { get; set; }
 
