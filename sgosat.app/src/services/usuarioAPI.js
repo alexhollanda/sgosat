@@ -9,6 +9,22 @@ const UsuarioAPI = {
             console.error("Erro ao obter usuário:", error);
             throw error;
         }
+    },async obterPorUserNameAsync(userName) {
+        try {
+            const response = await HTTPClient.get(`/Usuario/ObterPorUserName/${userName}`);
+            return response.data;
+        } catch (error) {
+            console.error("Erro ao obter usuário:", error);
+            throw error;
+        }
+    },async LoginAsync(usuario) {
+        try {
+            const response = await HTTPClient.post(`/Usuario/Login`, usuario);
+            return response.data;
+        } catch (error) {
+            console.error("Erro ao fazer login:", error);
+            throw error;
+        }
     },
     async listarAsync(ativos) {
         try {

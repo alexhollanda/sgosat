@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using sgosat.Aplicacao.Interfaces;
 using sgosat.Dominio.Entidades;
 using sgosat.Repositorio.Interfaces;
@@ -22,8 +23,17 @@ namespace sgosat.Aplicacao
 
             if (string.IsNullOrEmpty(usuario.Senha))
                 throw new Exception("Senha não pode ser vazia");
+            
+            var user = new Usuario
+            {
+                UserName = usuario.UserName,
+                Email = usuario.Email,
+                Senha = BCrypt.Net.BCrypt.HashPassword(usuario.Senha),
+                FuncionarioID = usuario.FuncionarioID,
+                TipoUsuarioID = usuario.TipoUsuarioID
+            };
 
-            return await _usuarioRepositorio.Salvar(usuario);
+            return await _usuarioRepositorio.Salvar(user);
         }
 
         public async Task Atualizar(Usuario usuario)
@@ -61,7 +71,7 @@ namespace sgosat.Aplicacao
             if (usuarioDominio.Senha != senhaAntiga)
                 throw new Exception("Senha Antiga Inválida!");
 
-            usuarioDominio.Senha = usuario.Senha;
+            usuarioDominio.Senha = BCrypt.Net.BCrypt.HashPassword(usuario.Senha);
 
             await _usuarioRepositorio.Atualizar(usuarioDominio);
         }
@@ -123,6 +133,18 @@ namespace sgosat.Aplicacao
         public async Task<IEnumerable<Usuario>> Listar(bool Ativo)
         {
             return await _usuarioRepositorio.Listar(Ativo);
+        }
+
+        public async Task<bool> Login(string userName, string senha)
+        {
+            var usuario = await _usuarioRepositorio.ObterPorUserName(userName, true);
+            if (usuario == null)
+                return false;
+
+            bool senhaValida = BCrypt.Net.BCrypt.Verify(senha, usuario.Senha);
+            
+
+            return senhaValida;
         }
 
         #region Útil

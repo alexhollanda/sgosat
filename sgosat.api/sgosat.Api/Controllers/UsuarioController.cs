@@ -57,6 +57,7 @@ namespace sgosat.Api.Controllers
                     ID = usuarioDomino.ID,
                     UserName = usuarioDomino.UserName,
                     Email = usuarioDomino.Email,
+                    Senha = usuarioDomino.Senha,
                     FuncionarioID = usuarioDomino.FuncionarioID,
                     TipoUsuarioID = usuarioDomino.TipoUsuarioID
                 };
@@ -95,21 +96,24 @@ namespace sgosat.Api.Controllers
         }
 
         [HttpPost]
+        [Route("Login")]
+        public async Task<ActionResult> Login([FromBody] UsuarioLogin usuario)
+        {                      
+            bool autenticado = await _usuarioAplicacao.Login(usuario.UserName, usuario.Senha);
+
+            if (!autenticado)
+                return Unauthorized(new {mensagem = "Nome de Usuário ou Senha inválidos!"});
+            
+            return Ok(new {mensagem = "Login efetuado com sucesso!"});
+        }
+
+        [HttpPost]
         [Route("Criar")]
-        public async Task<ActionResult> Criar([FromBody] UsuarioCriar usuarioCriar)
+        public async Task<ActionResult> Criar([FromBody] Usuario usuarioCriar)
         {
             try
             {
-                var usuarioDomino = new Usuario()
-                {
-                    UserName = usuarioCriar.UserName,
-                    Email = usuarioCriar.Email,
-                    Senha = usuarioCriar.Senha,
-                    FuncionarioID = usuarioCriar.FuncionarioID,
-                    TipoUsuarioID = usuarioCriar.TipoUsuarioID
-                };
-
-                var usuarioID = await _usuarioAplicacao.Criar(usuarioDomino);
+                var usuarioID = await _usuarioAplicacao.Criar(usuarioCriar);
                 return Ok(usuarioID);
             }
             catch (Exception ex)

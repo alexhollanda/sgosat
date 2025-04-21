@@ -22,7 +22,7 @@ export function Sidebar({ children, colapsada, setColapsada }) {
                 </div>
 
                 <div className={style.sidebar_corpo}>
-                    <SidebarItem texto="Resumo" link="/" logo={<BsFillPieChartFill />} colapsada={colapsada} />
+                    <SidebarItem texto="Resumo" link="/home" logo={<BsFillPieChartFill />} colapsada={colapsada} />
                     <SidebarItem texto="Ordens de Serviço" link="/ordens" logo={<BsClipboard2PlusFill />} colapsada={colapsada} />
                     <SidebarItem texto="Clientes" link="/clientes" logo={<BsFillPeopleFill  />} colapsada={colapsada} />
                     <SidebarItem texto="Funcionários" link="/funcionarios" logo={<BsBriefcaseFill />} colapsada={colapsada} />

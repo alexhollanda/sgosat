@@ -13,5 +13,6 @@ namespace sgosat.Aplicacao.Interfaces
         Task<Usuario> ObterPorUserName(string userName);
         Task<Usuario> ObterPorEmail(string email);
         public Task<IEnumerable<Usuario>> Listar(bool Ativo);
+        public Task<bool> Login(string userName, string senha);
     }
 }

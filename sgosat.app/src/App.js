@@ -14,12 +14,14 @@ import { NovoFuncionario } from './paginas/Funcionarios/NovoFuncionario';
 import { EditarFuncionario } from './paginas/Funcionarios/EditarFuncionario';
 import { AlterarSenha } from './paginas/Usuarios/AlterarSenha';
 import { EditarOrdemServico } from './paginas/OrdensServico/EditarOrdemServico';
+import Login from './paginas/Login/Login';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Login />} />
+        <Route path="/home" element={<Home />} />
         <Route path="/clientes" element={<Clientes />} />
         <Route path="/clientes/novo" element={<NovoCliente />} />
         <Route path="/clientes/editar" element={<EditarCliente />} />

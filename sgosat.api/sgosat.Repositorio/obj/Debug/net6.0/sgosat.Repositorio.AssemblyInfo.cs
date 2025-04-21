@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("sgosat.Repositorio")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+061ed9c181d5a82ad99600726a6110dad981a472")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5382bf3600556310b0e71fd14e4916519ddb132c")]
 [assembly: System.Reflection.AssemblyProductAttribute("sgosat.Repositorio")]
 [assembly: System.Reflection.AssemblyTitleAttribute("sgosat.Repositorio")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
