@@ -1,9 +1,18 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import style from './Topbar.module.css';
 import { BsDoorOpenFill } from "react-icons/bs";
 import { Breadcrumbs } from '../Breadcrumbs/Breadcrumbs';
+import { useAuth } from '../../contexts/AuthContext';
 
 export function Topbar({ children, colapsada }) {
+    const { logout } = useAuth();
+    const navigate = useNavigate();
+    
+    const handleLogout = () => {
+        logout();
+        navigate('/login');
+    }
+    
     return (
         <>
             <div
@@ -13,7 +22,7 @@ export function Topbar({ children, colapsada }) {
                     <Breadcrumbs />
                 </div>
                 <div className={style.topbar_conteudo}>
-                    <Link to="/login" className={style.botao_deslogar}>
+                    <Link onClick={handleLogout} className={style.botao_deslogar}>
                         <BsDoorOpenFill />
                     </Link>
                 </div>

@@ -15,26 +15,29 @@ import { EditarFuncionario } from './paginas/Funcionarios/EditarFuncionario';
 import { AlterarSenha } from './paginas/Usuarios/AlterarSenha';
 import { EditarOrdemServico } from './paginas/OrdensServico/EditarOrdemServico';
 import Login from './paginas/Login/Login';
+import PrivateRoute from './routes/PrivateRoute';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/clientes" element={<Clientes />} />
-        <Route path="/clientes/novo" element={<NovoCliente />} />
-        <Route path="/clientes/editar" element={<EditarCliente />} />
-        <Route path="/funcionarios" element={<Funcionarios />} />
-        <Route path="/funcionarios/novo" element={<NovoFuncionario />} />
-        <Route path="/funcionarios/editar" element={<EditarFuncionario />} />
-        <Route path="/usuarios" element={<Usuarios />} />
-        <Route path="/usuarios/novo" element={<NovoUsuario />} />
-        <Route path="/usuarios/editar" element={<EditarUsuario />} />
-        <Route path="/usuarios/alterarsenha" element={<AlterarSenha />} />
-        <Route path="/ordens" element={<OrdensServico />} />
-        <Route path='/ordens/nova' element={<NovaOrdemServico />} />
-        <Route path='/ordens/editar' element={<EditarOrdemServico />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/logout" element={<Login />} />
+        <Route path="/home" element={<PrivateRoute><Home /></PrivateRoute>} />
+        <Route path="/clientes" element={<PrivateRoute><Clientes /></PrivateRoute>} />
+        <Route path="/clientes/novo" element={<PrivateRoute><NovoCliente /></PrivateRoute>} />
+        <Route path="/clientes/editar" element={<PrivateRoute><EditarCliente /></PrivateRoute>} />
+        <Route path="/funcionarios" element={<PrivateRoute><Funcionarios /></PrivateRoute>} />
+        <Route path="/funcionarios/novo" element={<PrivateRoute><NovoFuncionario /></PrivateRoute>} />
+        <Route path="/funcionarios/editar" element={<PrivateRoute><EditarFuncionario /></PrivateRoute>} />
+        <Route path="/usuarios" element={<PrivateRoute><Usuarios /></PrivateRoute>} />
+        <Route path="/usuarios/novo" element={<PrivateRoute><NovoUsuario /></PrivateRoute>} />
+        <Route path="/usuarios/editar" element={<PrivateRoute><EditarUsuario /></PrivateRoute>} />
+        <Route path="/usuarios/alterarsenha" element={<PrivateRoute><AlterarSenha /></PrivateRoute>} />
+        <Route path="/ordens" element={<PrivateRoute><OrdensServico /></PrivateRoute>} />
+        <Route path='/ordens/nova' element={<PrivateRoute><NovaOrdemServico /></PrivateRoute>} />
+        <Route path='/ordens/editar' element={<PrivateRoute><EditarOrdemServico /></PrivateRoute>} />
       </Routes>
     </BrowserRouter>
   );

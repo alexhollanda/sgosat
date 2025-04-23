@@ -23,7 +23,7 @@ export function Breadcrumbs() {
 
     return (
         <nav className={styles.breadcrumb}>
-            <Link to="/">Início</Link>
+            <Link to="/home">Início</Link>
             {pathnames.map((value, index) => {
                 const to = `/${pathnames.slice(0, index + 1).join('/')}`;
                 const isLast = index === pathnames.length - 1;

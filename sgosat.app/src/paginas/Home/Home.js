@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Container, Row, Col, Card, Spinner, Button } from 'react-bootstrap';
+import { Container, Spinner, Button } from 'react-bootstrap';
 import { Clipboard2Plus, PersonPlus, Tools, People } from 'react-bootstrap-icons';
 import { ExclamationCircle, HourglassSplit, XCircle, CheckCircle, Clock } from 'react-bootstrap-icons';
 import { Sidebar } from "../../componentes/Sidebar/Sidebar";
@@ -41,7 +41,7 @@ const STATUS_CONFIG = {
 };
 
 export function Home() {
-    const [colapsada, setColapsada] = useState(true);
+    const [colapsada, setColapsada] = useState(false);
     const [contagem, setContagem] = useState({});
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();

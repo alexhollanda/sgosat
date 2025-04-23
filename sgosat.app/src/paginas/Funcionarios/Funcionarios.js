@@ -12,7 +12,7 @@ import FuncionarioAPI from "../../services/funcionarioAPI";
 
 
 export function Funcionarios() {
-    const [colapsada, setColapsada] = useState(true);
+    const [colapsada, setColapsada] = useState(false);
     const [funcionarios, setFuncionarios] = useState([]);
     const [mostrarModal, setMostrarModal] = useState(false);
     const [funcionarioSelecionado, setFuncionarioSelecionado] = useState(null);

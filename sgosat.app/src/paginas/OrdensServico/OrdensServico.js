@@ -13,7 +13,7 @@ import OrdemServicoAPI from "../../services/ordemServicoAPI";
 
 
 export function OrdensServico() {
-    const [colapsada, setColapsada] = useState(true);
+    const [colapsada, setColapsada] = useState(false);
     const [clientes, setClientes] = useState([]);
     const [ordens, setOrdens] = useState([]);
     const [statusOS, setStatusOS] = useState([]);

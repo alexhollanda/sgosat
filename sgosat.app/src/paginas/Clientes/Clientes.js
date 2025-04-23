@@ -12,7 +12,7 @@ import ClienteAPI from "../../services/clienteAPI";
 
 
 export function Clientes() {
-    const [colapsada, setColapsada] = useState(true);
+    const [colapsada, setColapsada] = useState(false);
     const [clientes, setClientes] = useState([]);
     const [mostrarModal, setMostrarModal] = useState(false);
     const [clienteSelecionado, setClienteSelecionado] = useState(null);

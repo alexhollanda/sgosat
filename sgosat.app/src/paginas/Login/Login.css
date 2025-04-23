@@ -1,0 +1,134 @@
+.login-wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: row;
+    background: #F2EFE7;
+
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+  
+  .login-left {
+    flex: 1;
+    background-color: #006A71;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 2rem;
+    text-align: center;
+  }
+  
+  .login-left h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    animation: fadeInLeft 1s ease;
+    font-variant: small-caps;
+  }
+  
+  .login-left p {
+    font-size: 1.2rem;
+    max-width: 400px;
+    animation: fadeInLeft 1.2s ease;
+  }
+  
+  .login-right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+  
+  .login-card {
+    width: 100%;
+    max-width: 400px;
+    border: none;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    background-color: #9ACBD0;
+  }
+  
+  .login-card .form-control + .btn {
+    white-space: nowrap;
+    min-width: 40px;
+    padding: 0 0.5rem;
+    font-size: 1.2rem;
+  }
+
+  .login-logo {
+    width: 150px;
+    object-fit: contain;
+    margin-bottom: 1rem;
+    animation: fadeInDown 0.8s ease;
+  }
+  
+  .login-title {
+    color: #006A71;
+    font-weight: bold;
+    font-variant: small-caps;
+  }
+  
+  .login-button {
+    font-weight: 600;
+    background-color: #006A71;
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+  }
+  
+  .login-button:hover {
+    transform: translateY(-2px);
+    background-color: #04555b;
+  }
+  
+  /* Input animation */
+  .form-control {
+    transition: all 0.3s ease;
+  }
+  
+  .form-control:focus {
+    box-shadow: 0 0 8px rgba(13, 110, 253, 0.4);
+    border-color: #006A71;
+  }
+  
+  /* Animations */
+  @keyframes fadeInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+  
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes fadeInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-40px);
+    }
+  
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  /* Responsividade */
+  @media (max-width: 768px) {
+    .login-wrapper {
+      flex-direction: column;
+    }
+  
+    .login-left {
+      padding: 1rem;
+    }
+  
+    .login-left h1 {
+      font-size: 2rem;
+    }
+  }
