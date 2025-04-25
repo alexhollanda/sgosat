@@ -10,5 +10,6 @@ namespace sgosat.Repositorio.Interfaces
         Task<Cliente> ObterPorDoc(string doc, bool Ativo);
         Task<IEnumerable<Cliente>> ObterPorTermo(string query, bool Ativo);
         Task<IEnumerable<Cliente>> Listar(bool ativo);
+        Task<IEnumerable<Cliente>> Paginar(int pageNumber, int pageSize, int order);
     }
 }

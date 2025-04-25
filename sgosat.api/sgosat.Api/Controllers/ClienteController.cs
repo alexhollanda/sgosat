@@ -171,7 +171,7 @@ namespace sgosat.Api.Controllers
         }
 
         [HttpPut]
-        [Route("Restaurar/{pessoaID}")]
+        [Route("Restaurar/{clienteID}")]
         public async Task<ActionResult> Restaurar([FromRoute] int clienteID)
         {
             try
@@ -215,7 +215,38 @@ namespace sgosat.Api.Controllers
             {
                 return BadRequest(ex.Message);
             }
-        }       
+        }    
+
+        [HttpGet]
+        [Route("Paginar")]
+        public async Task<ActionResult> Paginar(int pageNumber, int pageSize, int order)
+        {
+            try
+            {
+                var clientesDominio = await _clienteAplicacao.Paginar(pageNumber, pageSize, order);
+
+                var clientes = clientesDominio.Select(c => new ClienteResponse(){
+                    ID = c.ID,
+                    Nome = c.Nome,
+                    TipoPessoa = c.TipoPessoa,
+                    Documento = c.Documento,
+                    Telefone = c.Telefone,
+                    CEP = c.CEP,
+                    Logradouro = c.Logradouro,
+                    Numero = c.Numero,
+                    Complemento = c.Complemento,
+                    Bairro = c.Bairro,
+                    Cidade = c.Cidade,
+                    UF = c.UF
+                }).ToList();
+
+                return Ok(clientes);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }    
 
     }
 }

@@ -106,6 +106,11 @@ namespace sgosat.Aplicacao
             return await _clienteRepositorio.Listar(Ativo);
         }
 
+        public async Task<IEnumerable<Cliente>> Paginar(int pageNumber, int pageSize, int order)
+        {
+            return await _clienteRepositorio.Paginar(pageNumber, pageSize, order);
+        }
+
         #region Útil
 
         private static void ValidarInformacoesCliente(Cliente cliente)
