@@ -1,6 +1,7 @@
 using sgosat.Aplicacao.Interfaces;
 using sgosat.Dominio.Entidades;
 using sgosat.Repositorio.Interfaces;
+using sgosat.Repositorio.Models.Ordens.Response;
 
 namespace sgosat.Aplicacao
 {
@@ -90,6 +91,11 @@ namespace sgosat.Aplicacao
         public async Task<IEnumerable<OrdemServico>> ListarPorStatus(int statusID, bool Ativo)
         {
             return await _ordemServicoRepositorio.ListarPorStatus(statusID, Ativo); 
+        }
+
+        public async Task<IEnumerable<OrdemPaginado>> Paginar(int pageNumber, int pageSize, int order, string nome)
+        {
+            return await _ordemServicoRepositorio.Paginar(pageNumber, pageSize, order, nome); 
         }
 
         #region Útil

@@ -1,4 +1,5 @@
 using sgosat.Dominio.Entidades;
+using sgosat.Repositorio.Models.Ordens.Response;
 
 namespace sgosat.Aplicacao.Interfaces
 {
@@ -14,5 +15,6 @@ namespace sgosat.Aplicacao.Interfaces
         
         Task<IEnumerable<OrdemServico>> ListarPorFuncionario(int funcionarioID, bool Ativo);
         Task<IEnumerable<OrdemServico>> ListarPorStatus(int statusID, bool Ativo);
+        Task<IEnumerable<OrdemPaginado>> Paginar(int pageNumber, int pageSize, int order, string nome);
     }
 }

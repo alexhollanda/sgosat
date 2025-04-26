@@ -68,12 +68,17 @@ namespace sgosat.Aplicacao
             if (usuarioDominio == null)
                 throw new Exception("Usuário não encontrado!");
 
-            if (usuarioDominio.Senha != senhaAntiga)
+            if (BCrypt.Net.BCrypt.Verify(usuarioDominio.Senha, senhaAntiga))
                 throw new Exception("Senha Antiga Inválida!");
 
             usuarioDominio.Senha = BCrypt.Net.BCrypt.HashPassword(usuario.Senha);
 
             await _usuarioRepositorio.Atualizar(usuarioDominio);
+        }
+
+        public bool VerificaSenha(string senha1, string senha2)
+        {
+            return BCrypt.Net.BCrypt.Verify(senha1, senha2);
         }
 
         public async Task Deletar(int usuarioID)

@@ -1,4 +1,5 @@
 using sgosat.Dominio.Entidades;
+using sgosat.Repositorio.Models.Clientes.Response;
 
 namespace sgosat.Repositorio.Interfaces
 {
@@ -10,6 +11,6 @@ namespace sgosat.Repositorio.Interfaces
         Task<Cliente> ObterPorDoc(string doc, bool Ativo);
         Task<IEnumerable<Cliente>> ObterPorTermo(string query, bool Ativo);
         Task<IEnumerable<Cliente>> Listar(bool ativo);
-        Task<IEnumerable<Cliente>> Paginar(int pageNumber, int pageSize, int order);
+        Task<IEnumerable<ClientePaginado>> Paginar(int pageNumber, int pageSize, int order, string nome, string documento);
     }
 }

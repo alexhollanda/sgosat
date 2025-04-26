@@ -219,25 +219,18 @@ namespace sgosat.Api.Controllers
 
         [HttpGet]
         [Route("Paginar")]
-        public async Task<ActionResult> Paginar(int pageNumber, int pageSize, int order)
+        public async Task<ActionResult> Paginar(int pageNumber, int pageSize, int order, string nome = null, string documento = null)
         {
             try
             {
-                var clientesDominio = await _clienteAplicacao.Paginar(pageNumber, pageSize, order);
+                var clientesDominio = await _clienteAplicacao.Paginar(pageNumber, pageSize, order, nome, documento);
 
-                var clientes = clientesDominio.Select(c => new ClienteResponse(){
+                var clientes = clientesDominio.Select(c => new ClientePaginado(){
                     ID = c.ID,
                     Nome = c.Nome,
-                    TipoPessoa = c.TipoPessoa,
                     Documento = c.Documento,
                     Telefone = c.Telefone,
-                    CEP = c.CEP,
-                    Logradouro = c.Logradouro,
-                    Numero = c.Numero,
-                    Complemento = c.Complemento,
-                    Bairro = c.Bairro,
-                    Cidade = c.Cidade,
-                    UF = c.UF
+                    TotalRegistros = c.TotalRegistros
                 }).ToList();
 
                 return Ok(clientes);

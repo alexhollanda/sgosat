@@ -4,7 +4,6 @@ import { Home } from './paginas/Home/Home';
 import { Usuarios } from './paginas/Usuarios/Usuarios';
 import { NovoUsuario } from './paginas/Usuarios/NovoUsuario';
 import { EditarUsuario } from './paginas/Usuarios/EditarUsuario';
-import { Clientes } from './paginas/Clientes/Clientes';
 import { NovoCliente } from './paginas/Clientes/NovoCliente';
 import { EditarCliente } from './paginas/Clientes/EditarCliente';
 import { OrdensServico } from './paginas/OrdensServico/OrdensServico';
@@ -16,6 +15,8 @@ import { AlterarSenha } from './paginas/Usuarios/AlterarSenha';
 import { EditarOrdemServico } from './paginas/OrdensServico/EditarOrdemServico';
 import Login from './paginas/Login/Login';
 import PrivateRoute from './routes/PrivateRoute';
+import { ClientesPaginados } from './paginas/Clientes/ClientesPaginados';
+import { OrdensServicoPaginado } from './paginas/OrdensServico/OrdensServicoPaginado';
 
 function App() {
   return (
@@ -25,7 +26,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Login />} />
         <Route path="/home" element={<PrivateRoute><Home /></PrivateRoute>} />
-        <Route path="/clientes" element={<PrivateRoute><Clientes /></PrivateRoute>} />
+        <Route path="/clientes" element={<PrivateRoute><ClientesPaginados /></PrivateRoute>} />
         <Route path="/clientes/novo" element={<PrivateRoute><NovoCliente /></PrivateRoute>} />
         <Route path="/clientes/editar" element={<PrivateRoute><EditarCliente /></PrivateRoute>} />
         <Route path="/funcionarios" element={<PrivateRoute><Funcionarios /></PrivateRoute>} />
@@ -35,7 +36,7 @@ function App() {
         <Route path="/usuarios/novo" element={<PrivateRoute><NovoUsuario /></PrivateRoute>} />
         <Route path="/usuarios/editar" element={<PrivateRoute><EditarUsuario /></PrivateRoute>} />
         <Route path="/usuarios/alterarsenha" element={<PrivateRoute><AlterarSenha /></PrivateRoute>} />
-        <Route path="/ordens" element={<PrivateRoute><OrdensServico /></PrivateRoute>} />
+        <Route path="/ordens" element={<PrivateRoute><OrdensServicoPaginado /></PrivateRoute>} />
         <Route path='/ordens/nova' element={<PrivateRoute><NovaOrdemServico /></PrivateRoute>} />
         <Route path='/ordens/editar' element={<PrivateRoute><EditarOrdemServico /></PrivateRoute>} />
       </Routes>

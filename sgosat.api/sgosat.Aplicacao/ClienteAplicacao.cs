@@ -1,6 +1,7 @@
 using sgosat.Aplicacao.Interfaces;
 using sgosat.Dominio.Entidades;
 using sgosat.Repositorio.Interfaces;
+using sgosat.Repositorio.Models.Clientes.Response;
 
 namespace sgosat.Aplicacao
 {
@@ -106,9 +107,9 @@ namespace sgosat.Aplicacao
             return await _clienteRepositorio.Listar(Ativo);
         }
 
-        public async Task<IEnumerable<Cliente>> Paginar(int pageNumber, int pageSize, int order)
+        public async Task<IEnumerable<ClientePaginado>> Paginar(int pageNumber, int pageSize, int order, string nome, string documento)
         {
-            return await _clienteRepositorio.Paginar(pageNumber, pageSize, order);
+            return await _clienteRepositorio.Paginar(pageNumber, pageSize, order, nome, documento);
         }
 
         #region Útil

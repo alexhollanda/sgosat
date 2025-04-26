@@ -27,7 +27,16 @@ const ClienteAPI = {
             console.error("Erro ao listar clientes:", error);
             throw error;
         }
-    },   
+    }, 
+    async obterPaginadoAsync(pageNumber, pageSize, order, nome, documento) {
+        try {
+            const response = await HTTPClient.get(`/Cliente/Paginar?pageNumber=${pageNumber}&pageSize=${pageSize}&order=${order}&nome=${nome}&documento=${documento}`);
+            return response.data;
+        } catch (error) {
+            console.error("Erro ao listar clientes:", error);
+            throw error;
+        }
+    },  
     async listarAsync(ativos) {
         try {
             const response = await HTTPClient.get(`/Cliente/Listar?ativos=${ativos}`);

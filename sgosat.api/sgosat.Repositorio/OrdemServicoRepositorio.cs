@@ -1,6 +1,8 @@
+using Dapper;
 using Microsoft.EntityFrameworkCore;
 using sgosat.Dominio.Entidades;
 using sgosat.Repositorio.Interfaces;
+using sgosat.Repositorio.Models.Ordens.Response;
 
 namespace sgosat.Repositorio
 {
@@ -56,6 +58,21 @@ namespace sgosat.Repositorio
             return await _contexto.OrdensServicos
                         .Where(os => os.StatusOSID == statusID)
                         .Where(os => os.Ativo == Ativo).ToListAsync();
+        }
+
+        public async Task<IEnumerable<OrdemPaginado>> Paginar(int pageNumber, int pageSize, int order, string nome)
+        {
+            var parametros = new DynamicParameters();
+            parametros.Add("@PageNumber", pageNumber);
+            parametros.Add("@PageSize", pageSize);
+            parametros.Add("@Order", order);
+            parametros.Add("@Nome", nome);
+
+            return await _contexto.Database.GetDbConnection().QueryAsync<OrdemPaginado>(
+                "spObterOrdensPaginadas",
+                parametros,
+                commandType: System.Data.CommandType.StoredProcedure
+            );
         }
     }
 }

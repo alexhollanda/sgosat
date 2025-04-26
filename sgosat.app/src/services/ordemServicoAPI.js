@@ -9,7 +9,16 @@ const OrdemServicoAPI = {
             console.error("Erro ao obter Ordem de Serviço:", error);
             throw error;
         }
-    },   
+    }, 
+    async obterPaginadoAsync(pageNumber, pageSize, order, nome) {
+        try {
+            const response = await HTTPClient.get(`/OrdemServico/Paginar?pageNumber=${pageNumber}&pageSize=${pageSize}&order=${order}&nome=${nome}`);
+            return response.data;
+        } catch (error) {
+            console.error("Erro ao listar clientes:", error);
+            throw error;
+        }
+    },    
     async listarAsync(ativos) {
         try {
             const response = await HTTPClient.get(`/OrdemServico/Listar?ativos=${ativos}`);

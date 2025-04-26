@@ -6,7 +6,8 @@ namespace sgosat.Aplicacao.Interfaces
     {
         Task<int> Criar(Usuario usuario);
         Task Atualizar(Usuario usuario);
-        Task AtualizaSenha(Usuario usuario, string senhaAntiga);        
+        Task AtualizaSenha(Usuario usuario, string senhaAntiga);
+        public bool VerificaSenha(string senha1, string senha2);        
         Task Deletar(int usuarioID);
         Task Restaurar(int usuarioID);
         Task<Usuario> Obter(int usuarioID);

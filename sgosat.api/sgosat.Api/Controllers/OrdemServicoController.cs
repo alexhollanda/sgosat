@@ -251,6 +251,31 @@ namespace sgosat.Api.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("Paginar")]
+        public async Task<ActionResult> Paginar(int pageNumber, int pageSize, int order, string nome)
+        {
+            try
+            {
+                var osDominio = await _osAplicacao.Paginar(pageNumber, pageSize, order, nome);
+
+                var ordens = osDominio.Select(o => new OrdemPaginado(){
+                    ID = o.ID,
+                    DataAbertura = o.DataAbertura,
+                    Nome = o.Nome,
+                    Telefone = o.Telefone,
+                    StatusOSID = o.StatusOSID,
+                    TotalRegistros = o.TotalRegistros
+                }).ToList();
+
+                return Ok(ordens);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
 
         [HttpGet]
         [Route("ListarStatusOS")]

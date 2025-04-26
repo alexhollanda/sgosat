@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using sgosat.Dominio.Entidades;
 using sgosat.Repositorio.Interfaces;
 using Dapper;
+using sgosat.Repositorio.Models.Clientes.Response;
 
 namespace sgosat.Repositorio
 {
@@ -56,34 +57,16 @@ namespace sgosat.Repositorio
             return await _contexto.Clientes.Where(c => c.Ativo == Ativo).ToListAsync();
         }
 
-        public async Task<IEnumerable<Cliente>> Paginar(int pageNumber, int pageSize, int order)
-        {
-            
-
-
-            // CREATE PROCEDURE [dbo].[spObterClientesPaginados] (@PageNumber INT, @PageSize INT, @Order INT)
-            // AS
-            // BEGIN
-	        //     SET NOCOUNT ON;
-	        //     SELECT 
-		    //         Cliente.*,
-		    //         COUNT(*) OVER() AS TotalRegistros
-	        //     FROM Cliente
-	        //     ORDER BY 
-		    //         CASE WHEN @Order = 1 THEN Cliente.ID END ASC,
-		    //         CASE WHEN @Order = 2 THEN Cliente.Nome END ASC
-	        //     OFFSET (@PageNumber - 1) * @PageSize ROWS
-	        //     FETCH NEXT @PageSize ROWS ONLY;
-            // END
-            
-            
-            
+        public async Task<IEnumerable<ClientePaginado>> Paginar(int pageNumber, int pageSize, int order, string nome, string documento)
+        {         
             var parametros = new DynamicParameters();
             parametros.Add("@PageNumber", pageNumber);
             parametros.Add("@PageSize", pageSize);
             parametros.Add("@Order", order);
+            parametros.Add("@Nome", nome);
+            parametros.Add("@Documento", documento);
 
-            return await _contexto.Database.GetDbConnection().QueryAsync<Cliente>(
+            return await _contexto.Database.GetDbConnection().QueryAsync<ClientePaginado>(
                 "spObterClientesPaginados",
                 parametros,
                 commandType: System.Data.CommandType.StoredProcedure

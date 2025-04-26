@@ -74,7 +74,7 @@ export function AlterarSenha() {
         e.preventDefault();
         if (isFormValid()) {
             if (senha != senhaAtual) {
-                setMensagem("A senha atual informada não confere!" + senha);
+                setMensagem("A senha atual informada não confere!");
                 setErro(true);
                 return;
             }

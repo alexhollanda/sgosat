@@ -167,6 +167,22 @@ namespace sgosat.Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPut]
+        [Route("VerificaSenha")]
+        public ActionResult VerificaSenha(string senha1, string senha2)
+        {
+            try
+            {
+                _usuarioAplicacao.VerificaSenha(senha1, senha2);
+
+                return Ok("Senha Confere!");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     
         [HttpDelete]
         [Route("Deletar/{usuarioID}")]
