@@ -1,0 +1,51 @@
+# Compilação
+bin/
+obj/
+
+# Configurações do Visual Studio
+.vscode/
+*.user
+*.suo
+*.vsp
+*.vspx
+*.vsmdi
+*.testsettings
+
+# Logs
+logs/
+*.log
+
+# Dependências
+packages/
+*.nupkg
+project.lock.json
+
+# Publicação
+publish/
+*.publish.xml
+
+# Configurações do usuário
+appsettings.*.json
+secrets.json
+
+# Banco de dados
+*.mdf
+*.ldf
+*.sqlite
+
+# Diretório da IDE
+.idea/
+.vs/
+
+# Arquivos do Rider
+*.sln.iml
+.idea/
+*.dotCover
+
+# Outras configurações
+Thumbs.db
+Desktop.ini
+
+*.sqlite*
+*.sqlite-shm
+*.sqlite-wal

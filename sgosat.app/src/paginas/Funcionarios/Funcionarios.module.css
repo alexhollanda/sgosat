@@ -1,0 +1,115 @@
+.pagina_conteudo {
+    width: 100%;
+    height: 100%;
+
+    padding: 50px;
+
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.tabela {
+    margin-top: 30px;
+}
+
+.tabela_corpo tr {
+    vertical-align: middle;
+    font-size: 12px;
+}
+
+.tabela_corpo svg {
+    color: #212529;
+
+    margin: 2px;
+    font-size: 20px;
+}
+
+.botao_editar svg:hover {
+    color: #E69215;
+}
+
+.botao_deletar {
+    border: none;
+    background: none;
+
+    & svg:hover {
+        color: #df2019;
+    }
+}
+
+.pagina_cabecalho {
+    display: flex;
+    justify-content: space-between;
+
+    & .botao_novo {
+
+        display:  flex;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-style: normal;
+        font-size: 12px;
+
+        text-decoration: none;
+
+        color: white;
+
+        align-items: center;
+        height: 35px;
+
+        padding-right: 10px;
+
+        border-radius: 10px;
+        border: none;
+        background-color: #006A71;
+        ;
+    }
+
+    & .botao_novo svg {
+        margin-right: 10px;
+        font-size: 20px;
+    }
+}
+
+/* MODAL */
+.custom_modal {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    border-radius: 12px;
+    border: none;
+}
+.custom_modal .modal_content {
+    
+    font-size: 0.75rem;
+    background-color: #F2EFE7;
+    color: #006A71;
+}
+
+.custom_modal .modal_header,
+.custom_modal .modal_footer {
+    background-color: #006A71;
+    color: #F2EFE7;
+    border: none;
+}
+
+.custom_modal .modal_title {
+    font-size: 1.25rem;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.custom_modal Button {    
+    font-size: 0.7rem;
+}
+
+.custom_modal .btn_danger {
+    background-color: #e74c3c;
+    border-color: #e74c3c;
+}
+
+.custom_modal .btn_primary {
+    background-color: #95a5a6;
+    border-color: #95a5a6;
+}

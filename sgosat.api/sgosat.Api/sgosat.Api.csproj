@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\sgosat.Aplicacao\sgosat.Aplicacao.csproj" />
+    <ProjectReference Include="..\sgosat.Dominio\sgosat.Dominio.csproj" />
+    <ProjectReference Include="..\sgosat.Repositorio\sgosat.Repositorio.csproj" />
+  </ItemGroup>
+
+</Project>
