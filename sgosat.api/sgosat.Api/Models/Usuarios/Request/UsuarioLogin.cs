@@ -1,4 +1,4 @@
-namespace sgosat.Api.Models.Usuario.Request
+namespace sgosat.Api.Models.Usuarios.Request
 {
     public class UsuarioLogin
     {

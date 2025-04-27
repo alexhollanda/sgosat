@@ -17,6 +17,8 @@ import Login from './paginas/Login/Login';
 import PrivateRoute from './routes/PrivateRoute';
 import { ClientesPaginados } from './paginas/Clientes/ClientesPaginados';
 import { OrdensServicoPaginado } from './paginas/OrdensServico/OrdensServicoPaginado';
+import { FuncionariosPaginados } from './paginas/Funcionarios/FuncionariosPaginados';
+import { UsuariosPaginados } from './paginas/Usuarios/UsuariosPaginados';
 
 function App() {
   return (
@@ -29,10 +31,10 @@ function App() {
         <Route path="/clientes" element={<PrivateRoute><ClientesPaginados /></PrivateRoute>} />
         <Route path="/clientes/novo" element={<PrivateRoute><NovoCliente /></PrivateRoute>} />
         <Route path="/clientes/editar" element={<PrivateRoute><EditarCliente /></PrivateRoute>} />
-        <Route path="/funcionarios" element={<PrivateRoute><Funcionarios /></PrivateRoute>} />
+        <Route path="/funcionarios" element={<PrivateRoute><FuncionariosPaginados /></PrivateRoute>} />
         <Route path="/funcionarios/novo" element={<PrivateRoute><NovoFuncionario /></PrivateRoute>} />
         <Route path="/funcionarios/editar" element={<PrivateRoute><EditarFuncionario /></PrivateRoute>} />
-        <Route path="/usuarios" element={<PrivateRoute><Usuarios /></PrivateRoute>} />
+        <Route path="/usuarios" element={<PrivateRoute><UsuariosPaginados /></PrivateRoute>} />
         <Route path="/usuarios/novo" element={<PrivateRoute><NovoUsuario /></PrivateRoute>} />
         <Route path="/usuarios/editar" element={<PrivateRoute><EditarUsuario /></PrivateRoute>} />
         <Route path="/usuarios/alterarsenha" element={<PrivateRoute><AlterarSenha /></PrivateRoute>} />

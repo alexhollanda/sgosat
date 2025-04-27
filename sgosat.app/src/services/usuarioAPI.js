@@ -43,7 +43,16 @@ const UsuarioAPI = {
             console.error("Erro ao listar tipos de usuários:", error);
             throw error;
         }
-    },
+    }, 
+    async obterPaginadoAsync(pageNumber, pageSize, order, nome, userName) {
+        try {
+            const response = await HTTPClient.get(`/Usuario/Paginar?pageNumber=${pageNumber}&pageSize=${pageSize}&order=${order}&nome=${nome}&userName=${userName}`);
+            return response.data;
+        } catch (error) {
+            console.error("Erro ao listar usuários:", error);
+            throw error;
+        }
+    }, 
     async criarAsync(userName, email, senha, funcionarioID, tipoUsuarioID) {
         try {
             const usuarioCriar = {

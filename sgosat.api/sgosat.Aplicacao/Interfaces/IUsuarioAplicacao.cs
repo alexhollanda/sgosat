@@ -1,4 +1,5 @@
 using sgosat.Dominio.Entidades;
+using sgosat.Repositorio.Models.Usuarios.Response;
 
 namespace sgosat.Aplicacao.Interfaces
 {
@@ -6,8 +7,7 @@ namespace sgosat.Aplicacao.Interfaces
     {
         Task<int> Criar(Usuario usuario);
         Task Atualizar(Usuario usuario);
-        Task AtualizaSenha(Usuario usuario, string senhaAntiga);
-        public bool VerificaSenha(string senha1, string senha2);        
+        Task AtualizaSenha(Usuario usuario, string senhaAntiga);      
         Task Deletar(int usuarioID);
         Task Restaurar(int usuarioID);
         Task<Usuario> Obter(int usuarioID);
@@ -15,5 +15,6 @@ namespace sgosat.Aplicacao.Interfaces
         Task<Usuario> ObterPorEmail(string email);
         public Task<IEnumerable<Usuario>> Listar(bool Ativo);
         public Task<bool> Login(string userName, string senha);
+        public Task<IEnumerable<UsuarioPaginado>> Paginar(int pageNumber, int pageSize, int order, string nome, string userName);
     }
 }

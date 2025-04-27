@@ -1,6 +1,6 @@
 using sgosat.Dominio.Entidades;
 
-namespace sgosat.Api.Models.Usuario.Response
+namespace sgosat.Api.Models.Usuarios.Response
 {
     public class UsuarioResponse
     {

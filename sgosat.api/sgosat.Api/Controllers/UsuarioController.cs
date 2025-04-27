@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using sgosat.Api.Models.Usuario.Request;
-using sgosat.Api.Models.Usuario.Response;
+using sgosat.Api.Models.Usuarios.Request;
+using sgosat.Api.Models.Usuarios.Response;
 using sgosat.Aplicacao.Interfaces;
 using sgosat.Dominio.Entidades;
 using sgosat.Dominio.Enumeradores;
@@ -160,23 +160,7 @@ namespace sgosat.Api.Controllers
 
                 await _usuarioAplicacao.AtualizaSenha(usuarioDomino, usuario.SenhaAntiga);
 
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpPut]
-        [Route("VerificaSenha")]
-        public ActionResult VerificaSenha(string senha1, string senha2)
-        {
-            try
-            {
-                _usuarioAplicacao.VerificaSenha(senha1, senha2);
-
-                return Ok("Senha Confere!");
+                return Ok("Senha alterada com sucesso!");
             }
             catch (Exception ex)
             {
@@ -239,6 +223,30 @@ namespace sgosat.Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet]
+        [Route("Paginar")]
+        public async Task<ActionResult> Paginar(int pageNumber, int pageSize, int order, string nome = null, string userName = null)
+        {
+            try
+            {
+                var usuariosDominio = await _usuarioAplicacao.Paginar(pageNumber, pageSize, order, nome, userName);
+
+                var usuarios = usuariosDominio.Select(u => new UsuarioPaginado(){
+                    ID = u.ID,
+                    Nome = u.Nome,
+                    UserName = u.UserName,
+                    Email = u.Email,
+                    TotalRegistros = u.TotalRegistros
+                }).ToList();
+
+                return Ok(usuarios);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }    
     
         [HttpGet]
         [Route("ListarTiposUsuarios")]

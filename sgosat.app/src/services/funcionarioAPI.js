@@ -27,7 +27,16 @@ const FuncionarioAPI = {
             console.error("Erro ao listar funcionários:", error);
             throw error;
         }
-    },
+    }, 
+    async obterPaginadoAsync(pageNumber, pageSize, order, nome, documento) {
+        try {
+            const response = await HTTPClient.get(`/Funcionario/Paginar?pageNumber=${pageNumber}&pageSize=${pageSize}&order=${order}&nome=${nome}&documento=${documento}`);
+            return response.data;
+        } catch (error) {
+            console.error("Erro ao listar funcionários:", error);
+            throw error;
+        }
+    }, 
     async obterTecnicoAsync() {
         try {
             const response = await HTTPClient.get(`/Funcionario/ObterTecnico`);

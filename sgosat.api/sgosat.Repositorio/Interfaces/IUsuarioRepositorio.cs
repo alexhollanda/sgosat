@@ -1,4 +1,5 @@
 using sgosat.Dominio.Entidades;
+using sgosat.Repositorio.Models.Usuarios.Response;
 
 namespace sgosat.Repositorio.Interfaces
 {
@@ -10,5 +11,6 @@ namespace sgosat.Repositorio.Interfaces
         Task<Usuario> ObterPorUserName(string userName, bool Ativo);
         Task<Usuario> ObterPorEmail(string email, bool Ativo);
         Task<IEnumerable<Usuario>> Listar(bool ativo);
+        Task<IEnumerable<UsuarioPaginado>> Paginar(int pageNumber, int pageSize, int order, string nome, string userName);
     }
 }

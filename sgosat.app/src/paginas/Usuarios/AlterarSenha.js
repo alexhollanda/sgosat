@@ -3,7 +3,7 @@ import { Topbar } from "../../componentes/Topbar/Topbar";
 import style from "./EditarUsuario.module.css";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Alert } from "react-bootstrap";
+//import { Alert } from "react-bootstrap";
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import UsuarioAPI from "../../services/usuarioAPI";
@@ -11,6 +11,7 @@ import FuncionarioAPI from "../../services/funcionarioAPI";
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import { FaSpinner } from 'react-icons/fa';
 
 export function AlterarSenha() {
     const [colapsada, setColapsada] = useState(true);
@@ -29,8 +30,35 @@ export function AlterarSenha() {
     const [senhaAtual, setSenhaAtual] = useState('');
     const [novaSenha, setNovaSenha] = useState('');
     const [confirmarSenha, setConfirmarSenha] = useState("");
-    const [mensagem, setMensagem] = useState("");
-    const [erro, setErro] = useState(false);
+    const [erros, setErros] = useState({});
+    const [erroGeral, setErroGeral] = useState('');
+    const [sucesso, setSucesso] = useState('');
+    const [carregando, setCarregando] = useState(false);
+
+    useEffect(() => {
+        if (erroGeral || sucesso) {
+            const timer = setTimeout(() => {
+                setErroGeral('');
+                setSucesso('');
+            }, 5000);
+
+            return () => clearTimeout(timer);
+        }
+    }, [erroGeral, sucesso]);
+
+    const validarCampos = () => {
+        const novosErros = {};
+
+        if (!senhaAtual) novosErros.senhaAtual = 'Informe a senha atual.';
+        if (!novaSenha) novosErros.novaSenha = 'Informe a nova senha.';
+        if (novaSenha.length < 6) novosErros.novaSenha = 'A nova senha deve ter pelo menos 6 caracteres.';
+        if (!confirmarSenha) novosErros.confirmarSenha = 'Confirme a nova senha.';
+        if (novaSenha !== confirmarSenha) novosErros.confirmarSenha = 'As senhas não coincidem.';
+
+        setErros(novosErros);
+
+        return Object.keys(novosErros).length === 0;
+    };
 
     useEffect(() => {
         const fetchTiposUsuarios = async () => {
@@ -70,42 +98,70 @@ export function AlterarSenha() {
         fetchUsuario();
     }, []);
 
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault();
+    //     if (isFormValid()) {
+    //         if (UsuarioAPI.verificaSenha(senhaAtual, senha)) {
+    //             setMensagem("A senha atual informada não confere!");
+    //             setErro(true);
+    //             return;
+    //         }
+
+    //         if (novaSenha !== confirmarSenha) {
+    //             setMensagem("A nova senha e a confirmação não conferem!");
+    //             setErro(true);
+    //             return;
+    //         }
+    //         try {
+    //             await UsuarioAPI.alterarSenhaAsync(id, novaSenha, senhaAtual);
+    //             setMensagem("Senha alterada com sucesso!");
+    //             setErro(false);
+    //             setSenhaAtual("");
+    //             setNovaSenha("");
+    //             setConfirmarSenha("");
+    //             setTimeout(() => {
+    //                 navigate("/usuarios"); // ou qualquer rota desejada
+    //             }, 1000);
+    //         } catch (error) {
+    //             setMensagem(error.response?.data || "Erro ao alterar senha.");
+    //             setErro(true);
+    //         }
+    //     } else {
+    //         alert("Por favor, preencha todos os campos obrigatórios.");
+    //     }
+    // };
+
+    // const isFormValid = () => {
+    //     return senhaAtual && novaSenha && confirmarSenha;
+    // }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (isFormValid()) {
-            if (senha != senhaAtual) {
-                setMensagem("A senha atual informada não confere!");
-                setErro(true);
-                return;
-            }
+        setErroGeral('');
+        setSucesso('');
 
-            if (novaSenha !== confirmarSenha) {
-                setMensagem("A nova senha e a confirmação não conferem!");
-                setErro(true);
-                return;
-            }
-            try {
-                await UsuarioAPI.alterarSenhaAsync(id, novaSenha, senhaAtual);
-                setMensagem("Senha alterada com sucesso!");
-                setErro(false);
-                setSenhaAtual("");
-                setNovaSenha("");
-                setConfirmarSenha("");
-                setTimeout(() => {
-                    navigate("/usuarios"); // ou qualquer rota desejada
-                  }, 1000);
-            } catch (error) {
-                setMensagem(error.response?.data || "Erro ao alterar senha.");
-                setErro(true);
-            }
-        } else {
-            alert("Por favor, preencha todos os campos obrigatórios.");
+        if (!validarCampos()) {
+            return;
+        }
+
+        setCarregando(true);
+
+        try {
+            await UsuarioAPI.alterarSenhaAsync(id, novaSenha, senhaAtual);
+
+            setSucesso('Senha alterada com sucesso!');
+            setSenhaAtual('');
+            setNovaSenha('');
+            setConfirmarSenha('');
+            setTimeout(() => {
+                navigate("/usuarios"); // ou qualquer rota desejada
+            }, 1000);
+        } catch (err) {
+            setErroGeral(err.response?.data || 'Erro ao alterar senha.');
+        } finally {
+            setCarregando(false);
         }
     };
-
-    const isFormValid = () => {
-        return senhaAtual && novaSenha && confirmarSenha;
-    }
 
 
     return (
@@ -114,10 +170,10 @@ export function AlterarSenha() {
                 <div className={style.pagina_conteudo}>
                     <h3>Alterar Senha do Usuário</h3>
 
-                    <Form onSubmit={handleSubmit}>
-                        {mensagem && (
-                            <Alert variant={erro ? "danger" : "success"}>{mensagem}</Alert>
-                        )}
+                    {erroGeral && <div className="alert alert-danger">{erroGeral}</div>}
+                    {sucesso && <div className="alert alert-success">{sucesso}</div>}
+
+                    <Form onSubmit={handleSubmit} noValidate>
                         <Container>
                             <Row>
                                 <Col sm={12}>
@@ -201,13 +257,13 @@ export function AlterarSenha() {
                                         <Form.Label>Digite a Senha Atual:</Form.Label>
                                         <Form.Control
                                             type="password"
-                                            placeholder="************"
+                                            className={`form-control ${erros.senhaAtual ? 'is-invalid' : ''}`}
                                             name="senhaAtual"
                                             value={senhaAtual}
                                             onChange={(e) => setSenhaAtual(e.target.value)}
-                                            required
 
                                         />
+                                        {erros.senhaAtual && <div className="invalid-feedback">{erros.senhaAtual}</div>}
                                     </Form.Group>
                                 </Col>
 
@@ -216,13 +272,13 @@ export function AlterarSenha() {
                                         <Form.Label>Digite a Nova Senha:</Form.Label>
                                         <Form.Control
                                             type="password"
-                                            placeholder="************"
+                                            className={`form-control ${erros.novaSenha ? 'is-invalid' : ''}`}
                                             name="novaSenha"
                                             value={novaSenha}
                                             onChange={(e) => setNovaSenha(e.target.value)}
-                                            required
 
                                         />
+                                        {erros.novaSenha && <div className="invalid-feedback">{erros.novaSenha}</div>}
                                     </Form.Group>
                                 </Col>
 
@@ -231,19 +287,26 @@ export function AlterarSenha() {
                                         <Form.Label>Confirme a Nova Senha:</Form.Label>
                                         <Form.Control
                                             type="password"
-                                            placeholder="************"
+                                            className={`form-control ${erros.confirmarSenha ? 'is-invalid' : ''}`}
                                             name="confirmaSenha"
                                             value={confirmarSenha}
                                             onChange={(e) => setConfirmarSenha(e.target.value)}
-                                            required
 
                                         />
+                                        {erros.confirmarSenha && <div className="invalid-feedback">{erros.confirmarSenha}</div>}
                                     </Form.Group>
                                 </Col>
                             </Row>
 
-                            <Button variant="success" type="submit" className={style.btn} disabled={!isFormValid()}>
-                                Salvar
+                            <Button variant="success" type="submit" className={style.btn} disabled={carregando}>
+                                {carregando ? (
+                                    <div className="d-flex align-items-center justify-content-center">
+                                        <FaSpinner className="me-2" style={{ animation: 'spin 1s linear infinite' }} />
+                                        Salvando...
+                                    </div>
+                                ) : (
+                                    'Salvar'
+                                )}
                             </Button>
                             <Button variant="danger" type="button" className={style.btn} onClick={() => navigate("/usuarios")}>
                                 Cancelar
@@ -251,6 +314,15 @@ export function AlterarSenha() {
 
                         </Container>
                     </Form>
+                    {/* CSS para animar o ícone */}
+                    <style>
+                        {`
+                        @keyframes spin {
+                            from { transform: rotate(0deg); }
+                            to { transform: rotate(360deg); }
+                        }
+                        `}
+                    </style>
                 </div>
             </Topbar>
         </Sidebar>

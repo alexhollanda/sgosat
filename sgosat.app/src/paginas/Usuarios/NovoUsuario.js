@@ -20,10 +20,20 @@ export function NovoUsuario() {
     const [funcionarios, setFuncionarios] = useState([]);
     const [tipoUsuarioID, setTipoUsuarioID] = useState('');
     const [tiposUsuarios, setTiposUsuarios] = useState([]);
+    const [usuarios, setUsuarios] = useState([]);
 
     const navigate = useNavigate();
 
     useEffect(() => {
+        const fetchUsuarios = async () => {
+            try {
+                const listaUsuarios = await UsuarioAPI.listarAsync(true);
+                setUsuarios(listaUsuarios);
+            } catch (error) {
+                console.error("Erro ao buscar usuários:", error);
+            }
+        }
+
         const fetchTiposUsuarios = async () => {
             try {
                 const tipos = await UsuarioAPI.listarTiposUsuarios();
@@ -45,7 +55,16 @@ export function NovoUsuario() {
 
         fetchTiposUsuarios();
         fetchFuncionarios();
+        fetchUsuarios();
     }, []);
+
+    // Pega todos os IDs de funcionários que já têm usuário
+    const funcionariosComUSuario = usuarios.map(user => user.funcionarioID);
+
+    // Filtramos apenas os funcionários que ainda NÃO têm usuário
+    const funcionariosDisponiveis = funcionarios.filter(
+        func => !funcionariosComUSuario.includes(func.id)
+    );
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -82,7 +101,7 @@ export function NovoUsuario() {
                                             required
                                         >
                                             <option value="" disabled>Selecione um Funcionário</option>
-                                            {funcionarios.map((funcionario) => (
+                                            {funcionariosDisponiveis.map((funcionario) => (
                                                 <option key={funcionario.id} value={funcionario.id}>
                                                     {funcionario.nome}
                                                 </option>
@@ -101,7 +120,7 @@ export function NovoUsuario() {
                                             placeholder="Nome de Usuário"
                                             name="userName"
                                             value={userName}
-                                            onChange={(e) => setUserName(e.target.value)}
+                                            onChange={(e) => setUserName(e.target.value.toLowerCase())}
                                             required
                                         />
                                     </Form.Group>
@@ -117,7 +136,7 @@ export function NovoUsuario() {
                                             placeholder="E-mail"
                                             name="email"
                                             value={email}
-                                            onChange={(e) => setEmail(e.target.value)}
+                                            onChange={(e) => setEmail(e.target.value.toLowerCase())}
                                             required
                                         />
                                     </Form.Group>

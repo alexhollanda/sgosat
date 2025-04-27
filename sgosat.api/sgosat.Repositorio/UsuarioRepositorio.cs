@@ -1,6 +1,8 @@
+using Dapper;
 using Microsoft.EntityFrameworkCore;
 using sgosat.Dominio.Entidades;
 using sgosat.Repositorio.Interfaces;
+using sgosat.Repositorio.Models.Usuarios.Response;
 
 namespace sgosat.Repositorio
 {
@@ -52,6 +54,22 @@ namespace sgosat.Repositorio
         public async Task<IEnumerable<Usuario>> Listar(bool Ativo)
         {
             return await _contexto.Usuarios.Where(u => u.Ativo == Ativo).ToListAsync();
+        }
+
+        public async Task<IEnumerable<UsuarioPaginado>> Paginar(int pageNumber, int pageSize, int order, string nome, string userName)
+        {         
+            var parametros = new DynamicParameters();
+            parametros.Add("@PageNumber", pageNumber);
+            parametros.Add("@PageSize", pageSize);
+            parametros.Add("@Order", order);
+            parametros.Add("@Nome", nome);
+            parametros.Add("@UserName", userName);
+
+            return await _contexto.Database.GetDbConnection().QueryAsync<UsuarioPaginado>(
+                "spObterUsuariosPaginados",
+                parametros,
+                commandType: System.Data.CommandType.StoredProcedure
+            );
         }
     }
 }

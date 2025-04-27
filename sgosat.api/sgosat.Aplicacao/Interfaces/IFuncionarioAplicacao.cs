@@ -1,4 +1,5 @@
 using sgosat.Dominio.Entidades;
+using sgosat.Repositorio.Models.Funcionarios.Response;
 
 namespace sgosat.Aplicacao.Interfaces
 {
@@ -13,5 +14,6 @@ namespace sgosat.Aplicacao.Interfaces
         public Task<IEnumerable<Funcionario>> ObterPorTermo(string query, bool Ativo);
         public Task<IEnumerable<Funcionario>> ObterTecnico(bool Ativo);
         public Task<IEnumerable<Funcionario>> Listar(bool Ativo); 
+        public Task<IEnumerable<FuncionarioPaginado>> Paginar(int pageNumber, int pageSize, int order, string nome, string documento);
     }
 }

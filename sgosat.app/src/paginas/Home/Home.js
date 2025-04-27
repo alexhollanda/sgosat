@@ -41,7 +41,7 @@ const STATUS_CONFIG = {
 };
 
 export function Home() {
-    const [colapsada, setColapsada] = useState(false);
+    const [colapsada, setColapsada] = useState(true);
     const [contagem, setContagem] = useState({});
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();

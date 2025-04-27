@@ -30,14 +30,13 @@ function Login() {
             const response = await UsuarioAPI.LoginAsync(usuario);
 
             if (!response) {
-                setErro('Email ou senha inválidos.');
+                setErro('Usuário ou senha inválidos.');
                 return;
             }
 
             login(response);
 
-            //const data = await response.json();
-            setSucesso("Usuário autenticado com Sucesso!");
+           setSucesso("Usuário autenticado com Sucesso!");
 
             if (lembrar) {
                 localStorage.setItem('userName', userName);
@@ -51,7 +50,7 @@ function Login() {
 
             // Aqui você pode salvar token, redirecionar, etc.
         } catch (error) {
-            setErro('Erro ao conectar com o servidor.');
+            setErro('Usuário ou senha inválidos.');
         } finally {
             setCarregando(false);
         }

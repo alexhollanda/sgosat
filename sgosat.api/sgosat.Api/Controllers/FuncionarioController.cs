@@ -203,6 +203,30 @@ namespace sgosat.Api.Controllers
         }
 
         [HttpGet]
+        [Route("Paginar")]
+        public async Task<ActionResult> Paginar(int pageNumber, int pageSize, int order, string nome = null, string documento = null)
+        {
+            try
+            {
+                var funcionariosDominio = await _funcionarioAplicacao.Paginar(pageNumber, pageSize, order, nome, documento);
+
+                var funcionarios = funcionariosDominio.Select(f => new FuncionarioPaginado(){
+                    ID = f.ID,
+                    Nome = f.Nome,
+                    Documento = f.Documento,
+                    Telefone = f.Telefone,
+                    TotalRegistros = f.TotalRegistros
+                }).ToList();
+
+                return Ok(funcionarios);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }    
+
+        [HttpGet]
         [Route("ListarTiposFuncionarios")]
         public ActionResult ListarTiposUsuario()
         {

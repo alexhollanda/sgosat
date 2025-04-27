@@ -2,6 +2,7 @@ using System.Runtime.CompilerServices;
 using sgosat.Aplicacao.Interfaces;
 using sgosat.Dominio.Entidades;
 using sgosat.Repositorio.Interfaces;
+using sgosat.Repositorio.Models.Usuarios.Response;
 
 namespace sgosat.Aplicacao
 {
@@ -68,17 +69,12 @@ namespace sgosat.Aplicacao
             if (usuarioDominio == null)
                 throw new Exception("Usuário não encontrado!");
 
-            if (BCrypt.Net.BCrypt.Verify(usuarioDominio.Senha, senhaAntiga))
+            if (!BCrypt.Net.BCrypt.Verify(senhaAntiga, usuarioDominio.Senha))
                 throw new Exception("Senha Antiga Inválida!");
 
             usuarioDominio.Senha = BCrypt.Net.BCrypt.HashPassword(usuario.Senha);
 
             await _usuarioRepositorio.Atualizar(usuarioDominio);
-        }
-
-        public bool VerificaSenha(string senha1, string senha2)
-        {
-            return BCrypt.Net.BCrypt.Verify(senha1, senha2);
         }
 
         public async Task Deletar(int usuarioID)
@@ -150,6 +146,11 @@ namespace sgosat.Aplicacao
             
 
             return senhaValida;
+        }
+
+        public async Task<IEnumerable<UsuarioPaginado>> Paginar(int pageNumber, int pageSize, int order, string nome, string userName)
+        {
+            return await _usuarioRepositorio.Paginar(pageNumber, pageSize, order, nome, userName);
         }
 
         #region Útil
