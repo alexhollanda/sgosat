@@ -31,7 +31,6 @@ namespace sgosat.Api.Controllers
                     ID = usuarioDomino.ID,
                     UserName = usuarioDomino.UserName,
                     Email = usuarioDomino.Email,
-                    Senha = usuarioDomino.Senha,
                     FuncionarioID = usuarioDomino.FuncionarioID,
                     TipoUsuarioID = usuarioDomino.TipoUsuarioID
                 };
@@ -57,7 +56,6 @@ namespace sgosat.Api.Controllers
                     ID = usuarioDomino.ID,
                     UserName = usuarioDomino.UserName,
                     Email = usuarioDomino.Email,
-                    Senha = usuarioDomino.Senha,
                     FuncionarioID = usuarioDomino.FuncionarioID,
                     TipoUsuarioID = usuarioDomino.TipoUsuarioID
                 };

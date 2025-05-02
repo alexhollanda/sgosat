@@ -39,18 +39,9 @@ namespace sgosat.Aplicacao
 
         public async Task Atualizar(Usuario usuario)
         {
-            var usuarioDominio = await _usuarioRepositorio.Obter(usuario.ID, true);
-            if (usuarioDominio == null)
-                throw new Exception("Usuário não encontrado!");
-
-            var usuarioUserName = await _usuarioRepositorio.ObterPorUserName(usuario.UserName, true);
-            if (usuarioUserName.ID != usuario.ID)
-                throw new Exception("Já existe um usuário cadastrado com o Nome de Usuário informado!");
+            var usuarioDominio = await _usuarioRepositorio.Obter(usuario.ID, true)
+                ?? throw new Exception("Usuário não encontrado!");
             
-            var usuarioEmail = await _usuarioRepositorio.ObterPorEmail(usuario.Email, true);
-            if (usuarioEmail.ID != usuario.ID)
-                throw new Exception("Já existe um usuário cadastrado com o E-mail informado!");
-
             if (!String.IsNullOrEmpty(usuario.UserName) && !String.IsNullOrWhiteSpace(usuario.UserName))
                 usuarioDominio.UserName = usuario.UserName;
             

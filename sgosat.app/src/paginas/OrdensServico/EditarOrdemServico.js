@@ -1,6 +1,5 @@
 import style from './NovaOrdemServico.module.css';
 import React, { useState, useEffect } from 'react';
-import { Alert } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import ClienteAPI from "../../services/clienteAPI";
 import FuncionarioAPI from "../../services/funcionarioAPI";
@@ -11,7 +10,6 @@ import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Select from "react-select";
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import OrdemServicoAPI from '../../services/ordemServicoAPI';
 
@@ -30,13 +28,14 @@ export function EditarOrdemServico() {
     const [statusOSID, setStatusOSID] = useState('');
     const [statusOS, setStatusOS] = useState([]);
     const [erros, setErros] = useState({});
-    const [erro, setErro] = useState(false);
-    const [mensagem, setMensagem] = useState("");
-
+    const [erroGeral, setErroGeral] = useState('');
+    const [sucesso, setSucesso] = useState('');
 
     const navigate = useNavigate();
     const location = useLocation();
     const [id] = useState(location.state);
+
+    //#region Funções de Formatação
 
     function formatarMoeda(valor) {
         return valor.toLocaleString("pt-BR", {
@@ -66,6 +65,8 @@ export function EditarOrdemServico() {
         return tipoPessoa === 'PF' ? formataCPF(documento) : formataCNPJ(documento);
     };
 
+    //#endregion
+
     async function fecthOrdem(idOrdem) {
         try {
             const response = await OrdemServicoAPI.obterAsync(idOrdem);
@@ -79,6 +80,7 @@ export function EditarOrdemServico() {
             setFuncionarioID(response.funcionarioID);
             setValor(response.valor);
         } catch (error) {
+            setErroGeral(error.response?.data || "Erro ao buscar ordem de serviço.");
             console.log("Erro ao buscar ordem de serviço:", true);
         }
     }
@@ -90,8 +92,7 @@ export function EditarOrdemServico() {
         }
         catch (error) {
             console.error("Erro ao carregar clientes:", error);
-            setMensagem("Erro ao carregar clientes:");
-            setErro(true);
+            setErroGeral(error.response?.data || "Erro ao carregar clientes.");
         }
     }
 
@@ -102,8 +103,7 @@ export function EditarOrdemServico() {
         }
         catch (error) {
             console.error("Erro ao carregar funcionarios:", error);
-            setMensagem("Erro ao carregar funcionarios:");
-            setErro(true);
+            setErroGeral(error.response?.data || "Erro ao carregar funcionarios.");
         }
     }
 
@@ -114,26 +114,45 @@ export function EditarOrdemServico() {
 
         } catch (error) {
             console.error("Erro ao listar os status das ordens de serviço:", error);
-            setMensagem("Erro ao listar os status das ordens de serviço");
-            setErro(true);
+            setErroGeral(error.response?.data || "Erro ao listar os status das ordens de serviço.");
         }
     }
 
-    const validar = () => {
-        const novosErros = {};
-        if (!statusOSID) novosErros.statusOSID = "Selecione um Status para a Ordem de Serviço";
-        if (!descricaoProblema.trim()) novosErros.descricaoProblema = "Descrição é obrigatória";
-        if (!funcionarioID) novosErros.funcionarioID = "Selecione o técnico responsável";
-        return novosErros;
+    useEffect(() => {
+        fetchClientes();
+        fetchFuncionarios();
+        fetchStatusOS();
+        fecthOrdem(id);
+    }, []);
+
+    const validarCampos = () => {
+        const novosErros = {};        
+
+        if (dataConclusao && new Date(dataConclusao) < new Date(dataAbertura)) novosErros.dataConclusao = "Data de Conclusão não pode ser anterior à Data de Abertura!";
+        if (dataConclusao && new Date(dataConclusao) > new Date()) novosErros.dataConclusao = "Data de Conclusão não pode ser maior que a data atual!";
+        if (!statusOSID) novosErros.statusOSID = "Selecione um Status para a Ordem de Serviço!";
+        if (!descricaoProblema.trim()) novosErros.descricaoProblema = "Descrição é obrigatória!";
+        if (!funcionarioID) novosErros.funcionarioID = "Selecione o técnico responsável!";
+        if (statusOSID == 4 && !dataConclusao) novosErros.dataConclusao = "Data de Conclusão é obrigatória quando a Ordem de Serviço for Concluída!";
+        if (statusOSID == 4 && !servicoRealizado.trim()) novosErros.servicoRealizado = "Serviço realizado é obrigatório quando a Ordem de Serviço for Concluída!";
+        if (statusOSID == 4 && valor <= 0) novosErros.valor = "Valor deve ser maior que zero quando a Ordem de Serviço for Concluída!";
+
+        setErros(novosErros);
+
+        return Object.keys(novosErros).length === 0;
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const errosValidados = validar();
-        if (Object.keys(errosValidados).length > 0) {
-            setErros(errosValidados);
+        setErroGeral('');
+        setSucesso('');
+
+        if (!validarCampos()) {
+            setErroGeral("Por favor, preencha todos os campos obrigatórios.");
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             return;
         }
+
 
         const payload = {
             ID: id,
@@ -145,12 +164,11 @@ export function EditarOrdemServico() {
             Valor: valor,
             StatusOSID: statusOSID
         };
-        await OrdemServicoAPI.atualizarAsync(payload);
 
         try {
+            await OrdemServicoAPI.atualizarAsync(payload);
             window.scrollTo({ top: 0, behavior: 'smooth' });
-            setMensagem("Ordem de Serviço Atualizada com Sucesso!");
-            setErro(false);
+            setSucesso("Ordem de Serviço Atualizada com Sucesso!");
             setDataAbertura(null);
             setDataConclusao(null);
             setStatusOSID(0);
@@ -165,18 +183,9 @@ export function EditarOrdemServico() {
             }, 1000);
         } catch (error) {
             console.error(error);
-            alert("Erro ao criar ordem de serviço.");
-            setMensagem("Erro ao criar ordem de serviço.");
-            setErro(true);
-        }
+            setErroGeral(error.response?.data || "Erro ao atualizar ordem de serviço.");
+        } 
     };
-
-    useEffect(() => {
-        fetchClientes();
-        fetchFuncionarios();
-        fetchStatusOS();
-        fecthOrdem(id);
-    }, []);
 
     return (
         <Sidebar colapsada={colapsada} setColapsada={setColapsada}>
@@ -185,10 +194,10 @@ export function EditarOrdemServico() {
                     <h3>Editar Ordem de Serviço:</h3>
                     <hr></hr>
 
+                    {erroGeral && <div className="alert alert-danger">{erroGeral}</div>}
+                    {sucesso && <div className="alert alert-success">{sucesso}</div>}
+
                     <Form onSubmit={handleSubmit}>
-                        {mensagem && (
-                            <Alert variant={erro ? "danger" : "success"}>{mensagem}</Alert>
-                        )}
                         <Container>
                             <Row>
                                 <Col sm={4}>
@@ -196,12 +205,12 @@ export function EditarOrdemServico() {
                                         <Form.Label>Data de Abertura:</Form.Label>
                                         <Form.Control
                                             type="date"
+                                            className={`fomr-control ${erros.dataAbertura ? 'is-invalid' : ''}`}
                                             name="dataAbertura"
                                             value={dataAbertura}
-                                            onChange={(e) => setDataAbertura(e.target.value)}
-                                            required
                                             disabled
                                         />
+                                        {erros.dataAbertura && <div className="invalid-feedback">{erros.dataAbertura}</div>}
                                     </Form.Group>
                                 </Col>
 
@@ -210,10 +219,12 @@ export function EditarOrdemServico() {
                                         <Form.Label>Data de Conclusão:</Form.Label>
                                         <Form.Control
                                             type="date"
+                                            className={`fomr-control ${erros.dataConclusao ? 'is-invalid' : ''}`}
                                             name="dataConclusao"
                                             value={dataConclusao}
                                             onChange={(e) => setDataConclusao(e.target.value)}
                                         />
+                                        {erros.dataConclusao && <div className="invalid-feedback">{erros.dataConclusao}</div>}
                                     </Form.Group>
                                 </Col>
 
@@ -222,10 +233,10 @@ export function EditarOrdemServico() {
                                         <Form.Label>Status:</Form.Label>
                                         <Form.Control
                                             as="select"
+                                            className={`fomr-control ${erros.statusOSID ? 'is-invalid' : ''}`}
                                             name="statusOSID"
                                             value={statusOSID}
                                             onChange={(e) => setStatusOSID(e.target.value)}
-                                            required
                                         >
                                             <option value="" disabled>Status da Ordem de Serviço</option>
                                             {statusOS.map((status) => (
@@ -233,7 +244,9 @@ export function EditarOrdemServico() {
                                                     {status.nome}
                                                 </option>
                                             ))}
+
                                         </Form.Control>
+                                        {erros.statusOSID && <div className="invalid-feedback">{erros.statusOSID}</div>}
                                     </Form.Group>
                                 </Col>
 
@@ -248,14 +261,13 @@ export function EditarOrdemServico() {
                                             as="select"
                                             name="clienteID"
                                             value={clienteSelecionado}
-                                            //onChange={(e) => setFuncionarioID(e.target.value)}
                                             disabled
                                             required
                                         >
                                             <option value="" disabled>Selecione um Cliente</option>
                                             {clientes.map((cliente) => (
                                                 <option key={cliente.id} value={cliente.id}>
-                                                   {`${cliente.nome} (${maskDocument(cliente.tipoPessoa, cliente.documento)})`}
+                                                    {`${cliente.nome} (${maskDocument(cliente.tipoPessoa, cliente.documento)})`}
                                                 </option>
                                             ))}
                                         </Form.Control>
@@ -264,42 +276,42 @@ export function EditarOrdemServico() {
                             </Row>
 
                             <Row>
-                                <Col sm={12}>
+                                <Col sm={4}>
                                     <Form.Group className="mb-3" controlId="descricaoProblema">
                                         <Form.Label>Descrição do Problema:</Form.Label>
                                         <Form.Control
                                             as="textarea"
+                                            className={`fomr-control ${erros.descricaoProblema ? 'is-invalid' : ''}`}
                                             name="descricaoProblema"
                                             value={descricaoProblema}
                                             onChange={(e) => setDescricaoProblema(e.target.value)}
-                                            rows={4}
+                                            rows={8}
                                             style={{ resize: 'none' }}
                                             placeholder="Descreva o problema aqui..."
-                                            required
+
                                         />
+                                        {erros.descricaoProblema && <div className="invalid-feedback">{erros.descricaoProblema}</div>}
                                     </Form.Group>
                                 </Col>
-                            </Row>
 
-                            <Row>
-                                <Col sm={12}>
+                                <Col sm={4}>
                                     <Form.Group className="mb-3" controlId="servicoRealizado">
                                         <Form.Label>Serviços Realizados:</Form.Label>
                                         <Form.Control
                                             as="textarea"
+                                            className={`fomr-control ${erros.servicoRealizado ? 'is-invalid' : ''}`}
                                             name="servicoRealizado"
                                             value={servicoRealizado}
                                             onChange={(e) => setServicoRealizado(e.target.value)}
-                                            rows={4}
+                                            rows={8}
                                             style={{ resize: 'none' }}
                                             placeholder="Informe os serviços realizados..."
                                         />
+                                        {erros.servicoRealizado && <div className="invalid-feedback">{erros.servicoRealizado}</div>}
                                     </Form.Group>
                                 </Col>
-                            </Row>
 
-                            <Row>
-                                <Col sm={12}>
+                                <Col sm={4}>
                                     <Form.Group className="mb-3" controlId="observacoes">
                                         <Form.Label>Observações:</Form.Label>
                                         <Form.Control
@@ -307,7 +319,7 @@ export function EditarOrdemServico() {
                                             name="observacoes"
                                             value={observacoes}
                                             onChange={(e) => setObservacoes(e.target.value)}
-                                            rows={4}
+                                            rows={8}
                                             style={{ resize: 'none' }}
                                             placeholder="Alguma observação adicional?"
                                         />
@@ -321,10 +333,11 @@ export function EditarOrdemServico() {
                                         <Form.Label>Técnico Responsável:</Form.Label>
                                         <Form.Control
                                             as="select"
+                                            className={`fomr-control ${erros.funcionarioID ? 'is-invalid' : ''}`}
                                             name="funcionarioID"
                                             value={funcionarioID}
                                             onChange={(e) => setFuncionarioID(e.target.value)}
-                                            required
+
                                         >
                                             <option value="" disabled>Selecione um Funcionário</option>
                                             {funcionarios.map((funcionario) => (
@@ -333,6 +346,7 @@ export function EditarOrdemServico() {
                                                 </option>
                                             ))}
                                         </Form.Control>
+                                        {erros.funcionarioID && <div className="invalid-feedback">{erros.funcionarioID}</div>}
                                     </Form.Group>
                                 </Col>
 
@@ -342,6 +356,7 @@ export function EditarOrdemServico() {
                                         <Form.Control
                                             type="text"
                                             inputMode="numeric"
+                                            className={`fomr-control ${erros.valor ? 'is-invalid' : ''}`}
                                             value={formatarMoeda(valor)}
                                             onChange={(e) => {
                                                 const valorNumerico = parseFloat(
@@ -353,6 +368,7 @@ export function EditarOrdemServico() {
                                                 }
                                             }}
                                         />
+                                        {erros.valor && <div className="invalid-feedback">{erros.valor}</div>}
                                     </Form.Group>
                                 </Col>
                             </Row>
@@ -365,8 +381,6 @@ export function EditarOrdemServico() {
                                 Cancelar
                             </Button>
                         </Container>
-
-
                     </Form>
                 </div>
             </Topbar>
