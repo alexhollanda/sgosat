@@ -245,7 +245,7 @@ export function NovaOrdemServico() {
                                         <Form.Label>Data de Abertura:</Form.Label>
                                         <Form.Control
                                             type="date"
-                                            className={`fomr-control ${erros.dataAbertura ? 'is-invalid' : ''}`}
+                                            className={`form-control ${erros.dataAbertura ? 'is-invalid' : ''}`}
                                             name="dataAbertura"
                                             value={dataAbertura}
                                             onChange={(e) => setDataAbertura(e.target.value)}

@@ -93,9 +93,9 @@ namespace sgosat.Aplicacao
             return await _ordemServicoRepositorio.ListarPorStatus(statusID, Ativo); 
         }
 
-        public async Task<IEnumerable<OrdemPaginado>> Paginar(int pageNumber, int pageSize, int order, string nome)
+        public async Task<IEnumerable<OrdemPaginado>> Paginar(int pageNumber, int pageSize, int order, string nome, int statusID)
         {
-            return await _ordemServicoRepositorio.Paginar(pageNumber, pageSize, order, nome); 
+            return await _ordemServicoRepositorio.Paginar(pageNumber, pageSize, order, nome, statusID); 
         }
 
         #region Útil

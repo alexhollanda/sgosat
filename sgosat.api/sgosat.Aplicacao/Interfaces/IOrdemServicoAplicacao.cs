@@ -15,6 +15,6 @@ namespace sgosat.Aplicacao.Interfaces
         
         Task<IEnumerable<OrdemServico>> ListarPorFuncionario(int funcionarioID, bool Ativo);
         Task<IEnumerable<OrdemServico>> ListarPorStatus(int statusID, bool Ativo);
-        Task<IEnumerable<OrdemPaginado>> Paginar(int pageNumber, int pageSize, int order, string nome);
+        Task<IEnumerable<OrdemPaginado>> Paginar(int pageNumber, int pageSize, int order, string nome, int statusID);
     }
 }

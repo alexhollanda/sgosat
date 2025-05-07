@@ -1,5 +1,5 @@
 import style from './NovoCliente.module.css';
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ClienteAPI from '../../services/clienteAPI';
 import axios from 'axios';
@@ -30,9 +30,40 @@ export function NovoCliente() {
     const [modoAtualizacao, setModoAtualizacao] = useState(false);
     const [formDesabilitado, setFormDesabilitado] = useState(true);
     const [carregando, setCarregando] = useState(false);
-
+    const [erros, setErros] = useState({});
+    const [erroGeral, setErroGeral] = useState('');
+    const [sucesso, setSucesso] = useState('');
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (erroGeral || sucesso) {
+            const timer = setTimeout(() => {
+                setErroGeral('');
+                setSucesso('');
+            }, 5000);
+
+            return () => clearTimeout(timer);
+        }
+    }, [erroGeral, sucesso]);
+
+    const validarCampos = () => {
+        const novosErros = {};
+
+        if (!documento) novosErros.documento = "Documento é obrigatório!";
+        if (!nome) novosErros.nome = "Nome do cliente é obrigatório!";
+        if (!telefone) novosErros.telefone = "Telefone do cliente é obrigatório!";
+        if (!cep) novosErros.cep = "CEP do cliente é obrigatório!";
+        if (!logradouro) novosErros.logradouro = "Logradouro do cliente é obrigatório!";
+        if (!numero) novosErros.numero = "Número residencial do cliente é obrigatório!";
+        if (!bairro) novosErros.bairro = "Bairro do cliente é obrigatório!";
+        if (!cidade) novosErros.cidade = "Cidade do cliente é obrigatório!";
+        if (!uf) novosErros.uf = "UF do cliente é obrigatório!";
+
+        setErros(novosErros);
+
+        return Object.keys(novosErros).length === 0;
+    };
 
     const buscarClientePorDocumento = async (documento) => {
         setCarregando(true);
@@ -50,7 +81,7 @@ export function NovoCliente() {
             setCidade(cliente.cidade);
             setUF(cliente.uf);
             setModoAtualizacao(true);
-            setFormDesabilitado(false);            
+            setFormDesabilitado(false);
         } catch (error) {
             // Cliente não encontrado (erro 400)
             if (error?.response?.status === 400) {
@@ -68,37 +99,63 @@ export function NovoCliente() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // Remove as máscaras antes de enviar
-        const dadosSemMascara = {
-            telefoneLimpo: removeMask(telefone),
-            documentoLimpo: removeMask(documento),
-            cepLimpo: removeMask(cep)
-        };
+        setErroGeral('');
+        setSucesso('');
 
-        if (isFormValid()) {
-            try {
-                if (modoAtualizacao && id) {
-                    await ClienteAPI.atualizarAsync(id, nome, dadosSemMascara.telefoneLimpo, dadosSemMascara.cepLimpo,
-                                                    logradouro, numero, complemento, bairro, cidade, uf)
-                } else {
-                    ClienteAPI.criarAsync(nome, tipoPessoa, dadosSemMascara.documentoLimpo, dadosSemMascara.telefoneLimpo,
-                                        dadosSemMascara.cepLimpo, logradouro, numero, complemento, bairro, cidade, uf);
-                }
-                navigate("/clientes");
-            } catch (error) {
-                console.log("Erro ao salvar o cliente:", error);
-            }
-
-        } else {
-            alert("Por favor, preencha todos os campos obrigatórios.");
+        if (!validarCampos()) {
+            setErroGeral("Por favor, preencha todos os campos obrigatórios.");
+            window.scrollTo({ top: 0, behavior: 'smooth' }); // Rola para o topo da página
+            return;
         }
+
+        setCarregando(true);
+
+        const payloadCriar = {
+            nome,
+            tipoPessoa,
+            documento: removeMask(documento),
+            telefone: removeMask(telefone),
+            cep: removeMask(cep),
+            logradouro,
+            numero,
+            complemento,
+            bairro,
+            cidade,
+            uf
+        }
+
+        const payloadAtualizar = {
+            id,
+            nome,
+            telefone: removeMask(telefone),
+            cep: removeMask(cep),
+            logradouro,
+            numero,
+            complemento,
+            bairro,
+            cidade,
+            uf
+        }
+
+        try {
+            if (modoAtualizacao && id) {
+                await ClienteAPI.atualizarAsync(payloadAtualizar)
+            } else {
+                ClienteAPI.criarAsync(payloadCriar);
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' }); // Rola para o topo da página
+            setSucesso("Cliente salvo com sucesso!");
+            setTimeout(() => {
+                navigate("/clientes");
+            }, 2000); // Redireciona após 2 segundos
+        } catch (error) {
+            console.log("Erro ao salvar o cliente:", error);
+            setErroGeral(error?.response?.data || "Erro ao salvar o cliente.");
+        } finally {
+            setCarregando(false);
+        }
+
     }
-
-    const isFormValid = () => {
-        return (nome && tipoPessoa && documento && telefone && cep
-                && logradouro && numero && bairro && cidade && uf);
-    };
-
 
     //#region Funções e Validação e Máscaras
     const [errorDocumento, setErrorDocumento] = useState(''); // Mensagem de erro pro CPF/CNPJ
@@ -261,7 +318,7 @@ export function NovoCliente() {
         setErrorDocumento('');
     }
 
-    const handleBlurDocumento = () => {  
+    const handleBlurDocumento = () => {
         const rawValue = getRawValue(documento);
 
         // Validação de CPF ou CNPJ
@@ -314,6 +371,10 @@ export function NovoCliente() {
                 <div className={style.pagina_conteudo}>
                     <h3>Novo Cliente</h3>
                     <hr></hr>
+
+                    {erroGeral && <div className="alert alert-danger">{erroGeral}</div>}
+                    {sucesso && <div className="alert alert-success">{sucesso}</div>}
+
                     <Form onSubmit={handleSubmit}>
                         <Container>
                             <Row>
@@ -347,13 +408,14 @@ export function NovoCliente() {
                                         <Form.Label>Nome do Cliente:</Form.Label>
                                         <Form.Control
                                             type="text"
+                                            className={`form-control ${erros.nome ? 'is-invalid' : ''}`}
                                             placeholder="Nome do Funcionário"
                                             name="nome"
                                             value={nome}
                                             onChange={(e) => setNome(e.target.value.toUpperCase()) || ""}
                                             disabled={formDesabilitado}
-                                            required
                                         />
+                                        {erros.nome && <div className="invalid-feedback">{erros.nome}</div>}
                                     </Form.Group>
                                 </Col>
 
@@ -370,8 +432,7 @@ export function NovoCliente() {
                                             onBlur={handleBlurTelefone}   // Aplica máscara ao sair
                                             placeholder="(99) 9 9999-9999"
                                             isInvalid={!!errorPhone}
-                                            disabled={formDesabilitado}
-                                            required
+                                            disabled={formDesabilitado}                                            
                                         />
                                         {errorPhone && (
                                             <Form.Control.Feedback type="invalid">
@@ -395,7 +456,6 @@ export function NovoCliente() {
                                             onBlur={buscarCep}
                                             isInvalid={!!errorCep}
                                             disabled={formDesabilitado}
-                                            required
                                         />
                                         {errorCep && (
                                             <Form.Control.Feedback type="invalid">
@@ -410,13 +470,14 @@ export function NovoCliente() {
                                         <Form.Label>Logradouro:</Form.Label>
                                         <Form.Control
                                             type="text"
+                                            className={`form-control ${erros.logradouro ? 'is-invalid' : ''}`}
                                             placeholder="Logradouro"
                                             name="logradouro"
                                             value={logradouro}
                                             onChange={(e) => setLogradouro(e.target.value.toUpperCase())}
                                             disabled={formDesabilitado}
-                                            required
                                         />
+                                        {erros.logradouro && <div className="invalid-feedback">{erros.logradouro}</div>}
                                     </Form.Group>
                                 </Col>
 
@@ -425,13 +486,14 @@ export function NovoCliente() {
                                         <Form.Label>Número:</Form.Label>
                                         <Form.Control
                                             type="text"
+                                            className={`fomr-control ${erros.numero ? 'is-invalid' : ''}`}
                                             placeholder="Número"
                                             name="numero"
                                             value={numero}
                                             onChange={(e) => setNumero(e.target.value)}
                                             disabled={formDesabilitado}
-                                            required
                                         />
+                                        {erros.numero && <div className="invalid-feedback">{erros.numero}</div>}
                                     </Form.Group>
                                 </Col>
                             </Row>
@@ -456,13 +518,14 @@ export function NovoCliente() {
                                         <Form.Label>Bairro:</Form.Label>
                                         <Form.Control
                                             type="text"
+                                            className={`fomr-control ${erros.bairro ? 'is-invalid' : ''}`}
                                             placeholder="Bairro"
                                             name="bairro"
                                             value={bairro}
                                             onChange={(e) => setBairro(e.target.value.toUpperCase())}
                                             disabled={formDesabilitado}
-                                            required
                                         />
+                                        {erros.bairro && <div className="invalid-feedback">{erros.bairro}</div>}
                                     </Form.Group>
                                 </Col>
                             </Row>
@@ -473,13 +536,14 @@ export function NovoCliente() {
                                         <Form.Label>Cidade:</Form.Label>
                                         <Form.Control
                                             type="text"
+                                            className={`fomr-control ${erros.cidade ? 'is-invalid' : ''}`}
                                             placeholder="Cidade"
                                             name="cidade"
                                             value={cidade}
                                             onChange={(e) => setCidade(e.target.value.toUpperCase())}
                                             disabled={formDesabilitado}
-                                            required
                                         />
+                                        {erros.cidade && <div className="invalid-feedback">{erros.cidade}</div>}
                                     </Form.Group>
                                 </Col>
 
@@ -488,11 +552,11 @@ export function NovoCliente() {
                                         <Form.Label>UF:</Form.Label>
                                         <Form.Control
                                             as="select"
+                                            className={`fomr-control ${erros.uf ? 'is-invalid' : ''}`}
                                             name="uf"
                                             value={uf}
                                             onChange={(e) => setUF(e.target.value)}
                                             disabled={formDesabilitado}
-                                            required
                                         >
                                             <option value="" disabled>Selecione a UF</option>
                                             <option value="AC">AC - Acre</option>
@@ -523,11 +587,12 @@ export function NovoCliente() {
                                             <option value="SP">SP - São Paulo</option>
                                             <option value="TO">TO - Tocantins</option>
                                         </Form.Control>
+                                        {erros.uf && <div className="invalid-feedback">{erros.uf}</div>}
                                     </Form.Group>
                                 </Col>
                             </Row>
 
-                            <Button variant="success" type="submit" className={style.btn} disabled={!isFormValid()}>
+                            <Button variant="success" type="submit" className={style.btn} disabled={carregando}>
                                 Salvar
                             </Button>
 

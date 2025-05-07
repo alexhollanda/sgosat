@@ -60,13 +60,14 @@ namespace sgosat.Repositorio
                         .Where(os => os.Ativo == Ativo).ToListAsync();
         }
 
-        public async Task<IEnumerable<OrdemPaginado>> Paginar(int pageNumber, int pageSize, int order, string nome)
+        public async Task<IEnumerable<OrdemPaginado>> Paginar(int pageNumber, int pageSize, int order, string nome, int statusID)
         {
             var parametros = new DynamicParameters();
             parametros.Add("@PageNumber", pageNumber);
             parametros.Add("@PageSize", pageSize);
             parametros.Add("@Order", order);
             parametros.Add("@Nome", nome);
+            parametros.Add("@Status", statusID);
 
             return await _contexto.Database.GetDbConnection().QueryAsync<OrdemPaginado>(
                 "spObterOrdensPaginadas",

@@ -21,11 +21,15 @@ export function EditarFuncionario() {
     const [salario, setSalario] = useState(0);
     const [tipoFuncionarioID, setTipoFuncionarioID] = useState('');
     const [tiposFuncionarios, setTiposFuncionarios] = useState([]);
+    const [carregando, setCarregando] = useState(false);
+    const [erros, setErros] = useState({});
+    const [erroGeral, setErroGeral] = useState('');
+    const [sucesso, setSucesso] = useState('');
 
     const navigate = useNavigate();
     const location = useLocation();
     const [id] = useState(location.state);
-    
+
 
     useEffect(() => {
         const fetchTiposFuncionarios = async () => {
@@ -50,40 +54,76 @@ export function EditarFuncionario() {
             } catch (error) {
                 console.error("Erro ao buscar funcionário:", error);
             }
-        }        
+        }
 
         fetchTiposFuncionarios();
         fetchFuncionarios();
-    }, [])
+    }, []);
+
+    useEffect(() => {
+        if (erroGeral || sucesso) {
+            const timer = setTimeout(() => {
+                setErroGeral('');
+                setSucesso('');
+            }, 5000);
+
+            return () => clearTimeout(timer);
+        }
+    }, [erroGeral, sucesso]);
+
+    const validarCampos = () => {
+        const novosErros = {};
+
+        if (!nome) novosErros.nome = "Nome do funcionário é obrigatório!";
+        if (!salario) novosErros.salario = "Salário é obrigatório!";
+        if (!telefone) novosErros.telefone = "Telefone do funcionário é obrigatório!";
+        if (!tipoFuncionarioID) novosErros.tipoFuncionarioID = "Selecione um tipo de funcionário!";
+
+        setErros(novosErros);
+
+        return Object.keys(novosErros).length === 0;
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // Remove as máscaras antes de enviar
-        const dadosSemMascara = {
-            telefoneLimpo: removeMask(telefone)
+        setErroGeral('');
+        setSucesso('');
+
+        if (!validarCampos()) {
+            setErroGeral('Por favor, preencha todos os campos obrigatórios.');
+            window.scrollTo({ top: 0, behavior: 'smooth' }); // Rola a página para o topo
+            return;
+        }
+
+        setCarregando(true);
+
+        const payloadAtualizar = {
+            id: id,
+            nome: nome,
+            telefone: removeMask(telefone),
+            salario: salario,
+            tipoFuncionarioID: tipoFuncionarioID
         };
 
-        if (isFormValid()) {
-            try {
-                await FuncionarioAPI.atualizarAsync(id, nome, dadosSemMascara.telefoneLimpo, salario, tipoFuncionarioID)
-                navigate("/funcionarios");
-            } catch (error) {
-                console.log("Erro ao salvar o funcionário:", error);
-            }
-
-        } else {
-            alert("Por favor, preencha todos os campos obrigatórios.");
+        try {
+            await FuncionarioAPI.atualizarAsync(payloadAtualizar)
+            window.scrollTo({ top: 0, behavior: 'smooth' }); // Rola para o topo da página
+            setSucesso("Funcionário salvo com sucesso!");
+            setTimeout(() => {
+                navigate("/funcionarios"); // Redireciona para a página de funcionários
+            }, 2000); // Redireciona após 2 segundos
+        } catch (error) {
+            console.log("Erro ao salvar o funcionário:", error);
+            setErroGeral(error?.response?.data || "Erro ao salvar o funcionário.");
+        } finally {
+            setCarregando(false);
         }
-    }
 
-    const isFormValid = () => {
-        return (nome && documento && telefone && dataAdmissao && salario && tipoFuncionarioID);
     };
-
 
     //#region Funções e Validação e Máscaras    
     const [errorPhone, setErrorPhone] = useState(''); // Mensagem de erro pro Telefone
-    
+
     function formataCPF(value) {
         return value
             .replace(/\D/g, '') // Remove tudo que não for dígito
@@ -112,7 +152,7 @@ export function EditarFuncionario() {
 
     const removeMask = (value) => {
         return value.replace(/\D/g, ''); // Remove tudo que não for dígito
-    }    
+    }
 
     const handleTelefoneChange = (event) => {
         setTelefone(getRawValue(event.target.value));
@@ -143,6 +183,10 @@ export function EditarFuncionario() {
                 <div className={style.pagina_conteudo}>
                     <h3>Editar Funcionário</h3>
                     <hr></hr>
+
+                    {erroGeral && <div className="alert alert-danger">{erroGeral}</div>}
+                    {sucesso && <div className="alert alert-success">{sucesso}</div>}
+
                     <Form onSubmit={handleSubmit}>
                         <Container>
                             <Row>
@@ -157,7 +201,7 @@ export function EditarFuncionario() {
                                                 disabled
                                                 tabIndex={1}
                                                 required
-                                            />                                            
+                                            />
                                         </InputGroup>
                                     </Form.Group>
                                 </Col>
@@ -167,6 +211,7 @@ export function EditarFuncionario() {
                                         <Form.Label>Nome do Cliente:</Form.Label>
                                         <Form.Control
                                             type="text"
+                                            className={`form-control ${erros.nome ? 'is-invalid' : ''}`}
                                             placeholder="Nome do Funcionário"
                                             name="nome"
                                             value={nome}
@@ -174,6 +219,7 @@ export function EditarFuncionario() {
                                             tabIndex={2}
                                             required
                                         />
+                                        {erros.nome && <div className="invalid-feedback">{erros.nome}</div>}
                                     </Form.Group>
                                 </Col>
                             </Row>
@@ -204,11 +250,13 @@ export function EditarFuncionario() {
                                             decimalSeparator=","
                                             prefix="R$ "
                                             name="salario"
+                                            className={`form-control ${erros.salario ? 'is-invalid' : ''}`}
                                             value={salario}
                                             onValueChange={(val) => setSalario(val.floatValue)}
                                             tabIndex={4}
                                             isNumericString
                                         />
+                                        {erros.salario && <div className="invalid-feedback">{erros.salario}</div>}
                                     </Form.Group>
                                 </Col>
                             </Row>
@@ -219,6 +267,7 @@ export function EditarFuncionario() {
                                         <Form.Label>Telefone:</Form.Label>
                                         <Form.Control
                                             type="text"
+                                            className={`form-control ${erros.telefone ? 'is-invalid' : ''}`}
                                             name="telefone"
                                             maxLength={11}
                                             value={telefone}
@@ -230,6 +279,7 @@ export function EditarFuncionario() {
                                             tabIndex={5}
                                             required
                                         />
+                                        {erros.telefone && <div className="invalid-feedback">{erros.telefone}</div>}
                                         {errorPhone && (
                                             <Form.Control.Feedback type="invalid">
                                                 {errorPhone}
@@ -243,6 +293,7 @@ export function EditarFuncionario() {
                                         <Form.Label>Tipo de Usuário</Form.Label>
                                         <Form.Control
                                             as="select"
+                                            className={`form-control ${erros.tipoFuncionarioID ? 'is-invalid' : ''}`}
                                             name="tipoFuncionarioID"
                                             value={tipoFuncionarioID}
                                             onChange={(e) => setTipoFuncionarioID(e.target.value)}
@@ -256,12 +307,13 @@ export function EditarFuncionario() {
                                                 </option>
                                             ))}
                                         </Form.Control>
+                                        {erros.tipoFuncionarioID && <div className="invalid-feedback">{erros.tipoFuncionarioID}</div>}
                                     </Form.Group>
                                 </Col>
 
                             </Row>
 
-                            <Button variant="success" type="submit" className={style.btn} disabled={!isFormValid()}>
+                            <Button variant="success" type="submit" className={style.btn} disabled={carregando}>
                                 Salvar
                             </Button>
 
