@@ -46,22 +46,9 @@ const ClienteAPI = {
             throw error;
         }
     },    
-    async criarAsync(nome, tipoPessoa, documento, telefone, cep, logradouro, numero, complemento, bairro, cidade, uf)
+    async criarAsync(clienteCriar)
     {
         try {
-            const clienteCriar = {
-                Nome: nome,
-                TipoPessoa: tipoPessoa,
-                Documento: documento,
-                Telefone: telefone,
-                CEP: cep,
-                Logradouro: logradouro,
-                Numero: numero,
-                Complemento: complemento,
-                Bairro: bairro,
-                Cidade: cidade,
-                UF: uf
-            }
             const response = await HTTPClient.post("/Cliente/Criar", clienteCriar);
             return response.data;
         } catch (error) {
@@ -69,21 +56,9 @@ const ClienteAPI = {
             throw error;
         }
     },
-    async atualizarAsync(clienteID, nome, telefone, cep, logradouro, numero, complemento, bairro, cidade, uf)
+    async atualizarAsync(clienteAtualizar)
     {
-        try {
-            const clienteAtualizar = {
-                ID: clienteID,
-                Nome: nome,
-                Telefone: telefone,
-                CEP: cep,
-                Logradouro: logradouro,
-                Numero: numero,
-                Complemento: complemento,
-                Bairro: bairro,
-                Cidade: cidade,
-                UF: uf
-            }
+        try {            
             const response = await HTTPClient.put("/Cliente/Atualizar", clienteAtualizar);
             return response.data;
         } catch (error) {

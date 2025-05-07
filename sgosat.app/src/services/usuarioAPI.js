@@ -9,7 +9,7 @@ const UsuarioAPI = {
             console.error("Erro ao obter usuário:", error);
             throw error;
         }
-    },async obterPorUserNameAsync(userName) {
+    }, async obterPorUserNameAsync(userName) {
         try {
             const response = await HTTPClient.get(`/Usuario/ObterPorUserName/${userName}`);
             return response.data;
@@ -17,7 +17,7 @@ const UsuarioAPI = {
             console.error("Erro ao obter usuário:", error);
             throw error;
         }
-    },async LoginAsync(usuario) {
+    }, async LoginAsync(usuario) {
         try {
             const response = await HTTPClient.post(`/Usuario/Login`, usuario);
             return response.data;
@@ -35,7 +35,7 @@ const UsuarioAPI = {
             throw error;
         }
     },
-    async listarTiposUsuarios(){
+    async listarTiposUsuarios() {
         try {
             const response = await HTTPClient.get(`/Usuario/ListarTiposUsuarios`);
             return response.data;
@@ -43,7 +43,7 @@ const UsuarioAPI = {
             console.error("Erro ao listar tipos de usuários:", error);
             throw error;
         }
-    }, 
+    },
     async obterPaginadoAsync(pageNumber, pageSize, order, nome, userName) {
         try {
             const response = await HTTPClient.get(`/Usuario/Paginar?pageNumber=${pageNumber}&pageSize=${pageSize}&order=${order}&nome=${nome}&userName=${userName}`);
@@ -52,16 +52,9 @@ const UsuarioAPI = {
             console.error("Erro ao listar usuários:", error);
             throw error;
         }
-    }, 
-    async criarAsync(userName, email, senha, funcionarioID, tipoUsuarioID) {
+    },
+    async criarAsync(usuarioCriar) {
         try {
-            const usuarioCriar = {
-                UserName: userName,
-                Email: email,
-                Senha: senha,
-                FuncionarioID: funcionarioID,
-                TipoUsuarioID: tipoUsuarioID
-            }
             const response = await HTTPClient.post("/Usuario/Criar", usuarioCriar);
             return response.data;
         } catch (error) {
@@ -69,14 +62,8 @@ const UsuarioAPI = {
             throw error;
         }
     },
-    async atualizarAsync(usuarioID, userName, email, tipoUsuarioID) {
+    async atualizarAsync(usuarioAtualizar) {
         try {
-            const usuarioAtualizar = {
-                ID: usuarioID,
-                UserName: userName,
-                Email: email,
-                TipoUsuarioID: tipoUsuarioID
-            }
             const response = await HTTPClient.put("/Usuario/Atualizar", usuarioAtualizar);
             return response.data;
         } catch (error) {
@@ -111,10 +98,10 @@ const UsuarioAPI = {
             }
             const response = await HTTPClient.put("/Usuario/AlterarSenha", usuarioAlterarSenha);
             return response.data;
-            
+
         } catch (error) {
             console.error("Erro ao alterar senha do usuário:", error);
-            throw error;            
+            throw error;
         }
     }
 

@@ -137,8 +137,13 @@ export function FuncionariosPaginados() {
                         </Button>
                     </div>
 
-                    <Row className="mb-3">
-                        <Col md={3}>
+                    <Row className="justify-content-between align-items-center">
+                        <hr />
+                    </Row>
+
+                    <Row className="justify-content-between align-items-center mb-3">
+                        <h5>Filtros</h5>
+                        <Col xs="auto">
                             <Form.Control
                                 placeholder="Buscar por nome"
                                 value={nome}
@@ -146,7 +151,7 @@ export function FuncionariosPaginados() {
                             />
                         </Col>
 
-                        <Col md={3}>
+                        <Col xs="auto">
                             <Form.Control
                                 placeholder="Buscar por documento"
                                 value={documento}
@@ -154,7 +159,7 @@ export function FuncionariosPaginados() {
                             />
                         </Col>
 
-                        <Col md={3}>
+                        <Col xs="auto">
                             <DropdownButton
                                 variant="outline-dark"
                                 title={
@@ -180,7 +185,7 @@ export function FuncionariosPaginados() {
                             </DropdownButton>
                         </Col>
 
-                        <Col md={3}>
+                        <Col xs="auto">
                             <DropdownButton
                                 variant="outline-dark"
                                 title={

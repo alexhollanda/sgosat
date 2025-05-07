@@ -10,9 +10,9 @@ const OrdemServicoAPI = {
             throw error;
         }
     }, 
-    async obterPaginadoAsync(pageNumber, pageSize, order, nome) {
+    async obterPaginadoAsync(pageNumber, pageSize, order, nome, statusID) {
         try {
-            const response = await HTTPClient.get(`/OrdemServico/Paginar?pageNumber=${pageNumber}&pageSize=${pageSize}&order=${order}&nome=${nome}`);
+            const response = await HTTPClient.get(`/OrdemServico/Paginar?pageNumber=${pageNumber}&pageSize=${pageSize}&order=${order}&nome=${nome}&statusID=${statusID}`);
             return response.data;
         } catch (error) {
             console.error("Erro ao listar clientes:", error);

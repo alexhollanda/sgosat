@@ -30,6 +30,7 @@ export function OrdensServicoPaginado() {
     const [tamanhoPagina, setTamanhoPagina] = useState(5);
     const [order, setOrder] = useState(1);
     const [nome, setNome] = useState("");
+    const [statusID, setStatusID] = useState(0); // ID do status selecionado
     const [carregando, setCarregando] = useState(false);
     const [totalRegistros, setTotalRegistros] = useState(0);
 
@@ -98,7 +99,7 @@ export function OrdensServicoPaginado() {
 
     useEffect(() => {
         buscarOrdens();
-    }, [paginaAtual, order, tamanhoPagina]);
+    }, [paginaAtual, order, tamanhoPagina, statusID]);
 
     // debounce para nome
     useEffect(() => {
@@ -117,7 +118,8 @@ export function OrdensServicoPaginado() {
                 paginaAtual,
                 tamanhoPagina,
                 order,
-                nome
+                nome,
+                statusID
             );
             setOrdens(response);
             if (response.length > 0) setTotalRegistros(response[0].totalRegistros || 0);
@@ -135,15 +137,22 @@ export function OrdensServicoPaginado() {
         <Sidebar colapsada={colapsada} setColapsada={setColapsada}>
             <Topbar colapsada={colapsada}>
                 <div className={style.pagina_conteudo}>
-                    <div className={style.pagina_cabecalho}>
-                        <h3>Ordens de Serviço</h3>
-                        <Button variant="danger" type="button" className={style.botao_novo} onClick={() => navigate("/ordens/nova")}>
-                            <BsFillPersonPlusFill />Nova
-                        </Button>
-                    </div>
+                    <Row className="mb-3">
+                        <div className={style.pagina_cabecalho}>
+                            <h3>Ordens de Serviço</h3>
+                            <Button variant="danger" type="button" className={style.botao_novo} onClick={() => navigate("/ordens/nova")}>
+                                <BsFillPersonPlusFill />Nova
+                            </Button>
+                        </div>
+                    </Row>
 
                     <Row className="mb-3">
-                        <Col md={3}>
+                        <hr />
+                    </Row>
+
+                    <Row className="justify-content-between align-items-center mb-3">
+                        <h5>Filtros</h5>
+                        <Col xs="auto">
                             <Form.Control
                                 placeholder="Buscar por nome"
                                 value={nome}
@@ -151,13 +160,58 @@ export function OrdensServicoPaginado() {
                             />
                         </Col>
 
-                        <Col md={3}>
+                        <Col xs="auto">
                             <DropdownButton
                                 variant="outline-dark"
                                 title={
                                     <>
                                         <FaSortAlphaDown className="me-2" />
-                                        Ordenar por: {order === 1 ? "ID" : "Nome"}
+                                        Status da Ordem: {" "}
+                                        {statusID === 0
+                                            ? "Todas"
+                                            : statusID === 1
+                                                ? "Em Aberto"
+                                                : statusID === 2
+                                                    ? "Em Andamento"
+                                                    : statusID === 3
+                                                        ? "Cancelada"
+                                                        : statusID === 4
+                                                            ? "Concluída"
+                                                            : statusID === 5
+                                                                ? "Pendente"
+                                                                : ""}
+                                    </>
+                                }
+                                className="dropdown-estilizado"
+                                onSelect={(key) => {
+                                    setStatusID(parseInt(key));
+                                    setPaginaAtual(1);
+                                }}
+                            >
+                                <Dropdown.Item eventKey="0">Todas</Dropdown.Item>
+                                <Dropdown.Item eventKey="1">Em Aberto</Dropdown.Item>
+                                <Dropdown.Item eventKey="2">Em Andamento</Dropdown.Item>
+                                <Dropdown.Item eventKey="3">Cancelada</Dropdown.Item>
+                                <Dropdown.Item eventKey="4">Concluída</Dropdown.Item>
+                                <Dropdown.Item eventKey="5">Pendente</Dropdown.Item>
+
+                            </DropdownButton>
+                        </Col>
+
+                        <Col xs="auto">
+                            <DropdownButton
+                                variant="outline-dark"
+                                title={
+                                    <>
+                                        <FaSortAlphaDown className="me-2" />
+                                        Ordenar por: {" "}
+                                        {order === 1
+                                            ? "ID"
+                                            : order === 2
+                                                ? "Nome"
+                                                : order === 3
+                                                    ? "Status"
+                                                    : ""}
                                     </>
                                 }
                                 className="dropdown-estilizado"
@@ -174,10 +228,15 @@ export function OrdensServicoPaginado() {
                                     <FaSortAlphaDown className="me-2 text-secondary" />
                                     Nome
                                 </Dropdown.Item>
+
+                                <Dropdown.Item eventKey="3">
+                                    <FaSortAlphaDown className="me-2 text-secondary" />
+                                    Status
+                                </Dropdown.Item>
                             </DropdownButton>
                         </Col>
 
-                        <Col md={3}>
+                        <Col xs="auto">
                             <DropdownButton
                                 variant="outline-dark"
                                 title={
@@ -263,7 +322,7 @@ export function OrdensServicoPaginado() {
                                 </Row>
                             </>
                         )}
-                    </div>
+                    </div>                    
 
                     <Modal show={mostrarModal} onHide={handleFechareModal} className={style.custom_modal}>
                         <Modal.Header className={style.modal_header} closeButton>

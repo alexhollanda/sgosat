@@ -3,7 +3,6 @@ import { Topbar } from "../../componentes/Topbar/Topbar";
 import style from "./EditarUsuario.module.css";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-//import { Alert } from "react-bootstrap";
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import UsuarioAPI from "../../services/usuarioAPI";
@@ -26,7 +25,6 @@ export function AlterarSenha() {
     const [funcionarios, setFuncionarios] = useState([]);
     const [funcionarioID, setFuncionarioID] = useState('');
     const [email, setEmail] = useState('');
-    const [senha, setSenha] = useState('');
     const [senhaAtual, setSenhaAtual] = useState('');
     const [novaSenha, setNovaSenha] = useState('');
     const [confirmarSenha, setConfirmarSenha] = useState("");
@@ -85,7 +83,6 @@ export function AlterarSenha() {
                 const usuario = await UsuarioAPI.obterAsync(id);
                 setTipoUsuarioID(usuario.tipoUsuarioID);
                 setUserName(usuario.userName);
-                setSenha(usuario.senha);
                 setFuncionarioID(usuario.funcionarioID);
                 setEmail(usuario.email);
             } catch (error) {
@@ -96,44 +93,7 @@ export function AlterarSenha() {
         fetchTiposUsuarios();
         fetchFuncionarios();
         fetchUsuario();
-    }, []);
-
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault();
-    //     if (isFormValid()) {
-    //         if (UsuarioAPI.verificaSenha(senhaAtual, senha)) {
-    //             setMensagem("A senha atual informada não confere!");
-    //             setErro(true);
-    //             return;
-    //         }
-
-    //         if (novaSenha !== confirmarSenha) {
-    //             setMensagem("A nova senha e a confirmação não conferem!");
-    //             setErro(true);
-    //             return;
-    //         }
-    //         try {
-    //             await UsuarioAPI.alterarSenhaAsync(id, novaSenha, senhaAtual);
-    //             setMensagem("Senha alterada com sucesso!");
-    //             setErro(false);
-    //             setSenhaAtual("");
-    //             setNovaSenha("");
-    //             setConfirmarSenha("");
-    //             setTimeout(() => {
-    //                 navigate("/usuarios"); // ou qualquer rota desejada
-    //             }, 1000);
-    //         } catch (error) {
-    //             setMensagem(error.response?.data || "Erro ao alterar senha.");
-    //             setErro(true);
-    //         }
-    //     } else {
-    //         alert("Por favor, preencha todos os campos obrigatórios.");
-    //     }
-    // };
-
-    // const isFormValid = () => {
-    //     return senhaAtual && novaSenha && confirmarSenha;
-    // }
+    }, []);    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -169,6 +129,7 @@ export function AlterarSenha() {
             <Topbar texto="Editar Usuário" colapsada={colapsada}>
                 <div className={style.pagina_conteudo}>
                     <h3>Alterar Senha do Usuário</h3>
+                    <hr></hr>
 
                     {erroGeral && <div className="alert alert-danger">{erroGeral}</div>}
                     {sucesso && <div className="alert alert-success">{sucesso}</div>}
