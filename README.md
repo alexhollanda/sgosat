@@ -47,8 +47,8 @@ O sistema oferecerá uma solução eficiente para o gerenciamento de ordens de s
 Com esse planejamento, o desenvolvimento será estruturado e eficiente, garantindo um sistema funcional e de qualidade.
 
 
-📦 Entrega do Projeto Final – Curso Desenvolvedor Full Stack – Itera360
-1. 🔗 Repositório GitHub
+# 📦 Entrega do Projeto Final – Curso Desenvolvedor Full Stack – Itera360
+## 1️⃣ 🔗 Repositório GitHub
 Link do repositório:
 https://github.com/alexhollanda/sgosat
 
@@ -60,90 +60,259 @@ A aplicação frontend criada com React e React Bootstrap
 
 Estrutura de projeto em camadas (Apresentação, Aplicação, Domínio, Repositório)
 
-2. 📄 Documentação do Projeto
+## 2️⃣ 📄 Documentação do Projeto
+
 🏗️ Arquitetura do Projeto
+
 A aplicação foi desenvolvida com uma arquitetura em camadas, que garante a separação de responsabilidades e facilita a manutenção:
 
-Apresentação (sgosat/sgosat.api/sgosat.API): Interface API.
-
-Aplicação (sgosat/sgosat.api/sgosat.Aplicacao): Contém a lógica de orquestração entre a camada de domínio e infraestrutura.
-
-Domínio (sgosat/sgosat.api/sgosat.Dominio): Define entidades, interfaces e regras de negócio.
-
-Infraestrutura (sgosat/sgosat.api/sgosat.Repositorio): Implementação dos repositórios e acesso ao banco de dados SQL Server.
-
-Frontend (sgosat/sgosat.app): Interface em React, com integração à API via Axios e React Router.
+•	Apresentação (sgosat/sgosat.api/sgosat.API): Interface API.
+•	Aplicação (sgosat/sgosat.api/sgosat.Aplicacao): Contém a lógica de orquestração entre a camada de domínio e infraestrutura.
+•	Domínio (sgosat/sgosat.api/sgosat.Dominio): Define entidades, interfaces e regras de negócio.
+•	Infraestrutura (sgosat/sgosat.api/sgosat.Repositorio): Implementação dos repositórios e acesso ao banco de dados SQL Server.
+•	Frontend (sgosat/sgosat.app): Interface em React, com integração à API via Axios e React Router.
 
 A comunicação entre frontend e backend é feita via chamadas RESTful, utilizando JSON como formato padrão.
 
 
-⚙️ Configuração e Execução do Projeto
+# ⚙️ Configuração e Execução do Projeto
 
 Backend (.NET 6.0 + C#)
 
-1 - Clonar o repositório:
+## 1️⃣ Clonar o repositório:
 ```bash
 git clone https://github.com/alexhollanda/sgosat
 ```
-2 - Navegar até a pasta do backend e abrir com Visual Studio ou VS Code.
 
-3 - Restaurar pacotes:
+## 2️⃣ Navegar até a pasta do backend e abrir com Visual Studio ou VS Code.
+
+## 3️⃣ Restaurar pacotes:
 ```bash
 dotnet restore
 ```
-4 - Configurar a appsettings.json com a string de conexão correta.
 
-5 - Rodar as migrations:
+## 4️⃣ Configurar a appsettings.json com a string de conexão correta.
+
+## 5️⃣ Rodar as migrations:
 ```bash
 dotnet ef database update
 ```
-6 - Executar a API:
+
+## 6️⃣ No Banco de Dados, execute os seguintes Scripts SQL
+```bash
+INSERT INTO Funcionarios (
+    Nome,
+    Documento,
+    DataNascimento,
+    CPF,
+    Salario,
+    Ativo,
+    TipoFuncionarioID
+) VALUES (
+    'ADMIN',
+    '11111111111',
+    '2000-01-01T00:00:00',
+    '11111111111',
+    0.00,
+    1,
+    2
+);
+```
+
+```bash
+INSERT INTO Usuarios (
+    UserName,
+    Email,
+    Senha,
+    Ativo,
+    FuncionarioID,
+    TipoUsuarioID
+) VALUES (
+    'admin',
+    'ADMIN',
+    '$2a$11$Mu.R7KPDFTt5u2g0eCLrUOaWiXvBTKmZbkUl2JFMWj8TXocIykote',
+    1,
+    1,
+    1
+);
+```
+
+```bash
+CREATE PROCEDURE [dbo].[spObterClientesPaginados]
+	@PageNumber INT,
+	@PageSize INT,
+	@Order INT,
+	@Nome NVARCHAR(100) = NULL,
+	@Documento NVARCHAR(20) = NULL
+AS
+BEGIN
+	SET NOCOUNT ON;
+	SELECT 
+		Cliente.ID,
+		Cliente.Nome,
+		Cliente.Documento,
+		Cliente.Telefone,
+		COUNT(*) OVER() AS TotalRegistros
+	FROM Cliente
+	WHERE
+		(@Nome IS NULL OR Cliente.Nome LIKE '%' + @Nome + '%') AND
+		(@Documento IS NULL OR Cliente.Documento LIKE '%' + @Documento + '%') AND
+		Cliente.Ativo = 1
+	ORDER BY 
+		CASE WHEN @Order = 1 THEN Cliente.ID END ASC,
+		CASE WHEN @Order = 2 THEN Cliente.Nome END ASC
+	OFFSET (@PageNumber - 1) * @PageSize ROWS
+	FETCH NEXT @PageSize ROWS ONLY;
+END
+```
+
+```bash
+CREATE PROCEDURE [dbo].[spObterFuncionariosPaginados]
+	@PageNumber INT,
+	@PageSize INT,
+	@Order INT,
+	@Nome NVARCHAR(100) = NULL,
+	@Documento NVARCHAR(20) = NULL
+AS
+BEGIN
+	SET NOCOUNT ON;
+	SELECT 
+		Funcionario.ID,
+		Funcionario.Nome,
+		Funcionario.Documento,
+		Funcionario.Telefone,
+		COUNT(*) OVER() AS TotalRegistros
+	FROM Funcionario
+	WHERE
+		(@Nome IS NULL OR Funcionario.Nome LIKE '%' + @Nome + '%') AND
+		(@Documento IS NULL OR Funcionario.Documento LIKE '%' + @Documento + '%') AND
+		Funcionario.ID <> 1 AND
+		Funcionario.Ativo = 1
+	ORDER BY 
+		CASE WHEN @Order = 1 THEN Funcionario.ID END ASC,
+		CASE WHEN @Order = 2 THEN Funcionario.Nome END ASC
+	OFFSET (@PageNumber - 1) * @PageSize ROWS
+	FETCH NEXT @PageSize ROWS ONLY;
+END
+```
+
+```bash
+CREATE PROCEDURE [dbo].[spObterOrdensPaginadas]
+	@PageNumber INT,
+	@PageSize INT,
+	@Order INT,
+	@Nome NVARCHAR(100) = NULL,
+	@Status INT
+AS
+BEGIN
+	SET NOCOUNT ON;
+	SELECT 
+		OrdemServico.ID,
+		OrdemServico.DataAbertura,
+		Cliente.Nome,
+		Cliente.Telefone,
+		OrdemServico.StatusOSID,
+		COUNT(*) OVER() AS TotalRegistros
+	FROM OrdemServico
+	INNER JOIN Cliente ON OrdemServico.ClienteID = Cliente.ID
+	WHERE
+		(@Nome IS NULL OR Cliente.Nome LIKE '%' + @Nome + '%') AND
+		(@Status = 0 OR OrdemServico.StatusOSID = @Status) AND
+		OrdemServico.Ativo = 1
+	ORDER BY 
+		CASE WHEN @Order = 1 THEN OrdemServico.ID END ASC,
+		CASE WHEN @Order = 2 THEN Cliente.Nome END ASC,
+		CASE WHEN @Order = 3 THEN OrdemServico.StatusOSID END ASC
+	OFFSET (@PageNumber - 1) * @PageSize ROWS
+	FETCH NEXT @PageSize ROWS ONLY;
+END
+```
+
+```bash
+CREATE PROCEDURE [dbo].[spObterUsuariosPaginados]
+	@PageNumber INT,
+	@PageSize INT,
+	@Order INT,
+	@Nome NVARCHAR(100) = NULL,
+	@UserName NVARCHAR(20) = NULL
+AS
+BEGIN
+	SET NOCOUNT ON;
+	SELECT 
+		Usuario.ID,
+		Funcionario.Nome,
+		Usuario.UserName,
+		Usuario.Email,
+		COUNT(*) OVER() AS TotalRegistros
+	FROM Usuario
+	INNER JOIN Funcionario ON Usuario.FuncionarioID = Funcionario.ID
+	WHERE
+		(@Nome IS NULL OR Funcionario.Nome LIKE '%' + @Nome + '%') AND
+		(@UserName IS NULL OR Usuario.UserName LIKE '%' + @UserName + '%') AND
+		Usuario.ID <> 1 AND
+		Usuario.Ativo = 1
+	ORDER BY 
+		CASE WHEN @Order = 1 THEN Usuario.ID END ASC,
+		CASE WHEN @Order = 2 THEN Funcionario.Nome END ASC
+	OFFSET (@PageNumber - 1) * @PageSize ROWS
+	FETCH NEXT @PageSize ROWS ONLY;
+END
+```
+
+## 7️⃣ Executar a API:
 ```bash
 dotnet run
 ```
 
-Frontend (React)
+# 🖥️ Frontend (React)
 
-1 - Navegar até a pasta do frontend:
+## 1️⃣ Navegar até a pasta do frontend:
 ```bash
 cd sgosat/sgosat.app
 ```
 
-2 - Instalar dependências:
+## 2️⃣ Instalar dependências:
 ```bash
 npm install
 ```
 
-3 - Rodar o projeto:
+## 3️⃣ Rodar o projeto:
 ```bash
 npm start
 ```
 
-🧪 Instruções de Uso
+## 4️⃣ Para acessar o sistema (LOGIN):
+Use as seguintes credenciais padrão já definidas:
+
+•	Nome de usuário: admin
+
+•	Senha: 12345
+
+# 📄 Instruções de Uso
 Exemplos de uso da API
-* Buscar cliente por documento:
+## * Buscar cliente por documento:
 ```bash
-GET /api/pessoas/documento/{doc}
+GET /Cliente/ObterPorDoc/{doc}
 ```
 
-* Criar novo cliente:
+## * Criar novo cliente:
 ```bash
-POST /api/pessoas
+POST /Cliente/Criar
 ```
 
-Interações no Frontend
-Login de funcionários
+# ⌨️ Interações no Frontend
 
-Cadastro e busca de clientes
+## Login de Usuários
 
-Criação e acompanhamento de ordens de serviço com status
+## Cadastro e busca de clientes
 
-Dashboard com resumo (em andamento, concluídas, etc.)
+## Criação e acompanhamento de ordens de serviço com status
 
-Filtros por técnico e por período
+## Dashboard com resumo (em andamento, concluídas, etc.)
 
-🧰 Dependências e Ferramentas
-Backend:
+# 🧰 Dependências e Ferramentas
+
+## Backend:
 
 .NET 6.0
 
@@ -153,25 +322,20 @@ SQL Server
 
 BCrypt.Net-Next (criptografia de senhas)
 
-Frontend:
+## Frontend:
 
 React 19.1.0
 
 React Bootstrap
 
-Formik + Yup (validação de formulários)
-
 Axios
 
-Recharts (gráficos no dashboard)
+# 💡 Decisões Técnicas e Desafios
 
-💡 Decisões Técnicas e Desafios
-Optei por usar a arquitetura em camadas para melhor separação de responsabilidades.
+•	Optei por usar a arquitetura em camadas para melhor separação de responsabilidades.
 
-Implementei autenticação com hash de senha (BCrypt).
+•	Implementei autenticação com hash de senha (BCrypt).
 
-Utilizei Stored Procedures com paginação no SQL Server para otimizar buscas.
+•	Utilizei Stored Procedures com paginação no SQL Server para otimizar buscas.
 
-Adicionei filtros, dashboard interativo e responsividade no frontend para melhorar a experiência do usuário.
-
-O maior desafio foi alinhar os estados do React com os dados assíncronos da API, especialmente em formulários com preenchimento automático.
+•	Adicionei filtros, dashboard interativo e responsividade no frontend para melhorar a experiência do usuário.
