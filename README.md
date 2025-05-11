@@ -67,9 +67,13 @@ Estrutura de projeto em camadas (Apresentação, Aplicação, Domínio, Reposit�
 A aplicação foi desenvolvida com uma arquitetura em camadas, que garante a separação de responsabilidades e facilita a manutenção:
 
 •	Apresentação (sgosat/sgosat.api/sgosat.API): Interface API.
+
 •	Aplicação (sgosat/sgosat.api/sgosat.Aplicacao): Contém a lógica de orquestração entre a camada de domínio e infraestrutura.
+
 •	Domínio (sgosat/sgosat.api/sgosat.Dominio): Define entidades, interfaces e regras de negócio.
+
 •	Infraestrutura (sgosat/sgosat.api/sgosat.Repositorio): Implementação dos repositórios e acesso ao banco de dados SQL Server.
+
 •	Frontend (sgosat/sgosat.app): Interface em React, com integração à API via Axios e React Router.
 
 A comunicação entre frontend e backend é feita via chamadas RESTful, utilizando JSON como formato padrão.
